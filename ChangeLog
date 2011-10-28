@@ -1,0 +1,12 @@
+2011-10-28  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (tree-slide-play): Add timer to count down presentation
+
+	* org-tree-slide.el: Add play and stop function, and show slide header
+
+	* org-tree-slide.el: Add a function to change mode-line during presentation
+
+2011-09-28  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Initial release
+
