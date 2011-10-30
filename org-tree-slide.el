@@ -60,7 +60,7 @@
 
 (defcustom tree-slide-slide-in-effect t
   "Using a visual effect of slide-in for displaying trees."
-  :type 'boolen
+  :type 'boolean
   :group 'org-tree-slide)
 
 (defcustom tree-slide-slide-in-brank-lines 10
