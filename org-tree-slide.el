@@ -24,6 +24,7 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;; History:
+;;    v1.2.1 (2011-10-30@16:10) # Add slide-in visual effect
 ;;    v1.1.1 (2011-10-28@16:16) # Add functions to start and stop slide view
 ;;    v1.0.0 (2011-09-28@20:59) # Release an init version
 ;;
@@ -40,12 +41,30 @@
 
 (require 'org-timer)
 
-(defconst org-tree-slide "1.1.1"
+(defconst org-tree-slide "1.2.1"
   "The version number of the org-tree-slide.el")
 
 (defcustom tree-slide-title nil
-  "Specify the title of presentation. The title is shown in a header area. If this variable is nil, the name of current buffer will be displayed as a slide title."
+  "Specify the title of presentation. The title is shown in a header area. 
+   If this variable is nil, the name of current buffer will be displayed
+   as a slide title."
   :type 'string
+  :group 'org-tree-slide)
+
+(defcustom tree-slide-auto-play-period 0
+  "If this variable is greater than 0, the slide show move to the next tree
+   automatically, and the value specify an interval."
+  :type 'float
+  :group 'org-tree-slide)
+
+(defcustom tree-slide-slide-in-effect t
+  "Using a visual effect of slide-in for displaying trees."
+  :type 'boolen
+  :group 'org-tree-slide)
+
+(defcustom tree-slide-slide-in-brank-lines 10
+  "Specify the number of brank lines, the slide will move from this line."
+  :type 'integer
   :group 'org-tree-slide)
 
 ;(defcustom tree-slide-header-background-color "#FFFFFF"
@@ -60,6 +79,7 @@
 
 (define-key org-mode-map (kbd "C-x s p") 'tree-slide-play)
 (define-key org-mode-map (kbd "C-x s s") 'tree-slide-stop)
+;(define-key org-mode-map (kbd "C-x s a") 'tree-slide-auto-play-start)
 ;(define-key org-mode-map (kbd "<f5>") 'org-narrow-to-subtree)
 ;(define-key org-mode-map (kbd "<S-f5>") 'widen)
 
@@ -107,16 +127,16 @@
   (show-children)
   (org-cycle-hide-drawers 'all)
   (org-narrow-to-subtree)
-  (show-slide-header))
+  (when tree-slide-slide-in-effect
+    (tree-slide-slide-in tree-slide-slide-in-brank-lines))
+  (show-slide-header)
+)
 
-(defun show-slide-header ()
+(defun set-slide-header (brank-lines)
   (save-excursion
     (setq tree-slide-footer-overlay
 	  (make-overlay (point-min) (+ 1 (point-min))))
     (overlay-put tree-slide-footer-overlay 'after-string " ")
-;    (overlay-put tree-slide-footer-overlay
-;		 'face '((background-color . (tree-slide-header-background-color))
-;			 (foreground-color . (tree-slide-header-foreground-color)));)
     (overlay-put tree-slide-footer-overlay
 		 'face
 		 '((foreground-color . "#696969")
@@ -125,7 +145,26 @@
 		 (concat "  [ " 
 			 (unless tree-slide-title
 			   (buffer-name))
-			 " ] (" (format-time-string "%Y-%m-%d") ")\n\n")))
+			 " ] (" (format-time-string "%Y-%m-%d") ")"
+			 (get-brank-lines brank-lines)))))
+
+
+(defun tree-slide-slide-in (brank-lines)
+  (while (< 2 brank-lines)
+    (set-slide-header brank-lines)
+    (sit-for 0.005)
+    (hide-slide-header)
+    (setq brank-lines (1- brank-lines))))
+
+(defun get-brank-lines (lines)
+  (let ((breaks ""))
+    (while (< 0 lines)
+      (setq lines (1- lines))
+      (setq breaks (concat breaks "\n")))
+    breaks))
+
+(defun show-slide-header ()
+  (set-slide-header 2)
   (forward-char 1))
 
 (defun hide-slide-header ()
@@ -185,6 +224,21 @@
 	  global-mode-string
 	  "-%-")))
 
+;(defun tree-slide-auto-play-start ()
+;  (interactive)
+;  (setq stop-count 10)
+;  (setq count 0)
+;  (while (< count stop-count)
+;    (tree-slide-move-next-tree)
+;    (sleep-for 1)
+;    (message "auto play %s" count)
+;    (setq count (1+ count))))
+
+;(defun tree-slide-auto-play-stop ()
+;  (interactive)
+;)
+
 (provide 'org-tree-slide)
 
 ;;; org-tree-slide.el ends here
+
