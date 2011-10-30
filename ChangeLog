@@ -1,8 +1,20 @@
+2011-10-30  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (tree-slide-slide-in): Add slide-in visual effect
+	If you don't like this effect, use (setq tree-slide-slide-in-effect nil).
+	You can also control the distance of moving slide-in trees, use
+	`tree-slide-slide-in-brank-lines'.
+
 2011-10-28  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (tree-slide-play): Add timer to count down presentation
+	By default, timer will NOT be activated. If you use a count down timer,
+	please use prefix (C-u) when starting up slide view. Which means
+	`C-u C-x sp ' is the right command.
 
 	* org-tree-slide.el: Add play and stop function, and show slide header
+	To play the slide, type `C-x s p'.
+	To stop the slide, type `C-x s s'.
 
 	* org-tree-slide.el: Add a function to change mode-line during presentation
 
