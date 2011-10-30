@@ -24,6 +24,7 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;; History:
+;;    v1.2.3 (2011-10-30@20:42) # Add a variable to control slide-in duration
 ;;    v1.2.1 (2011-10-30@16:10) # Add slide-in visual effect
 ;;    v1.1.1 (2011-10-28@16:16) # Add functions to start and stop slide view
 ;;    v1.0.0 (2011-09-28@20:59) # Release an init version
@@ -41,7 +42,7 @@
 
 (require 'org-timer)
 
-(defconst org-tree-slide "1.2.1"
+(defconst org-tree-slide "1.2.3"
   "The version number of the org-tree-slide.el")
 
 (defcustom tree-slide-title nil
@@ -65,6 +66,11 @@
 (defcustom tree-slide-slide-in-brank-lines 10
   "Specify the number of brank lines, the slide will move from this line."
   :type 'integer
+  :group 'org-tree-slide)
+
+(defcustom tree-slide-slide-in-waiting 0.02
+  "Specify the duration waiting the next update of overlay."
+  :type 'float
   :group 'org-tree-slide)
 
 ;(defcustom tree-slide-header-background-color "#FFFFFF"
@@ -152,7 +158,7 @@
 (defun tree-slide-slide-in (brank-lines)
   (while (< 2 brank-lines)
     (set-slide-header brank-lines)
-    (sit-for 0.005)
+    (sit-for tree-slide-slide-in-waiting)
     (hide-slide-header)
     (setq brank-lines (1- brank-lines))))
 
@@ -226,6 +232,8 @@
 
 ;(defun tree-slide-auto-play-start ()
 ;  (interactive)
+  ;; 入力受付モードでnが入るまで実行し続けるとか．
+  ;; このままでは表示が更新されない！
 ;  (setq stop-count 10)
 ;  (setq count 0)
 ;  (while (< count stop-count)

@@ -5,6 +5,11 @@
 	You can also control the distance of moving slide-in trees, use
 	`tree-slide-slide-in-brank-lines'.
 
+	* org-tree-slide.el (tree-slide-slide-in-waiting):
+	Add a variable to control slide-in duration.
+	If you feel the slide-in speed so fast, then set this value bigger like
+	`(setq tree-slide-slide-in-waiting 0.05)'
+
 2011-10-28  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (tree-slide-play): Add timer to count down presentation
