@@ -1,3 +1,10 @@
+2011-12-02  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Change function names, ots- is introduced.
+	Two profiles were defined:
+	org-tree-slide-simple-profile (no effect, no header)
+	org-tree-slide-presentation-profile (slide-in effect, title header)
+
 2011-11-02  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (tree-slide-content):
