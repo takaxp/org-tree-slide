@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.1.7 (2011-12-06@00:26) # Support TITLE/AUTHOR/EMAIL in a header
 ;;    v2.1.5 (2011-12-05@17:08) # Fix an issue of title display
 ;;    v2.1.3 (2011-12-05@15:08) # Fix the end of slide for skip ccontrol
 ;;    v2.1.1 (2011-12-05@11:08) # Add skip control by heading level
@@ -54,7 +55,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.1.5"
+(defconst org-tree-slide "2.1.7"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -76,8 +77,9 @@
 
 (defcustom org-tree-slide-title nil
   "Specify the title of presentation. The title is shown in a header area. 
-   If this variable is nil, the name of current buffer will be displayed
-   as a slide title."
+   If you have `#+TITLE:' line in your org buffer, it wil be used as a title
+   of the slide. If this variable is nil and no `#+TITLE:' line, the name of
+   current buffer will be displayed."
   :type 'string
   :group 'org-tree-slide)
 
@@ -160,6 +162,7 @@
   (interactive "P")
   (if (ots-active-p) (message "org-tree-slide is ACTIVE.")
     (setq ots-active t)
+    (ots-apply-local-header-to-slide-header)
     (when arg
       (org-timer-set-timer))
     (when org-tree-slide-heading-emphasis
@@ -176,7 +179,7 @@
     (setq ots-active nil)
     (widen)
     (org-overview)
-    (ots-move-to-the-first-heading)
+    (goto-char (point-min))
     (ots-hide-slide-header)
     (ots-remove-control-keybindings)
     (org-timer-pause-or-continue 'stop)
@@ -330,6 +333,30 @@
     (ots-hide-slide-header)
     (setq brank-lines (1- brank-lines))))
 
+(defvar org-tree-slide-email nil
+  "If you have `#+EMAIL:' line in your org buffer, it will be used as
+   an address of the slide.")
+
+(defvar org-tree-slide-author nil
+  "If you have `#+AUTHOR:' line in your org buffer, it will be used as
+   a name of the slide author.")
+
+(defun ots-apply-local-header-to-slide-header ()
+  (save-excursion
+    (ots-move-to-the-first-heading)
+    (let ((limit (point)))
+      (ots-set-header-variable-by-rexep
+       'org-tree-slide-title "#\\+TITLE:[ \t]*\\(.*\\)$" limit)
+      (ots-set-header-variable-by-rexep
+       'org-tree-slide-author "#\\+AUTHOR:[ \t]*\\(.*\\)$" limit)
+      (ots-set-header-variable-by-rexep
+       'org-tree-slide-email "#\\+EMAIL:[ \t]*\\(.*\\)$" limit))))
+
+(defun ots-set-header-variable-by-rexep (header-variable regexp limit)
+  (goto-char 1)
+  (set header-variable
+       (if (re-search-forward regexp limit t) (match-string 1) nil)))
+
 (defun ots-set-slide-header (brank-lines)
   (ots-hide-slide-header)
   (setq ots-header-overlay
@@ -344,7 +371,12 @@
 		   (concat "  [ " 
 			   (if org-tree-slide-title org-tree-slide-title
 			     (buffer-name))
-			   " ] (" (format-time-string "%Y-%m-%d") ")"
+			   " ]\n"
+			   (format-time-string "%Y-%m-%d") "  "
+			   (when org-tree-slide-author
+			     (concat org-tree-slide-author "  "))
+			   (when org-tree-slide-email
+			     (concat "<" org-tree-slide-email ">"))
 			   (ots-get-brank-lines brank-lines)))
     (overlay-put ots-header-overlay 'display
 		 (ots-get-brank-lines brank-lines))))

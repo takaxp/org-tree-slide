@@ -1,3 +1,9 @@
+2011-12-06  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Support TITLE/AUTHOR/EMAIL in a header
+	If #+TITLE:, #+AUTHOR:, or #+EMAIL: has a description in your org buffer,
+	it will be used in the slide header.
+
 2011-12-05  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Fix an issue of title display
