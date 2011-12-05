@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.1.3 (2011-12-05@15:08) # Fix the end of slide for skip ccontrol
 ;;    v2.1.1 (2011-12-05@11:08) # Add skip control by heading level
 ;;    v2.0.1 (2011-12-02@18:29) # Change function names, ots- is introduced.
 ;;    v2.0.0 (2011-12-01@17:41) # Add profiles and support org 6.33x
@@ -52,7 +53,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.1.1"
+(defconst org-tree-slide "2.1.3"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -274,6 +275,7 @@
 (defun ots-display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
   (goto-char (point-at-bol))
+  (hide-subtree)			; support CONTENT (subtrees are shown)
   (org-show-entry)
   (show-children)
   (org-cycle-hide-drawers 'all)
@@ -284,23 +286,40 @@
     (ots-show-slide-header)))
 
 (defun ots-outline-next-heading ()
-  (let ((has-next (outline-next-heading)))
-    (when (ots-outline-skip-p has-next (org-outline-level))
-      (ots-outline-next-heading)
-      (message "Skip!"))))
+  (ots-outline-select-method
+   (ots-outline-skip-p
+    (if (outline-next-heading) t 'last)
+    (org-outline-level))
+   'next))
 
 (defun ots-outline-previous-heading ()
-  (let ((has-previous (outline-previous-heading)))
-    (when (ots-outline-skip-p has-previous (org-outline-level))
-      (ots-outline-previous-heading)
-      (message "Skip!"))))
+  (ots-outline-select-method
+   (ots-outline-skip-p
+    (if (outline-previous-heading) t 'first)
+    (org-outline-level))
+   'previous))
+
+(defun ots-outline-select-method (action direction)
+  (cond ((and (equal action 'skip) (equal direction 'next))
+	 (ots-outline-next-heading))
+	((and (equal action 'skip) (equal direction 'previous))
+	 (ots-outline-previous-heading))
+	((and (equal action 'last) (equal direction 'next))
+	 (ots-outline-previous-heading)
+	 (message "End of slide.")) ; Return back.
+	((and (equal action 'first) (equal direction 'previous))
+	 (ots-move-to-the-first-heading)
+	 (message "Begining of slide.")) ; Stay the first heading
+	 ;; (ots-outline-previous-heading))
+	(t nil)))
 
 (defun ots-outline-skip-p (has-target-outline current-level)
-  (cond ((not has-target-outline)
-	 (message "End of slide")
-	 nil)
+  (cond ((equal has-target-outline 'last)
+	 'last)
+	((equal has-target-outline 'first)
+	 'first)
 	((and (> org-tree-slide-skip-outline-level 0)
-	      (<= org-tree-slide-skip-outline-level current-level)) t)
+	      (<= org-tree-slide-skip-outline-level current-level)) 'skip)
 	(t nil)))
 
 (defun ots-slide-in (brank-lines)
