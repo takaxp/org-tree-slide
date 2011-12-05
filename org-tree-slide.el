@@ -309,7 +309,7 @@
 	 (message "End of slide.")) ; Return back.
 	((and (equal action 'first) (equal direction 'previous))
 	 (ots-move-to-the-first-heading)
-	 (message "Begining of slide.")) ; Stay the first heading
+	 (message "Beginning of slide.")) ; Stay the first heading
 	 ;; (ots-outline-previous-heading))
 	(t nil)))
 
