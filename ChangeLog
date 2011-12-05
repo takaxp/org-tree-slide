@@ -1,5 +1,7 @@
 2011-12-05  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
+	* org-tree-slide.el: Fix an issue of title display
+
 	* org-tree-slide.el: Fix the end of slide for skip ccontrol
 
 	* org-tree-slide.el (org-tree-slide-skip-outline-level):

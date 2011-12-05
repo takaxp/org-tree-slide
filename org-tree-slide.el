@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.1.3 (2011-12-05@17:08) # Fix an issue of title display
 ;;    v2.1.3 (2011-12-05@15:08) # Fix the end of slide for skip ccontrol
 ;;    v2.1.1 (2011-12-05@11:08) # Add skip control by heading level
 ;;    v2.0.1 (2011-12-02@18:29) # Change function names, ots- is introduced.
@@ -341,7 +342,7 @@
   (if org-tree-slide-header
       (overlay-put ots-header-overlay 'display
 		   (concat "  [ " 
-			   (unless org-tree-slide-title
+			   (if org-tree-slide-title org-tree-slide-title
 			     (buffer-name))
 			   " ] (" (format-time-string "%Y-%m-%d") ")"
 			   (ots-get-brank-lines brank-lines)))
