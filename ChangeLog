@@ -1,3 +1,9 @@
+2011-12-05  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (org-tree-slide-skip-outline-level):
+	Add skip control by heading level. Skip the current slide if the level
+	is higher than or equal to this variable.
+
 2011-12-02  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Change function names, ots- is introduced.

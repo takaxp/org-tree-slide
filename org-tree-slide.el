@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.1.1 (2011-12-05@11:08) # Add skip control by heading level
 ;;    v2.0.1 (2011-12-02@18:29) # Change function names, ots- is introduced.
 ;;    v2.0.0 (2011-12-01@17:41) # Add profiles and support org 6.33x
 ;;    v1.2.5 (2011-10-31@18:34) # Add CONTENT view to see all the subtrees.
@@ -40,7 +41,7 @@
 ;;    1. Put this elisp into your load-path
 ;;    2. Add (requre 'org-tree-slide) in your .emacs
 ;;    3. Open an org-mode file 
-;;    4. M-x org-tree-slide-play, now you in slide view
+;;    4. M-x org-tree-slide-play, now you are in slide view
 ;;    5. <right>/<left> will move slides, mode line will be changed
 ;;    6. M-x org-tree-slide-stop, return to normal view
 ;;
@@ -51,12 +52,25 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.0.1"
+(defconst org-tree-slide "2.1.1"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
   "User variables for org-tree-slide."
   :group 'org-structure)
+
+(defcustom org-tree-slide-skip-outline-level 0
+  "Skip the current slide if the level is higher than or equal to this variable.
+   `0': never skip at any heading
+   e.g. set `4', 
+   *** heading A  ; display as a slide
+       entry
+   **** heading B ; skip! do not display as the next slide
+   **** heading C ; skip! 
+   *** heading D  ; display as the next slide
+"
+  :type 'integer
+  :group 'org-tree-slide)
 
 (defcustom org-tree-slide-title nil
   "Specify the title of presentation. The title is shown in a header area. 
@@ -220,14 +234,11 @@
     (message "   Next >>")
     (cond ((or (and (ots-before-first-heading-p) (not (org-on-heading-p)))
 	      (= (point-at-bol) 1)) ; support single top level tree
-	   (outline-next-heading))
+	   (ots-outline-next-heading))
 	  ((or (ots-first-heading-with-narrow-p) (not (org-on-heading-p)))
 	   (hide-subtree)
 	   (widen)
-	   ;; (if (> 7.3 (string-to-number org-version)) ; for 6.33x
-	   ;;     (ots-hide-slide-header)	       
-	   ;;     (org-content))
-	   (outline-next-heading))
+	   (ots-outline-next-heading))
 	  (t nil))
     (ots-display-tree-with-narrow)))
 
@@ -242,9 +253,9 @@
     (cond ((ots-before-first-heading-p)
 	   (message "The first slide!"))
 	  ((not (org-on-heading-p))
-	   (outline-previous-heading)
-	   (outline-previous-heading))
-	  (t (outline-previous-heading)))
+	   (ots-outline-previous-heading)
+	   (ots-outline-previous-heading))
+	  (t (ots-outline-previous-heading)))
     (ots-display-tree-with-narrow)
     ;; To avoid error of missing header in Emacs24
     (if (= emacs-major-version 24)
@@ -271,6 +282,26 @@
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
     (ots-show-slide-header)))
+
+(defun ots-outline-next-heading ()
+  (let ((has-next (outline-next-heading)))
+    (when (ots-outline-skip-p has-next (org-outline-level))
+      (ots-outline-next-heading)
+      (message "Skip!"))))
+
+(defun ots-outline-previous-heading ()
+  (let ((has-previous (outline-previous-heading)))
+    (when (ots-outline-skip-p has-previous (org-outline-level))
+      (ots-outline-previous-heading)
+      (message "Skip!"))))
+
+(defun ots-outline-skip-p (has-target-outline current-level)
+  (cond ((not has-target-outline)
+	 (message "End of slide")
+	 nil)
+	((and (> org-tree-slide-skip-outline-level 0)
+	      (<= org-tree-slide-skip-outline-level current-level)) t)
+	(t nil)))
 
 (defun ots-slide-in (brank-lines)
   (while (< 2 brank-lines)
