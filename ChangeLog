@@ -1,3 +1,12 @@
+2011-12-07  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Adopt minor mode
+	org-tree-slide adopt a minor mode!
+	org-tree-slide-play and org-tree-slide-stop are replaced
+	by org-tree-slide-mode.
+	When you make org-tree-slide-mode active, org-tree-slide-play is called.
+	Deactive it, org-tree-slide-stop will be called automatically.
+
 2011-12-06  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Support TITLE/AUTHOR/EMAIL in a header

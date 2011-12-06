@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.2.0 (2011-12-07@02:15) # Adopt minor mode
 ;;    v2.1.7 (2011-12-06@00:26) # Support TITLE/AUTHOR/EMAIL in a header
 ;;    v2.1.5 (2011-12-05@17:08) # Fix an issue of title display
 ;;    v2.1.3 (2011-12-05@15:08) # Fix the end of slide for skip ccontrol
@@ -44,9 +45,9 @@
 ;;    1. Put this elisp into your load-path
 ;;    2. Add (requre 'org-tree-slide) in your .emacs
 ;;    3. Open an org-mode file 
-;;    4. M-x org-tree-slide-play, now you are in slide view
-;;    5. <right>/<left> will move slides, mode line will be changed
-;;    6. M-x org-tree-slide-stop, return to normal view
+;;    4. Toggle org-tree-slide-mode, M-x org-mode-slide-mode
+;;    5. <right>/<left> will move slides, you can find "TSlide" in mode line.
+;;    6. Toggle org-tree-slide-mode again, return to normal view
 ;;
 ;;; Note:
 ;;    - Make sure key maps below when you introduce this elisp.
@@ -55,7 +56,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.1.7"
+(defconst org-tree-slide "2.2.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -104,6 +105,12 @@
   :type 'integer
   :group 'org-tree-slide)
 
+(defcustom org-tree-slide-cursor-init nil
+  "Specify a cursor position when the slide start.
+  `t': the cursor will move automatically to the head of buffer."
+  :type 'boolean
+  :group 'org-tree-slide)
+
 (defcustom org-tree-slide-slide-in-waiting 0.02
   "Specify the duration waiting the next update of overlay."
   :type 'float
@@ -112,16 +119,6 @@
 (defcustom org-tree-slide-heading-emphasis nil
   "Specify to use a custom face heading, or not"
   :type 'boolean
-  :group 'org-tree-slide)
-
-(defcustom org-tree-slide-previous-key (kbd "<left>")
-  "Specify the key for moving to the next slide."
-  :type 'string
-  :group 'org-tree-slide)
-
-(defcustom org-tree-slide-next-key (kbd "<right>")
-  "Specify the key for moving to the next slide."
-  :type 'string
   :group 'org-tree-slide)
 
 (defface org-tree-slide-heading-level-2-init
@@ -144,47 +141,36 @@
   "Level 3."
   :group 'org-tree-slide)
 
-;;; The default key bindings for org-tree-slide.
-(define-key org-mode-map (kbd "C-x s p") 'org-tree-slide-play)
-(define-key org-mode-map (kbd "C-x s s") 'org-tree-slide-stop)
-(define-key org-mode-map (kbd "C-x s c") 'org-tree-slide-content)
-(define-key org-mode-map (kbd "C-x s a") 'org-tree-slide-auto-play-start)
-;(define-key org-mode-map (kbd "<f5>") 'org-narrow-to-subtree)
-;(define-key org-mode-map (kbd "<S-f5>") 'widen)
+(defvar org-tree-slide-mode-map
+  (let ((map (make-sparse-keymap)))
+    ;; (define-key map (kbd "<f5>") 'org-narrow-to-subtree)
+    ;; (define-key map (kbd "S-<f5>") 'widen)
+    (define-key map (kbd "C-x s c") 'org-tree-slide-content)
+    (define-key map (kbd "C-x s a") 'org-tree-slide-auto-play-start)
+    (define-key map (kbd "<left>") 'org-tree-slide-move-previous-tree)
+    (define-key map (kbd "<right>") 'org-tree-slide-move-next-tree)
+    map)
+  "The default key bindings for org-tree-slide.")
 
-(defvar ots-active nil
-  "A flag to check if the slideshow is ACTIVE or not.")
+(defvar org-tree-slide-mode-hook nil)
+(define-minor-mode org-tree-slide-mode
+  "A presentation tool for org-mode"
+  :lighter " TSlide"
+  :keymap org-tree-slide-mode-map
+  :group 'org-tree-slide
+  :require 'org
+  (if org-tree-slide-mode
+      (progn
+	(ots-setup)
+	(run-hooks 'org-mode-slide-mode-hook))
+    (ots-abort)))
 
-(defun org-tree-slide-play (&optional arg)
-  "Start slide view with the first tree of the org-mode buffer.
-   If you all this function with a prefix (C-u), you can set 
-   a countdown timer to control your presentation."
-  (interactive "P")
-  (if (ots-active-p) (message "org-tree-slide is ACTIVE.")
-    (setq ots-active t)
-    (ots-apply-local-header-to-slide-header)
-    (when arg
-      (org-timer-set-timer))
-    (when org-tree-slide-heading-emphasis
-      (ots-apply-custom-heading-face t))
-    (ots-apply-control-keybindings)
-    (ots-move-to-the-first-heading)
-    (ots-display-tree-with-narrow)
-    (message "Hello! This is org-tree-slide :-)")))
-
-(defun org-tree-slide-stop ()
-  "Stop the slide view, and redraw the org-mode buffer with OVERVIEW."
+(defun org-tree-slide-play-with-timer ()
+  "Start slideshow with setting a count down timer."
   (interactive)
-  (when (ots-active-p)
-    (setq ots-active nil)
-    (widen)
-    (org-overview)
-    (goto-char (point-min))
-    (ots-hide-slide-header)
-    (ots-remove-control-keybindings)
-    (org-timer-pause-or-continue 'stop)
-    (ots-apply-custom-heading-face nil)
-    (message "Quit, Bye!")))
+  (org-timer-set-timer)
+  (unless (ots-active-p)
+    (org-tree-slide-mode)))
 
 (defun org-tree-slide-content ()
   "Change the display for viewing content of the org file during
@@ -228,6 +214,7 @@
   (ots-display-tree-with-narrow))
 
 (defun org-tree-slide-heading-emphasis-toggle ()
+  "Toggle applying emphasis to heading"
   (interactive)
   (setq org-tree-slide-heading-emphasis (not org-tree-slide-heading-emphasis))
   (ots-apply-custom-heading-face org-tree-slide-heading-emphasis))
@@ -267,14 +254,43 @@
 	(goto-char (point-min)))))
 
 ;;; Internal functions
-(defvar ots-right-key-assigned nil
-  "Store the previous command assigned to <right>.")
-(defvar ots-left-key-assigned nil
-  "Store the previous command assigned to <left>.")
-(defvar ots-modeline-assigned nil
-  "Store the previous mode-line-format.")
 (defvar ots-header-overlay nil
   "Flag to check the status of overlay for a slide header.")
+
+(defun ots-setup ()
+  (when (equal major-mode 'org-mode)
+    (ots-play)))
+
+(defun ots-abort ()
+  (unless (ots-active-p)
+    (ots-stop)))
+
+(defun ots-play ()
+  "Start slide view with the first tree of the org-mode buffer."
+  (ots-apply-local-header-to-slide-header)
+  (when org-tree-slide-heading-emphasis
+    (ots-apply-custom-heading-face t))
+  (when (or org-tree-slide-cursor-init (ots-before-first-heading-p))
+    (ots-move-to-the-first-heading))
+  (ots-display-tree-with-narrow)
+  (message "Hello! This is org-tree-slide :-)"))
+
+(defun ots-stop ()
+  "Stop the slide view, and redraw the org-mode buffer with OVERVIEW."
+  (widen)
+  (org-overview)
+  (cond ((equal "content" org-tree-slide-startup)
+	 (message "CONTENT: %s" org-tree-slide-startup)
+	 (org-content))
+	((equal "showall" org-tree-slide-startup)
+	 (message "SHOW ALL: %s" org-tree-slide-startup)
+	 (org-cycle '(64)))
+	(t nil))
+  (goto-char (point-min))		; Always return to the head position
+  (ots-hide-slide-header)
+  (org-timer-pause-or-continue 'stop)
+  (ots-apply-custom-heading-face nil)
+  (message "Quit, Bye!"))
 
 (defun ots-display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
@@ -341,6 +357,10 @@
   "If you have `#+AUTHOR:' line in your org buffer, it will be used as
    a name of the slide author.")
 
+(defvar org-tree-slide-startup "overview"
+  "If you have `#+STARTUP:' line in your org buffer, the org buffer will
+   be shown with corresponding status (content, showall, overview:default).")
+
 (defun ots-apply-local-header-to-slide-header ()
   (save-excursion
     (ots-move-to-the-first-heading)
@@ -350,7 +370,9 @@
       (ots-set-header-variable-by-rexep
        'org-tree-slide-author "#\\+AUTHOR:[ \t]*\\(.*\\)$" limit)
       (ots-set-header-variable-by-rexep
-       'org-tree-slide-email "#\\+EMAIL:[ \t]*\\(.*\\)$" limit))))
+       'org-tree-slide-email "#\\+EMAIL:[ \t]*\\(.*\\)$" limit)
+      (ots-set-header-variable-by-rexep
+       'org-tree-slide-startup "#\\+STARTUP:[ \t]*\\(.*\\)$" limit))))
 
 (defun ots-set-header-variable-by-rexep (header-variable regexp limit)
   (goto-char 1)
@@ -402,35 +424,6 @@
   (when (ots-before-first-heading-p)
     (outline-next-heading)))
 
-(defun ots-save-previous-propaties ()
-  (setq ots-right-key-assigned
-	(lookup-key org-mode-map org-tree-slide-next-key))
-  (setq ots-left-key-assigned
-	(lookup-key org-mode-map org-tree-slide-previous-key))
-  (setq ots-modeline-assigned mode-line-format))
-
-(defun ots-remove-control-keybindings ()
-  (define-key org-mode-map org-tree-slide-next-key ots-right-key-assigned)
-  (define-key org-mode-map org-tree-slide-previous-key ots-left-key-assigned)
-  (setq mode-line-format ots-modeline-assigned))
-
-(defun ots-apply-control-keybindings ()
-  (ots-save-previous-propaties)
-  (define-key org-mode-map
-    org-tree-slide-next-key 'org-tree-slide-move-next-tree)
-  (define-key org-mode-map
-    org-tree-slide-previous-key 'org-tree-slide-move-previous-tree)
-  (setq mode-line-format
-	'(" -"
-	  mode-line-mule-info
-	  mode-line-modified
-	  " "
-;	  mode-line-frame-identification
-	  mode-line-buffer-identification
-	  " [playing] / Stop: C-x s s / "
-	  global-mode-string
-	  "-%-")))
-
 (defun ots-apply-custom-heading-face (status)
   "Change status of heading face."
   (cond (status
@@ -445,7 +438,7 @@
 	 (message "Face: OFF"))))
 
 (defun ots-active-p ()
-  (and ots-active (equal 'org-mode major-mode)))
+  (and org-tree-slide-mode (equal major-mode 'org-mode)))
 
 (defun ots-narrowing-p ()
   "Check the current status if narrowing or not"
@@ -473,7 +466,6 @@
 "
   (and (ots-narrowing-p) (= (point-at-bol) (point-min))))
 
-
 ;;; Test....
 ;(defcustom org-tree-slide-header-background-color "#FFFFFF"
 ;  "Specify the color of header background."
@@ -493,7 +485,7 @@
   (cond 
    ((not org-tree-slide-slide-in-effect)
     (message "Please M-x org-tree-slide-slide-in-effect-toggle"))
-   (ots-active
+   ((ots-active-p)
     (let((stop-count skip-slides)
 	 (count 0))
       (while (< count stop-count)
