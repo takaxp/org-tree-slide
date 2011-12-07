@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.3.1 (2011-12-07@20:30) # Add a new profile to control narrowing status
 ;;    v2.3.0 (2011-12-07@16:17) # Support displaying a slide number
 ;;    v2.2.0 (2011-12-07@02:15) # Support minor mode
 ;;    v2.1.7 (2011-12-06@00:26) # Support TITLE/AUTHOR/EMAIL in a header
@@ -57,7 +58,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.3.0"
+(defconst org-tree-slide "2.3.1"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -144,8 +145,6 @@
 
 (defvar org-tree-slide-mode-map
   (let ((map (make-sparse-keymap)))
-    ;; (define-key map (kbd "<f5>") 'org-narrow-to-subtree)
-    ;; (define-key map (kbd "S-<f5>") 'widen)
     (define-key map (kbd "C-x s c") 'org-tree-slide-content)
     (define-key map (kbd "C-x s a") 'org-tree-slide-auto-play-start)
     (define-key map (kbd "<left>") 'org-tree-slide-move-previous-tree)
@@ -156,8 +155,11 @@
 (defvar org-tree-slide-mode-hook nil)
 (defvar display-tree-slide-string nil)
 (define-minor-mode org-tree-slide-mode
-  "A presentation tool for org-mode"
-  :lighter " TSlide"
+  "A presentation tool for org-mode.
+
+"
+  :lighter (:eval (if (ots-active-p) (format " %s" (ots-count-slide (point)))
+		    " TSlide"))
   :keymap org-tree-slide-mode-map
   :group 'org-tree-slide
   :require 'org
@@ -193,6 +195,7 @@
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
   (setq org-tree-slide-heading-emphasis nil)
+  (setq org-tree-slide-cursor-init t)
   (message "simple profile: ON"))
 
 (defun org-tree-slide-presentation-profile ()
@@ -201,7 +204,17 @@
   (setq org-tree-slide-header t)
   (setq org-tree-slide-slide-in-effect t)
   (setq org-tree-slide-heading-emphasis nil)
+  (setq org-tree-slide-cursor-init t)
   (message "presentation profile: ON"))
+
+(defun org-tree-slide-narrowing-control-profile ()
+  "Set variables for an alternative of narrowing/widen switch by <f5>/S-<f5>."
+  (interactive)
+  (setq org-tree-slide-header nil)
+  (setq org-tree-slide-slide-in-effect nil)
+  (setq org-tree-slide-heading-emphasis nil)
+  (setq org-tree-slide-cursor-init nil)
+  (message "narrowing control profile: ON"))
 
 (defun org-tree-slide-display-header-toggle ()
   "Toggle displaying the slide header"
@@ -283,17 +296,19 @@
   (message "Hello! This is org-tree-slide :-)"))
 
 (defun ots-stop ()
-  "Stop the slide view, and redraw the org-mode buffer with OVERVIEW."
+  "Stop the slide view, and redraw the org-mode buffer with #+STARTUP:."
   (widen)
-  (org-overview)
-  (cond ((equal "content" org-tree-slide-startup)
-	 (message "CONTENT: %s" org-tree-slide-startup)
-	 (org-content))
-	((equal "showall" org-tree-slide-startup)
-	 (message "SHOW ALL: %s" org-tree-slide-startup)
-	 (org-cycle '(64)))
-	(t nil))
-  (goto-char (point-min))		; Always return to the head position
+  (org-show-siblings)
+  (when (or org-tree-slide-cursor-init (ots-before-first-heading-p))
+    (goto-char (point-min))
+    (org-overview)
+    (cond ((equal "content" org-tree-slide-startup)
+	   (message "CONTENT: %s" org-tree-slide-startup)
+	   (org-content))
+	  ((equal "showall" org-tree-slide-startup)
+	   (message "SHOW ALL: %s" org-tree-slide-startup)
+	   (org-cycle '(64)))
+	  (t nil)))
   (ots-hide-slide-header)
   (org-timer-pause-or-continue 'stop)
   (ots-apply-custom-heading-face nil)
@@ -307,7 +322,7 @@
   (show-children)
   (org-cycle-hide-drawers 'all)
   (org-narrow-to-subtree)
-  (setq display-tree-slide-string (ots-count-slide (point)))
+  ;; (setq display-tree-slide-string (ots-count-slide (point)))
   (when org-tree-slide-slide-in-effect
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
@@ -460,23 +475,6 @@
 	  (setq previous-point (point))
 	  (ots-outline-next-heading))
 	(format "[%d/%d]" current-slide count)))))
-
-(defun ots-count-slide-old (&optional target-point)
-  (save-excursion
-    (save-restriction
-      (widen)
-      (unless target-point
-	(setq target-point (point-max)))
-      (ots-move-to-the-first-heading)
-      (let
-	  ((count 0)
-	   (previous-point 0))
-	(while (and (<= (point) target-point)
-		    (/= (point) previous-point))
-	  (setq count (1+ count))
-	  (setq previous-point (point))
-	  (ots-outline-next-heading))
-	count))))
 
 (defun ots-active-p ()
   (and org-tree-slide-mode (equal major-mode 'org-mode)))
