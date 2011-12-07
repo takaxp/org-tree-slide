@@ -28,7 +28,8 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
-;;    v2.2.0 (2011-12-07@02:15) # Adopt minor mode
+;;    v2.3.0 (2011-12-07@16:17) # Support displaying a slide number
+;;    v2.2.0 (2011-12-07@02:15) # Support minor mode
 ;;    v2.1.7 (2011-12-06@00:26) # Support TITLE/AUTHOR/EMAIL in a header
 ;;    v2.1.5 (2011-12-05@17:08) # Fix an issue of title display
 ;;    v2.1.3 (2011-12-05@15:08) # Fix the end of slide for skip ccontrol
@@ -56,7 +57,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.2.0"
+(defconst org-tree-slide "2.3.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -153,12 +154,15 @@
   "The default key bindings for org-tree-slide.")
 
 (defvar org-tree-slide-mode-hook nil)
+(defvar display-tree-slide-string nil)
 (define-minor-mode org-tree-slide-mode
   "A presentation tool for org-mode"
   :lighter " TSlide"
   :keymap org-tree-slide-mode-map
   :group 'org-tree-slide
   :require 'org
+  (setq display-tree-slide-string "")
+  (or global-mode-string (setq global-mode-string '("")))
   (if org-tree-slide-mode
       (progn
 	(ots-setup)
@@ -259,10 +263,13 @@
 
 (defun ots-setup ()
   (when (equal major-mode 'org-mode)
+    (or (memq 'display-tree-slide-string global-mode-string)
+	(setq global-mode-string
+	      (append global-mode-string '(display-tree-slide-string))))
     (ots-play)))
 
 (defun ots-abort ()
-  (unless (ots-active-p)
+  (when (equal major-mode 'org-mode)
     (ots-stop)))
 
 (defun ots-play ()
@@ -300,6 +307,7 @@
   (show-children)
   (org-cycle-hide-drawers 'all)
   (org-narrow-to-subtree)
+  (setq display-tree-slide-string (ots-count-slide (point)))
   (when org-tree-slide-slide-in-effect
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
@@ -325,11 +333,10 @@
 	((and (equal action 'skip) (equal direction 'previous))
 	 (ots-outline-previous-heading))
 	((and (equal action 'last) (equal direction 'next))
-	 (ots-outline-previous-heading)
-	 (message "End of slide.")) ; Return back.
+	 (ots-outline-previous-heading)) ; Return back.
+	 ;; (message "End of slide."))
 	((and (equal action 'first) (equal direction 'previous))
-	 (ots-move-to-the-first-heading)
-	 (message "Beginning of slide.")) ; Stay the first heading
+	 (ots-move-to-the-first-heading)) ; Stay the first heading
 	 ;; (ots-outline-previous-heading))
 	(t nil)))
 
@@ -436,6 +443,40 @@
 	  '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
 	  '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
 	 (message "Face: OFF"))))
+
+(defun ots-count-slide (target-point)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (ots-move-to-the-first-heading)
+      (let
+	  ((count 0)
+	   (previous-point 0)
+	   (current-slide 0))
+	(while (/= (point) previous-point) ; convergence point
+	  (setq count (1+ count))
+	  (when (<= (point) target-point)
+	    (setq current-slide count))
+	  (setq previous-point (point))
+	  (ots-outline-next-heading))
+	(format "[%d/%d]" current-slide count)))))
+
+(defun ots-count-slide-old (&optional target-point)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (unless target-point
+	(setq target-point (point-max)))
+      (ots-move-to-the-first-heading)
+      (let
+	  ((count 0)
+	   (previous-point 0))
+	(while (and (<= (point) target-point)
+		    (/= (point) previous-point))
+	  (setq count (1+ count))
+	  (setq previous-point (point))
+	  (ots-outline-next-heading))
+	count))))
 
 (defun ots-active-p ()
   (and org-tree-slide-mode (equal major-mode 'org-mode)))

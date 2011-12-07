@@ -1,5 +1,7 @@
 2011-12-07  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
+	* ort-tree-slide.el: Support displaying a slide number in a mode-line.
+
 	* org-tree-slide.el: Adopt minor mode
 	org-tree-slide adopt a minor mode!
 	org-tree-slide-play and org-tree-slide-stop are replaced
