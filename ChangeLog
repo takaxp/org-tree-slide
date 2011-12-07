@@ -2,8 +2,8 @@
 
 	* org-tree-slide.el: Add a new profile to control narrowing status
 	- You can control a status of narrowing or not by this profile.
-	  If you use <f5>/S-<f5>, toggle org-tree-slide-mode is an alternative way.
-	  (global-set-key (kbd "<f5>") 'org-tree-slide-mode) is recommended.
+	  Assigned a single key to `org-tree-slide-mode' is recommended, like
+	  (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
 	- Modify the way to display the current slide number.
 	  Replace " TSlide" by slide number in mode-line, like [1/10].
 

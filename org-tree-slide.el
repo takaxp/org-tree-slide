@@ -208,7 +208,7 @@
   (message "presentation profile: ON"))
 
 (defun org-tree-slide-narrowing-control-profile ()
-  "Set variables for an alternative of narrowing/widen switch by <f5>/S-<f5>."
+  "Set variables to switch a status of narrowing or widen."
   (interactive)
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
