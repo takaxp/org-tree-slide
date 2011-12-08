@@ -1,3 +1,7 @@
+2011-12-08  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (ots-update-modeline): Reduce redundant processing
+
 2011-12-07  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Add a new profile to control narrowing status

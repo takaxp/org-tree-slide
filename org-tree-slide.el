@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.3.2 (2011-12-08@09:22) # Reduce redundant processing
 ;;    v2.3.1 (2011-12-07@20:30) # Add a new profile to control narrowing status
 ;;    v2.3.0 (2011-12-07@16:17) # Support displaying a slide number
 ;;    v2.2.0 (2011-12-07@02:15) # Support minor mode
@@ -58,7 +59,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.3.1"
+(defconst org-tree-slide "2.3.2"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -155,11 +156,8 @@
 (defvar org-tree-slide-mode-hook nil)
 (defvar display-tree-slide-string nil)
 (define-minor-mode org-tree-slide-mode
-  "A presentation tool for org-mode.
-
-"
-  :lighter (:eval (if (ots-active-p) (format " %s" (ots-count-slide (point)))
-		    " TSlide"))
+  "A presentation tool for org-mode."
+  :lighter (:eval (ots-update-modeline))
   :keymap org-tree-slide-mode-map
   :group 'org-tree-slide
   :require 'org
@@ -170,6 +168,12 @@
 	(ots-setup)
 	(run-hooks 'org-mode-slide-mode-hook))
     (ots-abort)))
+
+(defvar ots-slide-number " TSlide")
+(defun ots-update-modeline ()
+  (if (and (ots-active-p) (org-on-heading-p))
+      (setq ots-slide-number (format " %s" (ots-count-slide (point))))
+    ots-slide-number))
 
 (defun org-tree-slide-play-with-timer ()
   "Start slideshow with setting a count down timer."
@@ -462,8 +466,7 @@
 (defun ots-count-slide (target-point)
   (save-excursion
     (save-restriction
-      (widen)
-      (ots-move-to-the-first-heading)
+      (ots-move-to-the-first-heading)	; include widen
       (let
 	  ((count 0)
 	   (previous-point 0)
