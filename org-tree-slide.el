@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.4.0 (2011-12-08@10:51) # Support TODO pursuit in a slideshow
 ;;    v2.3.2 (2011-12-08@09:22) # Reduce redundant processing
 ;;    v2.3.1 (2011-12-07@20:30) # Add a new profile to control narrowing status
 ;;    v2.3.0 (2011-12-07@16:17) # Support displaying a slide number
@@ -59,7 +60,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.3.2"
+(defconst org-tree-slide "2.4.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -124,6 +125,11 @@
   :type 'boolean
   :group 'org-tree-slide)
 
+(defcustom org-tree-slide-skip-done t
+  "Specify to show TODO item only or not."
+  :type'boolean
+  :group 'org-tree-slide)
+
 (defface org-tree-slide-heading-level-2-init
   '((t (:inherit outline-2)))
   "Level 2."
@@ -156,7 +162,29 @@
 (defvar org-tree-slide-mode-hook nil)
 (defvar display-tree-slide-string nil)
 (define-minor-mode org-tree-slide-mode
-  "A presentation tool for org-mode."
+  "A presentation tool for org-mode.
+
+Usage:
+  - Install this elisp into your load-path.
+  - Set minimal recommendation settings in .emacs
+    (global-set-key (kbd \"<f8>\") 'org-tree-slide-mode)
+    (global-set-key (kbd \"S-<f8>\") 'org-tree-slide-skip-done-toggle)
+  - Open an org file
+  - Type <f8> to start org-tree-slide-mode
+  - Type <left>/<right> to move between trees
+  - To exit this minor mode, just type <f8> again
+
+Profiles:
+  - Simple
+    M-x org-tree-slide-simple-profile
+
+  - Presentation
+    M-x org-tree-slide-presentation-profile
+
+  - TODO Pursuit
+    M-x org-tree-slide-narrowing-control-profile
+    M-x org-tree-slide-skip-done-toggle
+"
   :lighter (:eval (ots-update-modeline))
   :keymap org-tree-slide-mode-map
   :group 'org-tree-slide
@@ -239,6 +267,13 @@
   (interactive)
   (setq org-tree-slide-heading-emphasis (not org-tree-slide-heading-emphasis))
   (ots-apply-custom-heading-face org-tree-slide-heading-emphasis))
+
+(defun org-tree-slide-skip-done-toggle ()
+  "Toggle show TODO item only or not"
+  (interactive)
+  (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))
+  (if org-tree-slide-skip-done
+      (message "TODO Pursuit: ON") (message "TODO Pursuit: OFF")))
 
 (defun org-tree-slide-move-next-tree ()
   "Display the next slide"
@@ -353,10 +388,8 @@
 	 (ots-outline-previous-heading))
 	((and (equal action 'last) (equal direction 'next))
 	 (ots-outline-previous-heading)) ; Return back.
-	 ;; (message "End of slide."))
 	((and (equal action 'first) (equal direction 'previous))
 	 (ots-move-to-the-first-heading)) ; Stay the first heading
-	 ;; (ots-outline-previous-heading))
 	(t nil)))
 
 (defun ots-outline-skip-p (has-target-outline current-level)
@@ -366,6 +399,10 @@
 	 'first)
 	((and (> org-tree-slide-skip-outline-level 0)
 	      (<= org-tree-slide-skip-outline-level current-level)) 'skip)
+	((and org-tree-slide-skip-done
+	      (not
+	       (looking-at
+		(concat org-outline-regexp-bol org-not-done-regexp))) 'skip))
 	(t nil)))
 
 (defun ots-slide-in (brank-lines)
