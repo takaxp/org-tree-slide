@@ -1,3 +1,7 @@
+2011-12-09  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Add an option to control modeline display
+
 2011-12-08  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (ots-update-modeline): Reduce redundant processing

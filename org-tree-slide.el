@@ -28,6 +28,7 @@
 ;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
 ;;
 ;;; History:
+;;    v2.4.1 (2011-12-09@11:46) # Add an option to control modeline display
 ;;    v2.4.0 (2011-12-08@10:51) # Support TODO pursuit in a slideshow
 ;;    v2.3.2 (2011-12-08@09:22) # Reduce redundant processing
 ;;    v2.3.1 (2011-12-07@20:30) # Add a new profile to control narrowing status
@@ -60,7 +61,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.4.0"
+(defconst org-tree-slide "2.4.1"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -127,7 +128,16 @@
 
 (defcustom org-tree-slide-skip-done t
   "Specify to show TODO item only or not."
-  :type'boolean
+  :type 'boolean
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-modeline-display nil
+  "Specify how to display the slide number in modeline.
+   'outside: shown in modeline outside of lighter
+   'lighter: shown in lighter (slow)
+   nil: nothing to be shown
+"
+  :type 'symbol
   :group 'org-tree-slide)
 
 (defface org-tree-slide-heading-level-2-init
@@ -181,7 +191,7 @@ Profiles:
   - Presentation
     M-x org-tree-slide-presentation-profile
 
-  - TODO Pursuit
+  - TODO Pursuit with narrowing
     M-x org-tree-slide-narrowing-control-profile
     M-x org-tree-slide-skip-done-toggle
 "
@@ -199,9 +209,12 @@ Profiles:
 
 (defvar ots-slide-number " TSlide")
 (defun ots-update-modeline ()
-  (if (and (ots-active-p) (org-on-heading-p))
-      (setq ots-slide-number (format " %s" (ots-count-slide (point))))
-    ots-slide-number))
+  (cond ((equal org-tree-slide-modeline-display 'lighter)
+	 (if (and (ots-active-p) (org-on-heading-p))
+	     (setq ots-slide-number (format " %s" (ots-count-slide (point))))
+	   ots-slide-number))
+	((equal org-tree-slide-modeline-display 'outside) "")
+	(t " TSlide")))
 
 (defun org-tree-slide-play-with-timer ()
   "Start slideshow with setting a count down timer."
@@ -361,7 +374,8 @@ Profiles:
   (show-children)
   (org-cycle-hide-drawers 'all)
   (org-narrow-to-subtree)
-  ;; (setq display-tree-slide-string (ots-count-slide (point)))
+  (when (equal org-tree-slide-modeline-display 'outside)
+    (setq display-tree-slide-string (ots-count-slide (point))))
   (when org-tree-slide-slide-in-effect
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
@@ -402,7 +416,8 @@ Profiles:
 	((and org-tree-slide-skip-done
 	      (not
 	       (looking-at
-		(concat org-outline-regexp-bol org-not-done-regexp))) 'skip))
+		;; 6.33x does NOT suport org-outline-regexp-bol 
+		(concat "^\\*+ " org-not-done-regexp))) 'skip))
 	(t nil)))
 
 (defun ots-slide-in (brank-lines)
@@ -483,8 +498,8 @@ Profiles:
 
 (defun ots-move-to-the-first-heading ()
   (widen)
-  (goto-char (point-min))
-  (when (ots-before-first-heading-p)
+  (goto-char 1)  
+  (unless (looking-at "^\\*+ ")
     (outline-next-heading)))
 
 (defun ots-apply-custom-heading-face (status)
@@ -507,13 +522,15 @@ Profiles:
       (let
 	  ((count 0)
 	   (previous-point 0)
-	   (current-slide 0))
-	(while (/= (point) previous-point) ; convergence point
+	   (current-slide 0)
+	   (current-point (point)))
+	(while (/= current-point previous-point) ; convergence point
 	  (setq count (1+ count))
-	  (when (<= (point) target-point)
-	    (setq current-slide count))
-	  (setq previous-point (point))
-	  (ots-outline-next-heading))
+	  (when (<= current-point target-point)
+	    (setq current-slide count))	; FIXME
+	  (setq previous-point current-point)
+	  (ots-outline-next-heading)
+	  (setq current-point (point)))
 	(format "[%d/%d]" current-slide count)))))
 
 (defun ots-active-p ()
