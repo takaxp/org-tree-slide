@@ -25,34 +25,36 @@
 ;;
 ;;; Requirement:
 ;;    org-mode 6.33x or higher version
-;;    The latest version of the org-mode at http://orgmode.org/ is recommended.
-;;
-;;; History:
-;;    v2.4.1 (2011-12-09@11:46) # Add an option to control modeline display
-;;    v2.4.0 (2011-12-08@10:51) # Support TODO pursuit in a slideshow
-;;    v2.3.2 (2011-12-08@09:22) # Reduce redundant processing
-;;    v2.3.1 (2011-12-07@20:30) # Add a new profile to control narrowing status
-;;    v2.3.0 (2011-12-07@16:17) # Support displaying a slide number
-;;    v2.2.0 (2011-12-07@02:15) # Support minor mode
-;;    v2.1.7 (2011-12-06@00:26) # Support TITLE/AUTHOR/EMAIL in a header
-;;    v2.1.5 (2011-12-05@17:08) # Fix an issue of title display
-;;    v2.1.3 (2011-12-05@15:08) # Fix the end of slide for skip ccontrol
-;;    v2.1.1 (2011-12-05@11:08) # Add skip control by heading level
-;;    v2.0.1 (2011-12-02@18:29) # Change function names, ots- is introduced.
-;;    v2.0.0 (2011-12-01@17:41) # Add profiles and support org 6.33x
-;;    v1.2.5 (2011-10-31@18:34) # Add CONTENT view to see all the subtrees.
-;;    v1.2.3 (2011-10-30@20:42) # Add a variable to control slide-in duration
-;;    v1.2.1 (2011-10-30@16:10) # Add slide-in visual effect
-;;    v1.1.1 (2011-10-28@16:16) # Add functions to start and stop slide view
-;;    v1.0.0 (2011-09-28@20:59) # Release an init version
+;;    The latest version of the org-mode is recommended.
+;;                      (see http://orgmode.org/)
 ;;
 ;;; Usage:
 ;;    1. Put this elisp into your load-path
-;;    2. Add (requre 'org-tree-slide) in your .emacs
+;;    2. Add (require 'org-tree-slide) in your .emacs
 ;;    3. Open an org-mode file 
-;;    4. Toggle org-tree-slide-mode, M-x org-mode-slide-mode
-;;    5. <right>/<left> will move slides, you can find "TSlide" in mode line.
-;;    6. Toggle org-tree-slide-mode again, return to normal view
+;;    4. Toggle org-tree-slide-mode (M-x org-tree-slide-mode)
+;;       then Slideshow will start and you can find "TSlide" in mode line.
+;;    5. <left>/<right> will move between slides
+;;    6. `C-x s c' will show CONTENT of the org buffer
+;;       Select a heading and type <right>, then Slideshow will start again.
+;;    7. Toggle org-tree-slide-mode again to exit this minor mode
+;;
+;;; Recommended minimum settings:
+;;    (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
+;;    (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
+;;
+;;  and three useful profiles are available.
+;;
+;;    1. Simple use
+;;       M-x org-tree-slide-simple-profile
+;;
+;;    2. Presentation use
+;;       M-x org-tree-slide-presentation-profile
+;;
+;;    3. TODO Pursuit with narrowing
+;;       M-x org-tree-slide-narrowing-control-profile
+;;
+;;    Type `C-h f org-tree-slide-mode', you can find more detail.
 ;;
 ;;; Note:
 ;;    - Make sure key maps below when you introduce this elisp.
@@ -60,8 +62,9 @@
 
 (require 'org)
 (require 'org-timer)
+(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.4.1"
+(defconst org-tree-slide "2.5.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -69,7 +72,7 @@
   :group 'org-structure)
 
 (defcustom org-tree-slide-skip-outline-level 0
-  "Skip the current slide if the level is higher than or equal to this variable.
+  "Skip slides if a heading level is higher than or equal to this variable.
    `0': never skip at any heading
    e.g. set `4', 
    *** heading A  ; display as a slide
@@ -79,20 +82,6 @@
    *** heading D  ; display as the next slide
 "
   :type 'integer
-  :group 'org-tree-slide)
-
-(defcustom org-tree-slide-title nil
-  "Specify the title of presentation. The title is shown in a header area. 
-   If you have `#+TITLE:' line in your org buffer, it wil be used as a title
-   of the slide. If this variable is nil and no `#+TITLE:' line, the name of
-   current buffer will be displayed."
-  :type 'string
-  :group 'org-tree-slide)
-
-(defcustom org-tree-slide-auto-play-period 0
-  "If this variable is greater than 0, the slide show move to the next tree
-   automatically, and the value specify an interval."
-  :type 'float
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-header t
@@ -110,9 +99,10 @@
   :type 'integer
   :group 'org-tree-slide)
 
-(defcustom org-tree-slide-cursor-init nil
-  "Specify a cursor position when the slide start.
-  `t': the cursor will move automatically to the head of buffer."
+(defcustom org-tree-slide-cursor-init t
+  "Specify a cursor position when exit slideshow.
+  `t': the cursor will move automatically to the head of buffer.
+  nil: keep the same position."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -132,13 +122,20 @@
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-modeline-display nil
-  "Specify how to display the slide number in modeline.
-   'outside: shown in modeline outside of lighter
+  "Specify how to display the slide number in mode line.
+   'outside: shown in the mode line outside of lighter
    'lighter: shown in lighter (slow)
-   nil: nothing to be shown
-"
+   nil: nothing to be shown"
   :type 'symbol
   :group 'org-tree-slide)
+
+(defvar org-tree-slide-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-x s c") 'org-tree-slide-content)
+    (define-key map (kbd "<left>") 'org-tree-slide-move-previous-tree)
+    (define-key map (kbd "<right>") 'org-tree-slide-move-next-tree)
+    map)
+ "The default key bindings for org-tree-slide.")
 
 (defface org-tree-slide-heading-level-2-init
   '((t (:inherit outline-2)))
@@ -160,40 +157,48 @@
   "Level 3."
   :group 'org-tree-slide)
 
-(defvar org-tree-slide-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-x s c") 'org-tree-slide-content)
-    (define-key map (kbd "C-x s a") 'org-tree-slide-auto-play-start)
-    (define-key map (kbd "<left>") 'org-tree-slide-move-previous-tree)
-    (define-key map (kbd "<right>") 'org-tree-slide-move-next-tree)
-    map)
-  "The default key bindings for org-tree-slide.")
-
 (defvar org-tree-slide-mode-hook nil)
 (defvar display-tree-slide-string nil)
 (define-minor-mode org-tree-slide-mode
   "A presentation tool for org-mode.
 
 Usage:
-  - Install this elisp into your load-path.
   - Set minimal recommendation settings in .emacs
     (global-set-key (kbd \"<f8>\") 'org-tree-slide-mode)
     (global-set-key (kbd \"S-<f8>\") 'org-tree-slide-skip-done-toggle)
   - Open an org file
   - Type <f8> to start org-tree-slide-mode
   - Type <left>/<right> to move between trees
-  - To exit this minor mode, just type <f8> again
+  - To exit this minor mode, just type <f8> again.
 
 Profiles:
-  - Simple
-    M-x org-tree-slide-simple-profile
 
-  - Presentation
-    M-x org-tree-slide-presentation-profile
+  - [ Simple ]
+ => M-x `org-tree-slide-simple-profile'
 
-  - TODO Pursuit with narrowing
-    M-x org-tree-slide-narrowing-control-profile
-    M-x org-tree-slide-skip-done-toggle
+    1. No header display
+    2. No slide-in effect
+    3. The cursor will move to the head of buffer when exit
+    4. No slide number display in mode line
+    5. Display every type of tree
+
+  - [ Presentation ]
+ => M-x `org-tree-slide-presentation-profile'
+
+    1. Display header
+    2. Enable slide-in effect
+    3. The cursor will move to the head of buffer when exit
+    4. Display slide number in mode line
+    5. Display every type of tree
+
+  - [ TODO Pursuit with narrowing ]
+ => M-x `org-tree-slide-narrowing-control-profile'
+
+    1. No header display
+    2. No slide-in effect
+    3. The cursor will keep the same position when exit
+    4. Display slide number in mode line
+    5. Display TODO trees only
 "
   :lighter (:eval (ots-update-modeline))
   :keymap org-tree-slide-mode-map
@@ -223,6 +228,14 @@ Profiles:
   (unless (ots-active-p)
     (org-tree-slide-mode)))
 
+(defun org-tree-slide-without-init-play ()
+  "Start slideshow without the init play. Just enter org-tree-slide-mode."
+  (interactive)
+  (org-tree-slide-mode)
+  (widen)
+  (org-overview)  
+  (goto-char 1))
+
 (defun org-tree-slide-content ()
   "Change the display for viewing content of the org file during
    the slide view mode is active."
@@ -235,30 +248,57 @@ Profiles:
     (message "<<  CONTENT  >>")))
 
 (defun org-tree-slide-simple-profile ()
-  "Set variables for simple use."
+  "Set variables for simple use.
+  `org-tree-slide-header'            => nil
+  `org-tree-slide-slide-in-effect'   => nil
+  `org-tree-slide-heading-emphasis'  => nil
+  `org-tree-slide-cursor-init'       => t
+  `org-tree-slide-modeline-display'  => nil
+  `org-tree-slide-skip-done'         => nil
+"
   (interactive)
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
   (setq org-tree-slide-heading-emphasis nil)
   (setq org-tree-slide-cursor-init t)
+  (setq org-tree-slide-modeline-display nil)
+  (setq org-tree-slide-skip-done nil)
   (message "simple profile: ON"))
 
 (defun org-tree-slide-presentation-profile ()
-  "Set variables for presentation use."
+  "Set variables for presentation use.
+  `org-tree-slide-header'            => t
+  `org-tree-slide-slide-in-effect'   => t
+  `org-tree-slide-heading-emphasis'  => nil
+  `org-tree-slide-cursor-init'       => t
+  `org-tree-slide-modeline-display'  => 'outside
+  `org-tree-slide-skip-done'         => nil
+"
   (interactive)
   (setq org-tree-slide-header t)
   (setq org-tree-slide-slide-in-effect t)
   (setq org-tree-slide-heading-emphasis nil)
   (setq org-tree-slide-cursor-init t)
+  (setq org-tree-slide-modeline-display 'outside)
+  (setq org-tree-slide-skip-done nil)
   (message "presentation profile: ON"))
 
 (defun org-tree-slide-narrowing-control-profile ()
-  "Set variables to switch a status of narrowing or widen."
+  "Set variables for TODO pursuit with narrowing.
+  `org-tree-slide-header'            => nil
+  `org-tree-slide-slide-in-effect'   => nil
+  `org-tree-slide-heading-emphasis'  => nil
+  `org-tree-slide-cursor-init'       => nil
+  `org-tree-slide-modeline-display'  => 'lighter
+  `org-tree-slide-skip-done'         => t
+"
   (interactive)
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
   (setq org-tree-slide-heading-emphasis nil)
   (setq org-tree-slide-cursor-init nil)
+  (setq org-tree-slide-modeline-display 'lighter)
+  (setq org-tree-slide-skip-done t)
   (message "narrowing control profile: ON"))
 
 (defun org-tree-slide-display-header-toggle ()
@@ -301,6 +341,10 @@ Profiles:
 	   (widen)
 	   (ots-outline-next-heading))
 	  (t nil))
+    (when (and org-tree-slide-skip-done
+	       (looking-at (concat "^\\*+ " org-not-done-regexp)))
+      ;; (org-clock-in)
+      )
     (ots-display-tree-with-narrow)))
 
 (defun org-tree-slide-move-previous-tree ()
@@ -317,12 +361,17 @@ Profiles:
 	   (ots-outline-previous-heading)
 	   (ots-outline-previous-heading))
 	  (t (ots-outline-previous-heading)))
+    (when (and org-tree-slide-skip-done
+	       (looking-at (concat "^\\*+ " org-not-done-regexp)))
+      ;; (org-clock-in)
+      )
     (ots-display-tree-with-narrow)
     ;; To avoid error of missing header in Emacs24
     (if (= emacs-major-version 24)
 	(goto-char (point-min)))))
 
-;;; Internal functions
+
+;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar ots-header-overlay nil
   "Flag to check the status of overlay for a slide header.")
 
@@ -362,8 +411,13 @@ Profiles:
 	   (org-cycle '(64)))
 	  (t nil)))
   (ots-hide-slide-header)
-  (org-timer-pause-or-continue 'stop)
+  (org-timer-stop)
   (ots-apply-custom-heading-face nil)
+  (when (and org-tree-slide-skip-done
+	     (looking-at (concat "^\\*+ " org-not-done-regexp)))
+    (when (org-clocking-p)
+      ;; (org-clock-out)
+      ))
   (message "Quit, Bye!"))
 
 (defun ots-display-tree-with-narrow ()
@@ -374,8 +428,10 @@ Profiles:
   (show-children)
   (org-cycle-hide-drawers 'all)
   (org-narrow-to-subtree)
-  (when (equal org-tree-slide-modeline-display 'outside)
-    (setq display-tree-slide-string (ots-count-slide (point))))
+  (setq display-tree-slide-string
+	(if (equal org-tree-slide-modeline-display 'outside)
+	    (ots-count-slide (point))
+	  ""))
   (when org-tree-slide-slide-in-effect
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
@@ -426,6 +482,11 @@ Profiles:
     (sit-for org-tree-slide-slide-in-waiting)
     (ots-hide-slide-header)
     (setq brank-lines (1- brank-lines))))
+
+(defvar org-tree-slide-title nil
+  "If you have `#+TITLE:' line in your org buffer, it wil be used as a title
+   of the slide. If the buffer has no `#+TITLE:' line, the name of
+   current buffer will be displayed.")
 
 (defvar org-tree-slide-email nil
   "If you have `#+EMAIL:' line in your org buffer, it will be used as
@@ -531,6 +592,10 @@ Profiles:
 	  (setq previous-point current-point)
 	  (ots-outline-next-heading)
 	  (setq current-point (point)))
+	(when org-tree-slide-skip-done	; FIXME ignore the first tree
+					; but, that is TODO, cannot count it.
+	  (setq current-slide (1- current-slide))
+	  (setq count (1- count)))
 	(format "[%d/%d]" current-slide count)))))
 
 (defun ots-active-p ()
@@ -562,36 +627,6 @@ Profiles:
 "
   (and (ots-narrowing-p) (= (point-at-bol) (point-min))))
 
-;;; Test....
-;(defcustom org-tree-slide-header-background-color "#FFFFFF"
-;  "Specify the color of header background."
-;  :type 'string
-;  :group 'org-tree-slide)
-
-;(defcustom org-tree-slide-header-foreground-color "#666699"
-;  "Specify the color of header background."
-;  :type 'string
-;  :group 'org-tree-slide)
-
-(defun org-tree-slide-auto-play-start (skip-slides)
-  "Start auto play, type `C-g' to stop it"
-  (interactive "nHow many slide play auto? ")
-  (message "Skip %d slides ..." skip-slides)
-  (sit-for 1)
-  (cond 
-   ((not org-tree-slide-slide-in-effect)
-    (message "Please M-x org-tree-slide-slide-in-effect-toggle"))
-   ((ots-active-p)
-    (let((stop-count skip-slides)
-	 (count 0))
-      (while (< count stop-count)
-	(org-tree-slide-move-next-tree)
-	(message "auto play %s" count)
-	(sleep-for 0.5)
-	(setq count (1+ count)))
-      (org-tree-slide-content)))
-   (t
-    (message "Start slide show first with C-x s p :-)"))))
 
 (provide 'org-tree-slide)
 
