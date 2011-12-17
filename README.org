@@ -108,7 +108,7 @@ If you want to use this setting as the default, please put a setting including r
 | 9 | org-tree-slide-modeline-display     | nil           | [*1]    |
 |---+-------------------------------------+---------------+---------|
 
-#+begin_src text
+#+begin_src org
 [*1] ={ nil| 'lighter | 'outside }=
    'outside: shown in the mode line outside of lighter
    'lighter: shown in lighter (slow)
