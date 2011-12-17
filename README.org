@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@18:22
+#+Last Update: 2011-12-17@18:34
 
 * 1. What's this?
 
@@ -16,7 +16,7 @@ Main features:
   - Displaying the current number of slides
   - Countdown timer
   - CONTENT view during a presentation
-  - Slide in effect
+  - Slide-in effect
   - Slide header from org file's header
 
 ** 1-1. Related packages
@@ -30,7 +30,7 @@ see [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]].
 
 OR
 
-1. Eval: =(auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")= (for auto-install user)
+1. Eval: =(auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")= (for auto-install users)
 2. Add =(require 'org-tree-slide)= in your =.emacs=
 
 Then open an org file, just type =<right>= and =<left>=. A presentation will begin with a header, slide-in effect, and slide number.
@@ -42,14 +42,14 @@ Then open an org file, just type =<right>= and =<left>=. A presentation will beg
 
 Assigning a single key to =org-tree-slide-mode= is recommended.
 
-#+begin_src emacs lisp
+#+begin_src
 (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
 (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
 #+end_src
 
 OR
 
-#+begin_src emacs lisp
+#+begin_src emacs-lisp
 (define-key org-mode-map (kbd "<f8>") 'org-tree-slide-mode)
 (define-key org-mode-map (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
 #+end_src
@@ -60,13 +60,13 @@ Three useful profiles are available. Please select a profile that is the most su
 
 If you select =simple= profile, call the following command while =org-tree-slide-mode= is ON.
 
-#+begin_src emacs lisp
+#+begin_src emacs-lisp
 M-x org-tree-slide-simple-profile
 #+end_src
 
 If you want to use this setting as the default, put the following configuration including recommended settings into your =.emacs=.
 
-#+begin_src emacs lisp
+#+begin_src emacs-lisp
 (when (require 'org-tree-slide nil t)
   (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
   (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
