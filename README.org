@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@18:39
+#+Last Update: 2011-12-17@20:41
 
 * 1. What's this?
 
@@ -42,10 +42,10 @@ Then open an org file, just type =<right>= and =<left>=. A presentation will beg
 
 Assigning a single key to =org-tree-slide-mode= is recommended.
 
-#+begin_src
+#+BEGIN_SRC ruby
 (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
 (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
-#+end_src
+#+END_SRC
 
 OR
 
