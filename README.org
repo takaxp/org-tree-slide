@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@18:17
+#+Last Update: 2011-12-17@18:22
 
 * 1. What's this?
 
@@ -110,6 +110,8 @@ To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the he
 This profile will display trees restricted to =TODO status= without a header and slide-in effect. It is very useful to concentrate your focus on the current TODO item that is not done, and go to the next task by a single typing of =<right>=. This is "TODO Pursuit with narrowing". If you want to track every kind of tree including finished items, toggle =M-x org-tree-slide-skip-done-toggle= OFF.
 
 When you exit =org-tree-slide-mode=, the cursor will keep the same position, it is therefore possible to focus again by toggle =M-x org-tree-slide-mode= again.
+
+If you feel the cursor moving is very slow, please change a value of =org-tree-slide-modeline-display= to =\'outside= or =nil=.
 
 =M-x org-tree-slide-narrowing-control-profile=
 
