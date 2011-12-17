@@ -94,23 +94,30 @@ If you want to use this setting as the default, please put a setting including r
 
 * User variables
 
-|-------------------------------------+---------------|
-| Variable                            | Default value |
-|-------------------------------------+---------------|
-| org-tree-slide-skip-outline-level   | 0             |
-| org-tree-slide-header               | t             |
-| org-tree-slide-slide-in-effect      | t             |
-| org-tree-slide-slide-in-brank-lines | 10            |
-| org-tree-slide-slide-in-waiting     | 0.02          |
-| org-tree-slide-cursor-init          | t             |
-| org-tree-slide-heading-emphasis     | nil           |
-| org-tree-slide-skip-done            | nil           |
-| org-tree-slide-modeline-display     | nil           |
-|-------------------------------------+---------------|
+|---+-------------------------------------+---------------+---------|
+|   | Variable                            | Default value | Select  |
+|---+-------------------------------------+---------------+---------|
+| 1 | org-tree-slide-skip-outline-level   | 0             | numeric |
+| 2 | org-tree-slide-header               | t             | boolean |
+| 3 | org-tree-slide-slide-in-effect      | t             | boolean |
+| 4 | org-tree-slide-slide-in-brank-lines | 10            | numeric |
+| 5 | org-tree-slide-slide-in-waiting     | 0.02          | float   |
+| 6 | org-tree-slide-cursor-init          | t             | boolean |
+| 7 | org-tree-slide-heading-emphasis     | nil           | boolean |
+| 8 | org-tree-slide-skip-done            | nil           | boolean |
+| 9 | org-tree-slide-modeline-display     | nil           | [*1]    |
+|---+-------------------------------------+---------------+---------|
+
+#+begin_src
+[*1] ={ nil| 'lighter | 'outside }=
+   'outside: shown in the mode line outside of lighter
+   'lighter: shown in lighter (slow)
+   nil: nothing to be shown"
+#+end_src
 
 * History
 
-see also ChangeLog
+see also [[ChangeLog]]
 
 |---------+------------------+-----------------------------------------------|
 | Version | Date             | Description                                   |
@@ -138,6 +145,6 @@ see also ChangeLog
 
 * Contact
 
-The author is Takaaki ISHIKAWA (=takaxp@ieee.org=).
+The author is Takaaki ISHIKAWA ([[mailto:takaxp@ieee.org][takaxp@ieee.org]]).
 Feel free to email me or use a mention of twitter ([[https://twitter.com/#!/takaxp][@takaxp]])
 
