@@ -15,12 +15,12 @@ see [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]].
 * Install
 
 1. Put this elisp into your load-path
-2. Add (require 'org-tree-slide) in your .emacs
+2. Add =(require 'org-tree-slide)= in your .emacs
 
 OR
 
-1. Eval: (auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")
-2. Add (require 'org-tree-slide) in your .emacs
+1. Eval: =(auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")=
+2. Add =(require 'org-tree-slide)= in your =.emacs=
 
 ** Requirements
   - Org-mode 6.33x or higher version is required.
@@ -45,13 +45,13 @@ OR
 
 Three useful profiles are available. Please choise a profile which is the most closing your use.
 
-If you select `simple' profile, first of all, toggle org-tree-slide-mode and call a fuction to set this profile. 
+If you select =simple= profile, first of all, toggle =org-tree-slide-mode= and call a fuction to set this profile. 
 
 #+begin_src emacs lisp
 M-x org-tree-slide-simple-profile
 #+end_src
 
-If you want to use this setting as the default, please put a setting including recommended settings into your `.emacs'.
+If you want to use this setting as the default, please put a setting including recommended settings into your =.emacs=.
 
 #+begin_src emacs lisp
 (when (require 'org-tree-slide nil t)
@@ -60,11 +60,11 @@ If you want to use this setting as the default, please put a setting including r
   (org-tree-slide-simple-profile))
 #+end_src
 
-`org-tree-slide-presentation-profile' and `org-tree-slide-narrowing-control-profile' are also available.
+=org-tree-slide-presentation-profile= and =org-tree-slide-narrowing-control-profile= are also available.
 
 ** `Simple'
 
- => M-x `org-tree-slide-simple-profile'
+=M-x org-tree-slide-simple-profile=
 
     1. No header display
     2. No slide-in effect
@@ -74,7 +74,7 @@ If you want to use this setting as the default, please put a setting including r
 
 ** `Presentation'
 
- => M-x `org-tree-slide-presentation-profile'
+=M-x org-tree-slide-presentation-profile=
 
     1. Display header
     2. Enable slide-in effect
@@ -84,7 +84,7 @@ If you want to use this setting as the default, please put a setting including r
 
 ** `TODO Pursuit with narrowing'
 
- => M-x `org-tree-slide-narrowing-control-profile'
+=M-x org-tree-slide-narrowing-control-profile=
 
     1. No header display
     2. No slide-in effect
@@ -138,6 +138,6 @@ see also ChangeLog
 
 * Contact
 
-The author is Takaaki ISHIKAWA (takaxp@ieee.org).
-Feel free to email me or use a mention of twitter (@takaxp)
+The author is Takaaki ISHIKAWA (=takaxp@ieee.org=).
+Feel free to email me or use a mention of twitter ([[https://twitter.com/#!/takaxp][@takaxp]])
 
