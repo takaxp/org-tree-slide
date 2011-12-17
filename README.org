@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@20:45
+#+Last Update: 2011-12-17@20:47
 
 * 1. What's this?
 
@@ -123,6 +123,7 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 * 5. User variables
 
+|---+-------------------------------------+---------------+---------|
 |   | Variable                            | Default value | Select  |
 |---+-------------------------------------+---------------+---------|
 | 1 | org-tree-slide-skip-outline-level   | 0             | Numeric |
@@ -136,12 +137,12 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 9 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
 
 
-#+begin_src org
+#+BEGIN_SRC
 [*1] ={ nil| 'lighter | 'outside }=
    'outside: shown in the mode line outside of lighter
    'lighter: shown in lighter (slow)
    nil: nothing to be shown"
-#+end_src
+#+END_SRC
 
 ** 5-1. Useful settings for experts
 
@@ -222,7 +223,6 @@ see also ChangeLog
 | v1.2.1  | 2011-10-30@16:10 | Add slide-in visual effect                    |
 | v1.1.1  | 2011-10-28@16:16 | Add functions to start and stop slide view    |
 | v1.0.0  | 2011-09-28@20:59 | Release the initial version                   |
-|---------+------------------+-----------------------------------------------|
 
 * 8. Contact
 
