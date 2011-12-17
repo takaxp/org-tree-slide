@@ -1,3 +1,8 @@
+2011-12-18  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (org-tree-slide-move-next-tree): Fix a bug
+	Support an org buffer without any header
+
 2011-12-17  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: org-tree-slide-skip-done set nil as default

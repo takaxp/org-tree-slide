@@ -64,7 +64,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.5.2"
+(defconst org-tree-slide "2.5.3"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -334,7 +334,9 @@ Profiles:
   (when (ots-active-p)
     (message "   Next >>")
     (cond ((or (and (ots-before-first-heading-p) (not (org-on-heading-p)))
-	      (= (point-at-bol) 1)) ; support single top level tree
+	       ;; support single top level tree
+	       ;; FIXME: no header org buffer + CONTENT view is not supported
+	       (and (= (point-at-bol) 1) (not (ots-narrowing-p))))
 	   (ots-outline-next-heading))
 	  ((or (ots-first-heading-with-narrow-p) (not (org-on-heading-p)))
 	   (hide-subtree)

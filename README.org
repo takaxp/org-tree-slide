@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@21:23
+#+Last Update: 2011-12-18@00:50
 
 * 1. What's this?
 
@@ -203,6 +203,7 @@ see also ChangeLog
 |---------+------------------+-----------------------------------------------|
 | Version | Date             | Description                                   |
 |---------+------------------+-----------------------------------------------|
+| v2.5.3  | 2011-12-18@00:50 | Fix a bug for an org buffer without header    |
 | v2.5.2  | 2011-12-17@17:52 | Set presentation profile as the default       |
 | v2.5.1  | 2011-12-17@13:34 | org-tree-slide-skip-done set nil as default   |
 | v2.5.0  | 2011-12-12@18:16 | Remove auto-play function (TBD)               |
