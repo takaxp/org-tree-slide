@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@20:42
+#+Last Update: 2011-12-17@20:44
 
 * 1. What's this?
 
@@ -49,10 +49,10 @@ Assigning a single key to =org-tree-slide-mode= is recommended.
 
 OR
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (define-key org-mode-map (kbd "<f8>") 'org-tree-slide-mode)
 (define-key org-mode-map (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
-#+end_src
+#+END_SRC
 
 * 4. Profiles
 
@@ -60,18 +60,18 @@ Three useful profiles are available. Please select a profile that is the most su
 
 If you select =simple= profile, call the following command while =org-tree-slide-mode= is ON.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 M-x org-tree-slide-simple-profile
-#+end_src
+#+END_SRC
 
 If you want to use this setting as the default, put the following configuration including recommended settings into your =.emacs=.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (when (require 'org-tree-slide nil t)
   (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
   (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
   (org-tree-slide-simple-profile))
-#+end_src
+#+END_SRC
 
 =org-tree-slide-presentation-profile= and =org-tree-slide-narrowing-control-profile= are also available.
 
@@ -150,7 +150,7 @@ If you like this elisp, the following setting is more useful. Try it!
 
 =<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned to control org-tree-slide.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (when (require 'org-tree-slide nil t)
   (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
   (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
@@ -166,7 +166,7 @@ If you like this elisp, the following setting is more useful. Try it!
   (setq org-tree-slide-skip-outline-level 4)
   (org-tree-slide-narrowing-control-profile)
   (setq org-tree-slide-skip-done nil)))
-#+end_src
+#+END_SRC
 
 * 6. Functions
 
