@@ -121,7 +121,7 @@
   :type 'boolean
   :group 'org-tree-slide)
 
-(defcustom org-tree-slide-modeline-display nil
+(defcustom org-tree-slide-modeline-display 'outside
   "Specify how to display the slide number in mode line.
    'outside: shown in the mode line outside of lighter
    'lighter: shown in lighter (slow)
