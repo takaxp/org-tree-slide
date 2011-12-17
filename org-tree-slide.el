@@ -64,7 +64,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.5.0"
+(defconst org-tree-slide "2.5.1"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -116,7 +116,7 @@
   :type 'boolean
   :group 'org-tree-slide)
 
-(defcustom org-tree-slide-skip-done t
+(defcustom org-tree-slide-skip-done nil
   "Specify to show TODO item only or not."
   :type 'boolean
   :group 'org-tree-slide)

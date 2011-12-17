@@ -1,3 +1,7 @@
+2011-12-17  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: org-tree-slide-skip-done set nil as default
+
 2011-12-12  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Remove auto-play function (TBD)
