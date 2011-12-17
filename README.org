@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@20:49
+#+Last Update: 2011-12-17@21:23
 
 * 1. What's this?
 
@@ -178,7 +178,7 @@ If you like this elisp, the following setting is more useful. Try it!
 
 ** Startup options
 
-These function will toggle =org-tree-slide-mode= ON, automatically.
+These functions will toggle =org-tree-slide-mode= ON, automatically.
 
   - org-tree-slide-without-init-play
   - org-tree-slide-play-with-timer
