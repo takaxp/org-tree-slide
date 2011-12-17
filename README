@@ -1,0 +1,139 @@
+#    -*- mode: org -*-
+#+TITLE:	README for Org Tree Slide
+#+AUTHOR:	Takaaki Ishikawa
+#+EMAIL:	takaxp@ieee.org
+#+STARTUP:	content
+
+* What's this
+
+This emacs lisp is a minor mode for Emacs Org-mode. The main purpose of this elisp is to handle each tree in a org buffer as a slide by simple narrowing.
+
+* Install
+
+1. Put this elisp into your load-path
+2. Add (require 'org-tree-slide) in your .emacs
+
+OR
+
+1. Eval: (auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")
+2. Add (require 'org-tree-slide) in your .emacs
+
+** Requirements
+  - Org-mode 6.33x or higher version is required.
+  - This elisp doesn't require any additional packages.
+* Recommended settings
+
+Aissign single key to org-tree-slide-mode is recommended.
+
+#+begin_src emacs lisp
+(global-set-key (kbd "<f8>") 'org-tree-slide-mode)
+(global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
+#+end_src
+
+OR
+
+#+begin_src emacs lisp
+(define-key org-mode-map (kbd "<f8>") 'org-tree-slide-mode)
+(define-key org-mode-map (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
+#+end_src
+
+* Profiles
+
+Three useful profiles are available. Please choise a profile which is the most closing your use.
+
+If you select `simple' profile, first of all, toggle org-tree-slide-mode and call a fuction to set this profile. 
+
+#+begin_src emacs lisp
+M-x org-tree-slide-simple-profile
+#+end_src
+
+If you want to use this setting as the default, please put a setting including recommended settings into your `.emacs'.
+
+#+begin_src emacs lisp
+(when (require 'org-tree-slide nil t)
+  (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
+  (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
+  (org-tree-slide-simple-profile))
+#+end_src
+
+`org-tree-slide-presentation-profile' and `org-tree-slide-narrowing-control-profile' are also available.
+
+** `Simple'
+
+ => M-x `org-tree-slide-simple-profile'
+
+    1. No header display
+    2. No slide-in effect
+    3. The cursor will move to the head of buffer when exit
+    4. No slide number display in mode line
+    5. Display every type of tree
+
+** `Presentation'
+
+ => M-x `org-tree-slide-presentation-profile'
+
+    1. Display header
+    2. Enable slide-in effect
+    3. The cursor will move to the head of buffer when exit
+    4. Display slide number in mode line
+    5. Display every type of tree
+
+** `TODO Pursuit with narrowing'
+
+ => M-x `org-tree-slide-narrowing-control-profile'
+
+    1. No header display
+    2. No slide-in effect
+    3. The cursor will keep the same position when exit
+    4. Display slide number in mode line
+    5. Display TODO trees only
+
+* User variables
+
+|-------------------------------------+---------------|
+| Variable                            | Default value |
+|-------------------------------------+---------------|
+| org-tree-slide-skip-outline-level   | 0             |
+| org-tree-slide-header               | t             |
+| org-tree-slide-slide-in-effect      | t             |
+| org-tree-slide-slide-in-brank-lines | 10            |
+| org-tree-slide-slide-in-waiting     | 0.02          |
+| org-tree-slide-cursor-init          | t             |
+| org-tree-slide-heading-emphasis     | nil           |
+| org-tree-slide-skip-done            | nil           |
+| org-tree-slide-modeline-display     | nil           |
+|-------------------------------------+---------------|
+
+* History
+
+see also ChangeLog
+
+|---------+------------------+-----------------------------------------------|
+| Version | Date             | Description                                   |
+|---------+------------------+-----------------------------------------------|
+| v2.5.1  | 2011-12-17@13:34 | org-tree-slide-skip-done set nil as default   |
+| v2.5.0  | 2011-12-12@18:16 | Remove auto-play function (TBD)               |
+| v2.4.1  | 2011-12-09@11:46 | Add an option to control mode line display    |
+| v2.4.0  | 2011-12-08@10:51 | Support TODO pursuit in a slideshow           |
+| v2.3.2  | 2011-12-08@09:22 | Reduce redundant processing                   |
+| v2.3.1  | 2011-12-07@20:30 | Add a new profile to control narrowing status |
+| v2.3.0  | 2011-12-07@16:17 | Support displaying a slide number             |
+| v2.2.0  | 2011-12-07@02:15 | Support minor mode                            |
+| v2.1.7  | 2011-12-06@00:26 | Support TITLE/AUTHOR/EMAIL in a header        |
+| v2.1.5  | 2011-12-05@17:08 | Fix an issue of title display                 |
+| v2.1.3  | 2011-12-05@15:08 | Fix the end of slide for skip control         |
+| v2.1.1  | 2011-12-05@11:08 | Add skip control by heading level             |
+| v2.0.1  | 2011-12-02@18:29 | Change function names, ots- is introduced.    |
+| v2.0.0  | 2011-12-01@17:41 | Add profiles and support org 6.33x            |
+| v1.2.5  | 2011-10-31@18:34 | Add CONTENT view to see all the subtrees.     |
+| v1.2.3  | 2011-10-30@20:42 | Add a variable to control slide-in duration   |
+| v1.2.1  | 2011-10-30@16:10 | Add slide-in visual effect                    |
+| v1.1.1  | 2011-10-28@16:16 | Add functions to start and stop slide view    |
+| v1.0.0  | 2011-09-28@20:59 | Release the initial version                   |
+|---------+------------------+-----------------------------------------------|
+
+* Contact
+
+The author is Takaaki ISHIKAWA (takaxp@ieee.org).
+Feel free to email me or use a mention of twitter (@takaxp)
+
