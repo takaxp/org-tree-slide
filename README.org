@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@20:44
+#+Last Update: 2011-12-17@20:45
 
 * 1. What's this?
 
@@ -123,7 +123,6 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 * 5. User variables
 
-|---+-------------------------------------+---------------+---------|
 |   | Variable                            | Default value | Select  |
 |---+-------------------------------------+---------------+---------|
 | 1 | org-tree-slide-skip-outline-level   | 0             | Numeric |
@@ -135,7 +134,7 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 7 | org-tree-slide-heading-emphasis     | nil           | Boolean |
 | 8 | org-tree-slide-skip-done            | nil           | Boolean |
 | 9 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
-|---+-------------------------------------+---------------+---------|
+
 
 #+begin_src org
 [*1] ={ nil| 'lighter | 'outside }=
