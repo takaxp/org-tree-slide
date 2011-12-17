@@ -64,7 +64,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.5.1"
+(defconst org-tree-slide "2.5.2"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
