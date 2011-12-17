@@ -8,6 +8,10 @@
 
 This emacs lisp is a minor mode for Emacs Org-mode. The main purpose of this elisp is to handle each tree in a org buffer as a slide by simple narrowing.
 
+** Related packages
+
+see [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]].
+
 * Install
 
 1. Put this elisp into your load-path

@@ -94,16 +94,16 @@
   :type 'boolean
   :group 'org-tree-slide)
 
-(defcustom org-tree-slide-slide-in-brank-lines 10
-  "Specify the number of brank lines, the slide will move from this line."
-  :type 'integer
-  :group 'org-tree-slide)
-
 (defcustom org-tree-slide-cursor-init t
   "Specify a cursor position when exit slideshow.
   `t': the cursor will move automatically to the head of buffer.
   nil: keep the same position."
   :type 'boolean
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-slide-in-brank-lines 10
+  "Specify the number of brank lines, the slide will move from this line."
+  :type 'integer
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-slide-in-waiting 0.02
