@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-17@20:47
+#+Last Update: 2011-12-17@20:49
 
 * 1. What's this?
 
@@ -138,10 +138,10 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 
 #+BEGIN_SRC
-[*1] ={ nil| 'lighter | 'outside }=
-   'outside: shown in the mode line outside of lighter
-   'lighter: shown in lighter (slow)
-   nil: nothing to be shown"
+[*1] { nil| 'lighter | 'outside }
+  'outside: shown in the mode line outside of lighter
+  'lighter: shown in lighter (slow)
+       nil: nothing to be shown"
 #+END_SRC
 
 ** 5-1. Useful settings for experts
