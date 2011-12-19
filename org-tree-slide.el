@@ -132,6 +132,7 @@
 (defvar org-tree-slide-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x s c") 'org-tree-slide-content)
+    (define-key map (kbd "C-x s r") 'org-tree-slide-resume)
     (define-key map (kbd "<left>") 'org-tree-slide-move-previous-tree)
     (define-key map (kbd "<right>") 'org-tree-slide-move-next-tree)
     map)
