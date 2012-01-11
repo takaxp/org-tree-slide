@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2012-01-11@23:02
+#+Last Update: 2012-01-11@23:05
 
 * 1. What's this?
 
@@ -41,10 +41,10 @@ If you are an [[https://github.com/dimitri/el-get][el-get]] user, please use thi
 
 #+BEGIN_SRC emacs-lisp
 (:name org-tree-slide
-       :description "A presentation tool for org-mode"
-       :type git
-       :url "git://github.com/takaxp/org-tree-slide.git"
-       :required nil)
+:description "A presentation tool for org-mode"
+:type git
+:url "git://github.com/takaxp/org-tree-slide.git"
+:required nil)
 #+END_SRC
 
 ** 2.1 Requirements
