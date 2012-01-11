@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2011-12-18@10:58
+#+Last Update: 2012-01-11@23:02
 
 * 1. What's this?
 
@@ -34,6 +34,18 @@ OR
 2. Add =(require 'org-tree-slide)= in your =.emacs=
 
 Then open an org file, just type =<right>= and =<left>=. A presentation will begin with a header, slide-in effect, and slide number.
+
+** el-get recipe
+
+If you are an [[https://github.com/dimitri/el-get][el-get]] user, please use this recipe.
+
+#+BEGIN_SRC emacs-lisp
+(:name org-tree-slide
+       :description "A presentation tool for org-mode"
+       :type git
+       :url "git://github.com/takaxp/org-tree-slide.git"
+       :required nil)
+#+END_SRC
 
 ** 2.1 Requirements
   - Org-mode 6.33x or higher version is required.
@@ -91,7 +103,7 @@ Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
 
 This profile is used as the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line. A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
 
-If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headers will be shown like a Table Of Content. Find a heading that you want to show, and type =<right>=, the presentation will be resumed.
+If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown like a Table Of Content. Find a heading that you want to show, and type =<right>=, the presentation will be resumed.
 
 It is possible to skip slides when a heading level is higher than or equal to a  value of =org-tree-slide-skip-outline-level=. see User variables.
 
@@ -203,6 +215,7 @@ see also ChangeLog
 |---------+------------------+-----------------------------------------------|
 | Version | Date             | Description                                   |
 |---------+------------------+-----------------------------------------------|
+| v2.5.4  | 2012-01-11@23:02 | Add autoload magic comments                   |
 | v2.5.3  | 2011-12-18@00:50 | Fix a bug for an org buffer without header    |
 | v2.5.2  | 2011-12-17@17:52 | Set presentation profile as the default       |
 | v2.5.1  | 2011-12-17@13:34 | org-tree-slide-skip-done set nil as default   |

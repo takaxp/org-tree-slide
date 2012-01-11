@@ -64,7 +64,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.5.3"
+(defconst org-tree-slide "2.5.4"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -160,6 +160,8 @@
 
 (defvar org-tree-slide-mode-hook nil)
 (defvar display-tree-slide-string nil)
+
+;;;###autoload
 (define-minor-mode org-tree-slide-mode
   "A presentation tool for org-mode.
 
@@ -213,15 +215,7 @@ Profiles:
 	(run-hooks 'org-mode-slide-mode-hook))
     (ots-abort)))
 
-(defvar ots-slide-number " TSlide")
-(defun ots-update-modeline ()
-  (cond ((equal org-tree-slide-modeline-display 'lighter)
-	 (if (and (ots-active-p) (org-on-heading-p))
-	     (setq ots-slide-number (format " %s" (ots-count-slide (point))))
-	   ots-slide-number))
-	((equal org-tree-slide-modeline-display 'outside) "")
-	(t " TSlide")))
-
+;;;###autoload
 (defun org-tree-slide-play-with-timer ()
   "Start slideshow with setting a count down timer."
   (interactive)
@@ -229,6 +223,7 @@ Profiles:
   (unless (ots-active-p)
     (org-tree-slide-mode)))
 
+;;;###autoload
 (defun org-tree-slide-without-init-play ()
   "Start slideshow without the init play. Just enter org-tree-slide-mode."
   (interactive)
@@ -237,6 +232,7 @@ Profiles:
   (org-overview)  
   (goto-char 1))
 
+;;;###autoload
 (defun org-tree-slide-content ()
   "Change the display for viewing content of the org file during
    the slide view mode is active."
@@ -248,6 +244,7 @@ Profiles:
     (org-content)
     (message "<<  CONTENT  >>")))
 
+;;;###autoload
 (defun org-tree-slide-simple-profile ()
   "Set variables for simple use.
   `org-tree-slide-header'            => nil
@@ -266,6 +263,7 @@ Profiles:
   (setq org-tree-slide-skip-done nil)
   (message "simple profile: ON"))
 
+;;;###autoload
 (defun org-tree-slide-presentation-profile ()
   "Set variables for presentation use.
   `org-tree-slide-header'            => t
@@ -284,6 +282,7 @@ Profiles:
   (setq org-tree-slide-skip-done nil)
   (message "presentation profile: ON"))
 
+;;;###autoload
 (defun org-tree-slide-narrowing-control-profile ()
   "Set variables for TODO pursuit with narrowing.
   `org-tree-slide-header'            => nil
@@ -302,6 +301,7 @@ Profiles:
   (setq org-tree-slide-skip-done t)
   (message "narrowing control profile: ON"))
 
+;;;###autoload
 (defun org-tree-slide-display-header-toggle ()
   "Toggle displaying the slide header"
   (interactive)
@@ -310,18 +310,21 @@ Profiles:
     (ots-hide-slide-header))
   (ots-display-tree-with-narrow))
 
+;;;###autoload
 (defun org-tree-slide-slide-in-effect-toggle ()
   "Toggle using slide-in effect"
   (interactive)
   (setq org-tree-slide-slide-in-effect (not org-tree-slide-slide-in-effect))
   (ots-display-tree-with-narrow))
 
+;;;###autoload
 (defun org-tree-slide-heading-emphasis-toggle ()
   "Toggle applying emphasis to heading"
   (interactive)
   (setq org-tree-slide-heading-emphasis (not org-tree-slide-heading-emphasis))
   (ots-apply-custom-heading-face org-tree-slide-heading-emphasis))
 
+;;;###autoload
 (defun org-tree-slide-skip-done-toggle ()
   "Toggle show TODO item only or not"
   (interactive)
@@ -375,6 +378,15 @@ Profiles:
 
 
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar ots-slide-number " TSlide")
+(defun ots-update-modeline ()
+  (cond ((equal org-tree-slide-modeline-display 'lighter)
+	 (if (and (ots-active-p) (org-on-heading-p))
+	     (setq ots-slide-number (format " %s" (ots-count-slide (point))))
+	   ots-slide-number))
+	((equal org-tree-slide-modeline-display 'outside) "")
+	(t " TSlide")))
+
 (defvar ots-header-overlay nil
   "Flag to check the status of overlay for a slide header.")
 
