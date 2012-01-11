@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2012-01-11@23:05
+#+Last Update: 2012-01-11@23:06
 
 * 1. What's this?
 
@@ -40,11 +40,7 @@ Then open an org file, just type =<right>= and =<left>=. A presentation will beg
 If you are an [[https://github.com/dimitri/el-get][el-get]] user, please use this recipe.
 
 #+BEGIN_SRC emacs-lisp
-(:name org-tree-slide
-:description "A presentation tool for org-mode"
-:type git
-:url "git://github.com/takaxp/org-tree-slide.git"
-:required nil)
+(:name org-tree-slide :description "A presentation tool for org-mode" :type git :url "git://github.com/takaxp/org-tree-slide.git" :required nil)
 #+END_SRC
 
 ** 2.1 Requirements
