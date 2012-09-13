@@ -533,15 +533,22 @@ Profiles:
   (set header-variable
        (if (re-search-forward regexp limit t) (match-string 1) nil)))
 
+(defface org-tree-slide-header-overlay-face
+  '((((class color) (background dark))
+     (:bold t :foreground "white" :background "black"))
+    (((class color) (background light))
+     (:bold t :foreground "black" :background "white"))
+    (t (:bold t :foreground "black" :background "white")))
+  "Face for ots-header-overlay")
+
 (defun ots-set-slide-header (brank-lines)
   (ots-hide-slide-header)
   (setq ots-header-overlay
 	(make-overlay (point-min) (+ 1 (point-min))))
   (overlay-put ots-header-overlay 'after-string " ")
   (overlay-put ots-header-overlay
-	       'face
-	       '((foreground-color . "#696969")
-		 (background-color . "#FFFFFF") bold))
+               'face
+               'org-tree-slide-header-overlay-face)
   (if org-tree-slide-header
       (overlay-put ots-header-overlay 'display
 		   (concat "  [ " 
