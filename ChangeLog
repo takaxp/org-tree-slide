@@ -1,3 +1,8 @@
+2012-11-21  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Support dark color theme (by @uk-ar)
+	Thanks to ARISAWA-san.
+
 2012-01-11  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Add autoload magic comments

@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2012-01-11@23:06
+#+Last Update: 2012-11-21@02:16
 
 * 1. What's this?
 
@@ -145,12 +145,12 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 9 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
 
 
-#+BEGIN_SRC
+#+BEGIN_QUOTE
 [*1] { nil| 'lighter | 'outside }
   'outside: shown in the mode line outside of lighter
   'lighter: shown in lighter (slow)
        nil: nothing to be shown"
-#+END_SRC
+#+END_QUOTE
 
 ** 5-1. Useful settings for experts
 
@@ -211,6 +211,7 @@ see also ChangeLog
 |---------+------------------+-----------------------------------------------|
 | Version | Date             | Description                                   |
 |---------+------------------+-----------------------------------------------|
+| v2.6.0  | 2012-11-21@02:14 | Support dark color theme (by @uk-ar)          |
 | v2.5.4  | 2012-01-11@23:02 | Add autoload magic comments                   |
 | v2.5.3  | 2011-12-18@00:50 | Fix a bug for an org buffer without header    |
 | v2.5.2  | 2011-12-17@17:52 | Set presentation profile as the default       |

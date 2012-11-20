@@ -8,6 +8,8 @@
 ;; Repository: https://github.com/takaxp/org-tree-slide
 ;; Keywords: org-mode, presentation, narrowing
 ;;
+;; Committer: Yuuki ARISAWA (@uk-ar)
+;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 3 of the License, or
@@ -64,7 +66,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.5.4"
+(defconst org-tree-slide "2.6.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
