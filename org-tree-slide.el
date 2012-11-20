@@ -337,12 +337,12 @@ Profiles:
   (interactive)
   (when (ots-active-p)
     (message "   Next >>")
-    (cond ((or (and (ots-before-first-heading-p) (not (org-on-heading-p)))
+    (cond ((or (and (ots-before-first-heading-p) (not (org-at-heading-p)))
 	       ;; support single top level tree
 	       ;; FIXME: no header org buffer + CONTENT view is not supported
 	       (and (= (point-at-bol) 1) (not (ots-narrowing-p))))
 	   (ots-outline-next-heading))
-	  ((or (ots-first-heading-with-narrow-p) (not (org-on-heading-p)))
+	  ((or (ots-first-heading-with-narrow-p) (not (org-at-heading-p)))
 	   (hide-subtree)
 	   (widen)
 	   (ots-outline-next-heading))
@@ -363,7 +363,7 @@ Profiles:
     (ots-hide-slide-header)		; for at the first heading
     (cond ((ots-before-first-heading-p)
 	   (message "The first slide!"))
-	  ((not (org-on-heading-p))
+	  ((not (org-at-heading-p))
 	   (ots-outline-previous-heading)
 	   (ots-outline-previous-heading))
 	  (t (ots-outline-previous-heading)))
@@ -381,7 +381,7 @@ Profiles:
 (defvar ots-slide-number " TSlide")
 (defun ots-update-modeline ()
   (cond ((equal org-tree-slide-modeline-display 'lighter)
-	 (if (and (ots-active-p) (org-on-heading-p))
+	 (if (and (ots-active-p) (org-at-heading-p))
 	     (setq ots-slide-number (format " %s" (ots-count-slide (point))))
 	   ots-slide-number))
 	((equal org-tree-slide-modeline-display 'outside) "")
