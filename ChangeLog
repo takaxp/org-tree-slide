@@ -1,3 +1,7 @@
+2013-01-27  Takaaki ISHIKAWA  <takax@ieee.org>
+
+	* org-tree-slide.el: Added hooks for start and stop presentation
+
 2012-11-21  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Support dark color theme (by @uk-ar)

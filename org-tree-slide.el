@@ -1,6 +1,6 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2013 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
@@ -66,7 +66,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.6.0"
+(defconst org-tree-slide "2.6.2"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -160,7 +160,11 @@
   "Level 3."
   :group 'org-tree-slide)
 
-(defvar org-tree-slide-mode-hook nil)
+(defvar org-tree-slide-mode nil)
+(defvar org-tree-slide-mode-play-hook nil
+  "A hook run when ots-play is evaluated to start the slide show")
+(defvar org-tree-slide-mode-stop-hook nil
+  "A hook run when ots-stop is evaluated to stop the slide show")
 (defvar display-tree-slide-string nil)
 
 ;;;###autoload
@@ -212,9 +216,7 @@ Profiles:
   (setq display-tree-slide-string "")
   (or global-mode-string (setq global-mode-string '("")))
   (if org-tree-slide-mode
-      (progn
-	(ots-setup)
-	(run-hooks 'org-mode-slide-mode-hook))
+      (ots-setup)
     (ots-abort)))
 
 ;;;###autoload
@@ -382,12 +384,13 @@ Profiles:
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar ots-slide-number " TSlide")
 (defun ots-update-modeline ()
-  (cond ((equal org-tree-slide-modeline-display 'lighter)
-	 (if (and (ots-active-p) (org-at-heading-p))
-	     (setq ots-slide-number (format " %s" (ots-count-slide (point))))
-	   ots-slide-number))
-	((equal org-tree-slide-modeline-display 'outside) "")
-	(t " TSlide")))
+  (when (equal major-mode 'org-mode)
+    (cond ((equal org-tree-slide-modeline-display 'lighter)
+	   (if (and (ots-active-p) (org-at-heading-p))
+	       (setq ots-slide-number (format " %s" (ots-count-slide (point))))
+	     ots-slide-number))
+	  ((equal org-tree-slide-modeline-display 'outside) "")
+	  (t " TSlide"))))
 
 (defvar ots-header-overlay nil
   "Flag to check the status of overlay for a slide header.")
@@ -405,6 +408,7 @@ Profiles:
 
 (defun ots-play ()
   "Start slide view with the first tree of the org-mode buffer."
+  (run-hooks 'org-tree-slide-mode-play-hook)
   (ots-apply-local-header-to-slide-header)
   (when org-tree-slide-heading-emphasis
     (ots-apply-custom-heading-face t))
@@ -435,6 +439,7 @@ Profiles:
     (when (org-clocking-p)
       ;; (org-clock-out)
       ))
+  (run-hooks 'org-tree-slide-mode-stop-hook)
   (message "Quit, Bye!"))
 
 (defun ots-display-tree-with-narrow ()
