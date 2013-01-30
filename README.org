@@ -37,11 +37,9 @@ Then open an org file, just type =<right>= and =<left>=. A presentation will beg
 
 ** el-get recipe
 
-If you are an [[https://github.com/dimitri/el-get][el-get]] user, please use this recipe.
+If you are an [[https://github.com/dimitri/el-get][el-get]] user, just do
 
-#+BEGIN_SRC emacs-lisp
-(:name org-tree-slide :description "A presentation tool for org-mode" :type git :url "git://github.com/takaxp/org-tree-slide.git" :required nil)
-#+END_SRC
+: M-x el-get-install RET org-tree-slide
 
 ** 2.1 Requirements
   - Org-mode 6.33x or higher version is required.
