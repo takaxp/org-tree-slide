@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2013-01-27@22:39
+#+Last Update: 2013-02-12@01:44
 
 * 1. What's this?
 
@@ -214,6 +214,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.6.4  | 2013-02-12@01:43 | Added some features (issue #2, #5, and #7)      |
 | v2.6.2  | 2013-01-27@21:21 | Added hooks for start and stop the presentation |
 | v2.6.0  | 2012-11-21@02:14 | Support dark color theme (by @uk-ar)            |
 | v2.5.4  | 2012-01-11@23:02 | Add autoload magic comments                     |

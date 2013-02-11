@@ -67,7 +67,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.6.3"
+(defconst org-tree-slide "2.6.4"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -122,6 +122,23 @@
 (defcustom org-tree-slide-skip-done nil
   "Specify to show TODO item only or not."
   :type 'boolean
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-skip-comments t
+  "Specify to skip COMMENT item or not."
+  :type 'boolean
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-activate-message
+  "Hello! This is org-tree-slide :-)"
+  "Message in mini buffer when org-tree-slide is activated."
+  :type 'string
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-deactivate-message
+  "Quit, Bye!"
+  "Message in mini buffer when org-tree-slide is deactivated."
+  :type 'string
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-modeline-display 'outside
@@ -416,7 +433,8 @@ Profiles:
   (when (or org-tree-slide-cursor-init (ots-before-first-heading-p))
     (ots-move-to-the-first-heading))
   (ots-display-tree-with-narrow)
-  (message "Hello! This is org-tree-slide :-)"))
+  (when org-tree-slide-activate-message
+    (message "%s" org-tree-slide-activate-message)))
 
 (defun ots-stop ()
   "Stop the slide view, and redraw the org-mode buffer with #+STARTUP:."
@@ -441,7 +459,8 @@ Profiles:
       ;; (org-clock-out)
       ))
   (run-hooks 'org-tree-slide-mode-stop-hook)
-  (message "Quit, Bye!"))
+  (when org-tree-slide-deactivate-message
+    (message "%s" org-tree-slide-deactivate-message)))
 
 (defun ots-display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
@@ -497,6 +516,8 @@ Profiles:
 	       (looking-at
 		;; 6.33x does NOT suport org-outline-regexp-bol 
 		(concat "^\\*+ " org-not-done-regexp))) 'skip))
+	((and org-tree-slide-skip-comments
+	      (looking-at (concat "^\\*+ " org-comment-string))) 'skip)
 	(t nil)))
 
 (defun ots-slide-in (brank-lines)
@@ -597,13 +618,12 @@ Profiles:
   (cond (status
 	 (custom-set-faces
 	  '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
-	  '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3)))))
-	 (message "Face: ON"))
+	  '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))))
 	(t
 	 (custom-set-faces
 	  '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
 	  '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
-	 (message "Face: OFF"))))
+	 )))
 
 (defun ots-count-slide (target-point)
   (save-excursion

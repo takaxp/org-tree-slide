@@ -1,3 +1,11 @@
+2013-02-12  Takaaki ISHIKAWA  <takax@ieee.org>
+
+	* org-tree-slide.el: Issues #2, #5, #7
+	- Added org-tree-slide-skip-comments to skip a tree with COMMENT (#5)
+	- Remove brackets from title (#7)
+	- Added org-tree-slide-activate-message and
+	  org-tree-slide-deactivate-message to specify messages in mini-buffer (#2)
+
 2013-01-27  Takaaki ISHIKAWA  <takax@ieee.org>
 
 	* org-tree-slide.el: Added hooks for start and stop presentation
