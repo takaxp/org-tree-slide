@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2013-02-19@11:34
+#+Last Update: 2013-02-19@12:15
 
 * 1. What's this?
 
@@ -145,7 +145,6 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 10 | org-tree-slide-skip-comments        | t             | Boolean |
 | 11 | org-tree-slide-activate-message     | Hello...      | String  |
 | 12 | org-tree-slide-deactivate-message   | Quit, Bye!    | String  |
-|----+-------------------------------------+---------------+---------|
 
 #+BEGIN_QUOTE
 [*1] { nil| 'lighter | 'outside }

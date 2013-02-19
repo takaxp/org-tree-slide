@@ -644,7 +644,7 @@ Profiles:
     (delete-overlay ots-header-overlay)))
 
 (defvar ots-all-skipped t
-  "A flag to know if all trees are skpped")
+  "A flag to know if all trees are skipped")
 
 (defun ots-move-to-the-first-heading ()
   (setq ots-all-skipped t)
