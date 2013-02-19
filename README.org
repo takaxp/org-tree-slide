@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2013-02-19@12:15
+#+Last Update: 2013-02-19@12:50
 
 * 1. What's this?
 
@@ -218,6 +218,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.6.8  | 2013-02-19@12:49 | Added a flag to control face setting            |
 | v2.6.6  | 2013-02-19@11:22 | Added a new toggle to skip commented trees      |
 | v2.6.4  | 2013-02-12@01:43 | Added some features (issue #2, #5, and #7)      |
 | v2.6.2  | 2013-01-27@21:21 | Added hooks for start and stop the presentation |

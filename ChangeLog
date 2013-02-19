@@ -1,5 +1,8 @@
 2013-02-19  Takaaki ISHIKAWA  <takax@ieee.org>
 
+	* org-tree-slide.el (org-tree-slide-never-touch-face): Added a flag
+	If this flag is `t', face settings wil NOT be touched.
+
 	* org-tree-slide.el: support all trees are skipped
 	- ots-move-to-the-first-heading
 	- ots-all-skipped, as a flag

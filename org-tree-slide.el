@@ -67,7 +67,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.6.6"
+(defconst org-tree-slide "2.6.8"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -116,6 +116,11 @@
 
 (defcustom org-tree-slide-heading-emphasis nil
   "Specify to use a custom face heading, or not"
+  :type 'boolean
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-never-touch-face nil
+  "If t, do NOT touch any face setting."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -469,7 +474,8 @@ Profiles:
 	  (t nil)))
   (ots-hide-slide-header)
   (org-timer-stop)
-  (ots-apply-custom-heading-face nil)
+  (when org-tree-slide-heading-emphasis
+    (ots-apply-custom-heading-face nil))
   (when (and org-tree-slide-skip-done
 	     (looking-at (concat "^\\*+ " org-not-done-regexp)))
     (when (org-clocking-p)
@@ -658,15 +664,16 @@ Profiles:
 
 (defun ots-apply-custom-heading-face (status)
   "Change status of heading face."
-  (cond (status
-	 (custom-set-faces
-	  '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
-	  '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))))
-	(t
-	 (custom-set-faces
-	  '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
-	  '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
-	 )))
+  (unless org-tree-slide-never-touch-face
+    (cond (status
+	   (custom-set-faces
+	    '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
+	    '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))))
+	  (t
+	   (custom-set-faces
+	    '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
+	    '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
+	   ))))
 
 (defun ots-count-slide (target-point)
   (save-excursion
