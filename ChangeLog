@@ -1,7 +1,25 @@
+2013-02-19  Takaaki ISHIKAWA  <takax@ieee.org>
+
+	* org-tree-slide.el: support all trees are skipped
+	- ots-move-to-the-first-heading
+	- ots-all-skipped, as a flag
+	- ots-heading-skip-p
+	  - ots-heading-level-skip-p
+	  - ots-heading-done-skip-p
+	  - ots-heading-skip-comment-p
+	- ots-outline-select-method: [-/-] will be shown in mode line
+
+	* org-tree-slide.el (ots-count-slide): remove unused code
+
+2013-02-17  Takaaki ISHIKAWA  <takax@ieee.org>
+
+	* org-tree-slide.el (org-tree-slide-skip-comments-toggle): Added a toggle
+
 2013-02-12  Takaaki ISHIKAWA  <takax@ieee.org>
 
 	* org-tree-slide.el: Issues #2, #5, #7
 	- Added org-tree-slide-skip-comments to skip a tree with COMMENT (#5)
+	Thanks to Eric S Fraga
 	- Remove brackets from title (#7)
 	- Added org-tree-slide-activate-message and
 	  org-tree-slide-deactivate-message to specify messages in mini-buffer (#2)

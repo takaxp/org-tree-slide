@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+STARTUP:	content
-#+Last Update: 2013-02-12@01:44
+#+Last Update: 2013-02-19@11:34
 
 * 1. What's this?
 
@@ -44,6 +44,7 @@ If you are an [[https://github.com/dimitri/el-get][el-get]] user, just do
 ** 2.1 Requirements
   - Org-mode 6.33x or higher version is required.
   - This elisp doesn't require any additional packages.
+
 * 3. Recommended settings
 
 Assigning a single key to =org-tree-slide-mode= is recommended.
@@ -91,7 +92,7 @@ Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
     2. No slide-in effect
     3. The cursor will move to the head of the buffer when exit
     4. No slide number display in mode line
-    5. Display every type of tree
+    5. Display every type of tree except =org-comment-string= (e.g. COMMENT)
 
 ** 4-2. `Presentation'
 
@@ -109,7 +110,7 @@ To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the he
     2. Enable slide-in effect
     3. The cursor will move to the head of buffer when exit
     4. Display slide number in mode line
-    5. Display every type of tree
+    5. Display every type of tree except =org-comment-string= (e.g. COMMENT)
 
 ** 4-3. `TODO Pursuit with narrowing'
 
@@ -125,23 +126,26 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
     2. No slide-in effect
     3. The cursor will keep the same position when exit
     4. Display slide number in mode line
-    5. Display TODO trees only
+    5. Display TODO trees only except =org-comment-string= (e.g. COMMENT)
 
 * 5. User variables
 
-|---+-------------------------------------+---------------+---------|
-|   | Variable                            | Default value | Select  |
-|---+-------------------------------------+---------------+---------|
-| 1 | org-tree-slide-skip-outline-level   | 0             | Numeric |
-| 2 | org-tree-slide-header               | t             | Boolean |
-| 3 | org-tree-slide-slide-in-effect      | t             | Boolean |
-| 4 | org-tree-slide-slide-in-brank-lines | 10            | Numeric |
-| 5 | org-tree-slide-slide-in-waiting     | 0.02          | Float   |
-| 6 | org-tree-slide-cursor-init          | t             | Boolean |
-| 7 | org-tree-slide-heading-emphasis     | nil           | Boolean |
-| 8 | org-tree-slide-skip-done            | nil           | Boolean |
-| 9 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
-
+|----+-------------------------------------+---------------+---------|
+|    | Variable                            | Default value | Select  |
+|----+-------------------------------------+---------------+---------|
+|  1 | org-tree-slide-skip-outline-level   | 0             | Numeric |
+|  2 | org-tree-slide-header               | t             | Boolean |
+|  3 | org-tree-slide-slide-in-effect      | t             | Boolean |
+|  4 | org-tree-slide-slide-in-brank-lines | 10            | Numeric |
+|  5 | org-tree-slide-slide-in-waiting     | 0.02          | Float   |
+|  6 | org-tree-slide-cursor-init          | t             | Boolean |
+|  7 | org-tree-slide-heading-emphasis     | nil           | Boolean |
+|  8 | org-tree-slide-skip-done            | nil           | Boolean |
+|  9 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
+| 10 | org-tree-slide-skip-comments        | t             | Boolean |
+| 11 | org-tree-slide-activate-message     | Hello...      | String  |
+| 12 | org-tree-slide-deactivate-message   | Quit, Bye!    | String  |
+|----+-------------------------------------+---------------+---------|
 
 #+BEGIN_QUOTE
 [*1] { nil| 'lighter | 'outside }
@@ -194,6 +198,7 @@ These functions will toggle =org-tree-slide-mode= ON, automatically.
   - org-tree-slide-display-header-toggle
   - org-tree-slide-slide-in-effect-toggle
   - org-tree-slide-skip-done-toggle
+  - org-tree-slide-skip-comments-toggle
   - org-tree-slide-heading-emphasis-toggle
 
 ** Batch setting of user variables
@@ -214,6 +219,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.6.6  | 2013-02-19@11:22 | Added a new toggle to skip commented trees      |
 | v2.6.4  | 2013-02-12@01:43 | Added some features (issue #2, #5, and #7)      |
 | v2.6.2  | 2013-01-27@21:21 | Added hooks for start and stop the presentation |
 | v2.6.0  | 2012-11-21@02:14 | Support dark color theme (by @uk-ar)            |
