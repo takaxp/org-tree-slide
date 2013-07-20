@@ -1,3 +1,17 @@
+2013-07-21  Takaaki ISHIKAWA  <takax@ieee.org>
+
+	* org-tree-slide.el (ots-count-slide): Revised to distinguish status
+	[-/-]   ... before first heading and no headings in the buffer
+	[-/%d]  ... before first heading
+	[%d/%d] ... slides
+
+	* org-tree-slide.el: Support no headings
+	- org-tree-slide-move-next-tree and org-tree-slide-move-previous-tree
+	  - Removed hide-subtree to avoid an error
+	- ots-display-tree-with-narrow
+	  - ots-before-first-heading-p is used to wrap hide-subtree
+	  - (org-cycle-hide-drawers 'all) is disabled to speed up
+
 2013-02-19  Takaaki ISHIKAWA  <takax@ieee.org>
 
 	* org-tree-slide.el (org-tree-slide-never-touch-face): Added a flag

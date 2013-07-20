@@ -67,7 +67,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.6.8"
+(defconst org-tree-slide "2.7.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -362,6 +362,8 @@ Profiles:
   "Toggle show TODO item only or not"
   (interactive)
   (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))
+  (setq ots-previous-line -1) ; to update modeline intentionally
+  (ots-update-modeline)
   (if org-tree-slide-skip-done
       (message "TODO Pursuit: ON") (message "TODO Pursuit: OFF")))
 
@@ -378,36 +380,34 @@ Profiles:
   (interactive)
   (when (ots-active-p)
     (message "   Next >>")
-    (cond ((or (and (ots-before-first-heading-p) (not (org-at-heading-p)))
-	       ;; support single top level tree
-	       ;; FIXME: no header org buffer + CONTENT view is not supported
-	       (and (= (point-at-bol) 1) (not (ots-narrowing-p))))
-	   (ots-outline-next-heading))
-	  ((or (ots-first-heading-with-narrow-p) (not (org-at-heading-p)))
-	   (hide-subtree)
-	   (widen)
-	   (ots-outline-next-heading))
-	  (t nil))
+    (cond
+     ((or
+       (or (and (ots-before-first-heading-p) (not (org-at-heading-p)))
+	   (and (= (point-at-bol) 1) (not (ots-narrowing-p))))
+       (or (ots-first-heading-with-narrow-p) (not (org-at-heading-p))))
+      (widen)
+      (ots-outline-next-heading))
+     ;; stay the same slide (for CONTENT MODE, on the subtrees)
+     (t nil))
     (when (and org-tree-slide-skip-done
 	       (looking-at (concat "^\\*+ " org-not-done-regexp)))
       ;; (org-clock-in)
       )
-     (ots-display-tree-with-narrow)))
+    (ots-display-tree-with-narrow)))
 
 (defun org-tree-slide-move-previous-tree ()
   "Display the previous slide"
   (interactive)
   (when (ots-active-p)
     (message "<< Previous")
-    (hide-subtree)
-    (widen)
     (ots-hide-slide-header)		; for at the first heading
-    (cond ((ots-before-first-heading-p)
-	   (message "The first slide!"))
-	  ((not (org-at-heading-p))
-	   (ots-outline-previous-heading)
-	   (ots-outline-previous-heading))
-	  (t (ots-outline-previous-heading)))
+    (widen)
+    (cond
+     ((ots-before-first-heading-p) (message "before first heading (ots)" ))
+     ((not (org-at-heading-p))
+      (ots-outline-previous-heading)
+      (ots-outline-previous-heading))
+     (t (ots-outline-previous-heading)))
     (when (and org-tree-slide-skip-done
 	       (looking-at (concat "^\\*+ " org-not-done-regexp)))
       ;; (org-clock-in)
@@ -417,17 +417,25 @@ Profiles:
     (if (= emacs-major-version 24)
 	(goto-char (point-min)))))
 
-
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar ots-slide-number " TSlide")
+(defvar ots-previous-line 0)
+
+(defun ots-line-number-at-pos ()
+  (save-excursion
+    (save-restriction
+      (widen)
+      (line-number-at-pos))))
+
 (defun ots-update-modeline ()
   (when (ots-active-p)
-    (cond ((equal org-tree-slide-modeline-display 'lighter)
-  	   (if (and (ots-active-p) (org-at-heading-p))
-  	       (setq ots-slide-number (format " %s" (ots-count-slide (point))))
-  	     ots-slide-number))
-  	  ((equal org-tree-slide-modeline-display 'outside) "")
-  	  (t " TSlide"))))
+    (cond
+     ((equal org-tree-slide-modeline-display 'lighter)
+      (setq ots-slide-number (format " %s" (ots-count-slide (point))))
+      (setq ots-previous-line (ots-line-number-at-pos))
+      ots-slide-number)
+     ((equal org-tree-slide-modeline-display 'outside) "")
+     (t " TSlide"))))
 
 (defvar ots-header-overlay nil
   "Flag to check the status of overlay for a slide header.")
@@ -457,6 +465,10 @@ Profiles:
   (ots-display-tree-with-narrow)
   (when org-tree-slide-activate-message
     (message "%s" org-tree-slide-activate-message)))
+
+(defvar org-tree-slide-startup "overview"
+  "If you have `#+STARTUP:' line in your org buffer, the org buffer will
+   be shown with corresponding status (content, showall, overview:default).")
 
 (defun ots-stop ()
   "Stop the slide view, and redraw the org-mode buffer with #+STARTUP:."
@@ -488,15 +500,13 @@ Profiles:
 (defun ots-display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
   (goto-char (point-at-bol))
-  (hide-subtree)			; support CONTENT (subtrees are shown)
-  (org-show-entry)
-  (show-children)
-  (org-cycle-hide-drawers 'all)
-  (org-narrow-to-subtree)
-  (setq display-tree-slide-string
-	(if (equal org-tree-slide-modeline-display 'outside)
-	    (ots-count-slide (point))
-	  ""))
+  (unless (ots-before-first-heading-p)
+    (hide-subtree)	; support CONTENT (subtrees are shown)
+    (org-show-entry)
+    (show-children)
+    ;;    (org-cycle-hide-drawers 'all) ; disabled due to performance reduction
+    (org-narrow-to-subtree))
+  (ots-update-modeline)
   (when org-tree-slide-slide-in-effect
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
@@ -516,12 +526,15 @@ Profiles:
     (org-outline-level))
    'previous))
 
+(defvar ots-all-skipped t
+  "A flag to know if all trees are skipped")
+
 (defun ots-outline-select-method (action direction)
   (cond ((and (equal action 'last) (equal direction 'next))
-	 (if ots-all-skipped (setq ots-slide-number " [-/-]")
+	 (unless ots-all-skipped
 	   (ots-outline-previous-heading)))  ; Return back.
 	((and (equal action 'first) (equal direction 'previous))
-	 (if ots-all-skipped (setq ots-slide-number " [-/-]")
+	 (unless ots-all-skipped
 	   (ots-move-to-the-first-heading))) ; Stay the first heading
 	((and (equal action 'skip) (equal direction 'next))
 	 (ots-outline-next-heading))      ; recursive call
@@ -581,10 +594,6 @@ Profiles:
 (defvar org-tree-slide-author nil
   "If you have `#+AUTHOR:' line in your org buffer, it will be used as
    a name of the slide author.")
-
-(defvar org-tree-slide-startup "overview"
-  "If you have `#+STARTUP:' line in your org buffer, the org buffer will
-   be shown with corresponding status (content, showall, overview:default).")
 
 (defun ots-apply-local-header-to-slide-header ()
   (save-excursion
@@ -649,13 +658,10 @@ Profiles:
   (when ots-header-overlay
     (delete-overlay ots-header-overlay)))
 
-(defvar ots-all-skipped t
-  "A flag to know if all trees are skipped")
-
 (defun ots-move-to-the-first-heading ()
   (setq ots-all-skipped t)
   (widen)
-  (goto-char 1)  
+  (goto-char 1)
   (unless (looking-at "^\\*+ ")
     (outline-next-heading))
   (when (ots-heading-skip-p)
@@ -675,23 +681,27 @@ Profiles:
 	    '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
 	   ))))
 
-(defun ots-count-slide (target-point)
+(defun ots-count-slide (&optional pos)
   (save-excursion
     (save-restriction
-      (ots-move-to-the-first-heading)	; include widen
-      (let
-	  ((count 0)
-	   (previous-point 0)
-	   (current-slide 0)
-	   (current-point (point)))
-	(while (/= current-point previous-point) ; convergence point
-	  (setq count (1+ count))
-	  (when (<= current-point target-point)
-	    (setq current-slide count))
-	  (setq previous-point current-point)
-	  (ots-outline-next-heading)    ; will skip flagged trees
-	  (setq current-point (point)))
-	(format "[%d/%d]" current-slide count)))))
+      (widen)
+      (goto-char (point-min))
+      (let ((count 0)
+	    (current-slide 0)
+	    (current-point (or pos (point))))
+	(when (and (looking-at "^\\*+ ") (not (ots-heading-skip-p)))
+	  (setq count 1)
+	  (setq current-slide 1))
+	(while (outline-next-heading)
+	  (when (not (ots-heading-skip-p))
+	    (setq count (1+ count))
+	    (when (>= current-point (point))
+	      (setq current-slide (1+ current-slide)))))
+	(cond
+	 ((= count 0) "[-/-]") ; no headings
+	 ((= current-slide 0) (format "[-/%d]" count)) ; before first heading
+	 (t
+	  (format "[%d/%d]" current-slide count)))))))
 
 (defun ots-active-p ()
   (and org-tree-slide-mode (equal major-mode 'org-mode)))
