@@ -268,7 +268,8 @@ Profiles:
     (ots-hide-slide-header)
     (ots-move-to-the-first-heading)
     (org-overview)
-    (org-content)
+    (org-content (if (> org-tree-slide-skip-outline-level 0)
+                     (1- org-tree-slide-skip-outline-level)))
     (message "<<  CONTENT  >>")))
 
 ;;;###autoload
