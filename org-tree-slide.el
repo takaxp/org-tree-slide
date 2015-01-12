@@ -487,7 +487,8 @@ Profiles:
 	   (org-cycle '(64)))
 	  (t nil)))
   (ots-hide-slide-header)
-  (org-timer-stop)
+  (when org-timer-start-time
+      (org-timer-stop))
   (when org-tree-slide-heading-emphasis
     (ots-apply-custom-heading-face nil))
   (when (and org-tree-slide-skip-done

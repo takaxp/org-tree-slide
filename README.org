@@ -2,7 +2,7 @@
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
 #+DATE:		2015-01-12
-#+UPDATE:	18:34:09
+#+UPDATE:	19:58:48
 #+STARTUP:	content
 
 * 1. What's this?
@@ -219,6 +219,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.7.2  | 2015-01-12@19:56 | Suppress an error message from org-timer        |
 | v2.7.1  | 2015-01-12@18:28 | Hide skipped slides when CONTENT mode           |
 | v2.7.0  | 2013-07-21@05:21 | Support buffers without headings                |
 | v2.6.8  | 2013-02-19@12:49 | Added a flag to control face setting            |

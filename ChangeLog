@@ -1,5 +1,8 @@
 2015-01-12  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
+	* org-tree-slide.el (ots-stop): Suppress an error message from org-timer
+    - When the presentation start without any timer setting, `org-timer-stop' reports an error "No timer running". Updated code supresses the report.
+
 	* org-tree-slide.el (org-tree-slide-content): Hide skipped slides when CONTENT mode
 	- Use `ots-skip-outline-level' in `ots-slide-content' (#8)
 	  Thanks to Eike Kettner
