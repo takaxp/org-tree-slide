@@ -1,8 +1,9 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
+#+DATE:		2015-01-12
+#+UPDATE:	18:34:09
 #+STARTUP:	content
-#+Last Update: 2013-07-21@05:21
 
 * 1. What's this?
 
@@ -98,7 +99,7 @@ Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
 
 This profile is used as the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line. A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
 
-If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown like a Table Of Content. Find a heading that you want to show, and type =<right>=, the presentation will be resumed.
+If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown like a Table Of Content except some headings configured as skipping by =org-tree-slide-slip-outline-level=. Find a heading that you want to show, and type =<right>=, the presentation will be resumed.
 
 It is possible to skip slides when a heading level is higher than or equal to a  value of =org-tree-slide-skip-outline-level=. see User variables.
 
@@ -218,6 +219,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.7.1  | 2015-01-12@18:28 | Hide skipped slides when CONTENT mode           |
 | v2.7.0  | 2013-07-21@05:21 | Support buffers without headings                |
 | v2.6.8  | 2013-02-19@12:49 | Added a flag to control face setting            |
 | v2.6.6  | 2013-02-19@11:22 | Added a new toggle to skip commented trees      |

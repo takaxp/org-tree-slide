@@ -1,6 +1,6 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2013 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2014 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
@@ -10,6 +10,7 @@
 ;;
 ;; Committers: Yuuki ARISAWA (@uk-ar)
 ;;             Eric S Fraga
+;;             Eike Kettner
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -67,7 +68,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.7.0"
+(defconst org-tree-slide "2.7.1"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
