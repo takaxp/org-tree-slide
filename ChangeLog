@@ -1,3 +1,12 @@
+2015-02-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide: Refine displaying slide number in modeline
+	- If 'lighter is specified, the slide number will be updated aggressively, then it's slow. On the other hand, 'outside is specified which will be shown quickly in the same position of 'lighter because it changes the number only if a slide is moved to the next/previous slide.
+
+	* org-tree-slide: Added two hooks
+	- org-tree-slide-mode-before-narrow-hook
+	- org-tree-slide-mode-after-narrow-hook
+
 2015-01-12  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (ots-stop): Suppress an error message from org-timer

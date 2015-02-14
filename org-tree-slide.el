@@ -1,6 +1,6 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2014 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2015 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
@@ -68,7 +68,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.7.1"
+(defconst org-tree-slide "2.7.4"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -149,8 +149,8 @@
 
 (defcustom org-tree-slide-modeline-display 'outside
   "Specify how to display the slide number in mode line.
-   'outside: shown in the mode line outside of lighter
-   'lighter: shown in lighter (slow)
+   'lighter: shown in lighter (update info actively, then it's slow)
+   'outside: update infomation when moving to the next/previous slide
    nil: nothing to be shown"
   :type 'symbol
   :group 'org-tree-slide)
@@ -189,7 +189,10 @@
   "A hook run when ots-play is evaluated to start the slide show")
 (defvar org-tree-slide-mode-stop-hook nil
   "A hook run when ots-stop is evaluated to stop the slide show")
-(defvar display-tree-slide-string nil)
+(defvar org-tree-slide-mode-before-narrow-hook nil
+  "A hook run before evaluating ots-display-tree-with-narrow")
+(defvar org-tree-slide-mode-after-narrow-hook nil
+  "A hook run after evaluating ots-display-tree-with-narrow")
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
@@ -237,8 +240,6 @@ Profiles:
   :keymap org-tree-slide-mode-map
   :group 'org-tree-slide
   :require 'org
-  (setq display-tree-slide-string "")
-  (or global-mode-string (setq global-mode-string '("")))
   (if org-tree-slide-mode
       (ots-setup)
     (ots-abort)))
@@ -365,7 +366,7 @@ Profiles:
   (interactive)
   (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))
   (setq ots-previous-line -1) ; to update modeline intentionally
-  (ots-update-modeline)
+  (ots-show-slide-header)
   (if org-tree-slide-skip-done
       (message "TODO Pursuit: ON") (message "TODO Pursuit: OFF")))
 
@@ -381,7 +382,8 @@ Profiles:
   "Display the next slide"
   (interactive)
   (when (ots-active-p)
-    (message "   Next >>")
+    (unless (equal org-tree-slide-modeline-display 'outside)
+      (message "   Next >>"))
     (cond
      ((or
        (or (and (ots-before-first-heading-p) (not (org-at-heading-p)))
@@ -401,7 +403,8 @@ Profiles:
   "Display the previous slide"
   (interactive)
   (when (ots-active-p)
-    (message "<< Previous")
+    (unless (equal org-tree-slide-modeline-display 'outside)
+      (message "<< Previous"))
     (ots-hide-slide-header)		; for at the first heading
     (widen)
     (cond
@@ -420,7 +423,9 @@ Profiles:
 	(goto-char (point-min)))))
 
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar ots-slide-number " TSlide")
+(defvar ots-slide-number nil)
+(make-variable-buffer-local 'ots-slide-number)
+(setq-default ots-slide-number " TSlide")
 (defvar ots-previous-line 0)
 
 (defun ots-line-number-at-pos ()
@@ -436,7 +441,8 @@ Profiles:
       (setq ots-slide-number (format " %s" (ots-count-slide (point))))
       (setq ots-previous-line (ots-line-number-at-pos))
       ots-slide-number)
-     ((equal org-tree-slide-modeline-display 'outside) "")
+     ;; just return the current ots-slide-number quickly.
+     ((equal org-tree-slide-modeline-display 'outside) ots-slide-number)
      (t " TSlide"))))
 
 (defvar ots-header-overlay nil
@@ -444,9 +450,6 @@ Profiles:
 
 (defun ots-setup ()
   (when (ots-active-p)
-    (or (memq 'display-tree-slide-string global-mode-string)
-	(setq global-mode-string
-	      (append global-mode-string '(display-tree-slide-string))))
     (ots-play)))
 
 (defun ots-abort ()
@@ -502,6 +505,10 @@ Profiles:
 
 (defun ots-display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
+  (run-hooks 'org-tree-slide-mode-before-narrow-hook)
+  (when (equal org-tree-slide-modeline-display 'outside)
+    (setq ots-slide-number (format " %s" (ots-count-slide (point))))
+    (setq ots-previous-line (ots-line-number-at-pos)))
   (goto-char (point-at-bol))
   (unless (ots-before-first-heading-p)
     (hide-subtree)	; support CONTENT (subtrees are shown)
@@ -509,11 +516,11 @@ Profiles:
     (show-children)
     ;;    (org-cycle-hide-drawers 'all) ; disabled due to performance reduction
     (org-narrow-to-subtree))
-  (ots-update-modeline)
   (when org-tree-slide-slide-in-effect
     (ots-slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
-    (ots-show-slide-header)))
+    (ots-show-slide-header))
+  (run-hooks 'org-tree-slide-mode-after-narrow-hook))
 
 (defun ots-outline-next-heading ()
   (ots-outline-select-method
