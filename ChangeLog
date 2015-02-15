@@ -1,3 +1,8 @@
+2015-02-15  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (org-tree-slide): Replace ots- with org-tree-slide--
+	- According to the Coding Conventions provided from gnu.org, the prefix for internal functions should be described with two hyphens to avoid name conflicts with other packages.
+
 2015-02-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide: Refine displaying slide number in modeline

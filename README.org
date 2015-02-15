@@ -1,8 +1,8 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
-#+DATE:		2015-02-14
-#+UPDATE:	23:48:25
+#+DATE:		2015-02-15
+#+UPDATE:	16:30:03
 #+STARTUP:	content
 
 * 1. What's this?
@@ -219,6 +219,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.7.5  | 2015-02-15@16:29 | Replace ots- with org-tree-slide--              |
 | v2.7.4  | 2015-02-14@23:30 | Refine displaying slide number in modeline      |
 | v2.7.2  | 2015-01-12@19:56 | Suppress an error message from org-timer        |
 | v2.7.1  | 2015-01-12@18:28 | Hide skipped slides when CONTENT mode           |
