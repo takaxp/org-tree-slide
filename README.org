@@ -18,7 +18,7 @@ Main features:
   - CONTENT view during a presentation
   - Slide-in effect
   - Slide header from org file's header
-  - Countdown timer (currently, not available)
+  - Countdown timer 
 
 ** 1-1. Related packages
 
