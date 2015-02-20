@@ -68,7 +68,7 @@
 (require 'org-timer)
 (require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.7.5"
+(defconst org-tree-slide "2.8.0"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -158,11 +158,11 @@
 (defvar org-tree-slide-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x s c") 'org-tree-slide-content)
-    (define-key map (kbd "C-x s r") 'org-tree-slide-resume)
-    (define-key map (kbd "<left>") 'org-tree-slide-move-previous-tree)
-    (define-key map (kbd "<right>") 'org-tree-slide-move-next-tree)
+;;    (define-key map (kbd "C-x s r") 'org-tree-slide-resume) ;; TODO
+    (define-key map (kbd "C-<") 'org-tree-slide-move-previous-tree)
+    (define-key map (kbd "C->") 'org-tree-slide-move-next-tree)
     map)
- "The default key bindings for org-tree-slide.")
+ "The keymap for `org-tree-slide'.")
 
 (defface org-tree-slide-heading-level-2-init
   '((t (:inherit outline-2)))
@@ -185,15 +185,30 @@
   :group 'org-tree-slide)
 
 (defvar org-tree-slide-mode nil)
+;; These hooks was obsoleted, and will be deleted by Oct. 2015.
 (defvar org-tree-slide-mode-play-hook nil
-  "A hook run when org-tree-slide--play is evaluated to start the slide show")
+  "[obsolate] A hook run when org-tree-slide--play is evaluated to start the slide show")
 (defvar org-tree-slide-mode-stop-hook nil
-  "A hook run when org-tree-slide--stop is evaluated to stop the slide show")
+  "[obsolate] A hook run when org-tree-slide--stop is evaluated to stop the slide show")
 (defvar org-tree-slide-mode-before-narrow-hook nil
-  "A hook run before evaluating org-tree-slide--display-tree-with-narrow")
+  "[obsolate] A hook run before evaluating org-tree-slide--display-tree-with-narrow")
 (defvar org-tree-slide-mode-after-narrow-hook nil
-  "A hook run after evaluating org-tree-slide--display-tree-with-narrow")
+  "[obsolate] A hook run after evaluating org-tree-slide--display-tree-with-narrow")
 
+;; Updated hooks
+(defvar org-tree-slide-play-hook nil
+  "A hook run when org-tree-slide--play is evaluated to start the slide show")
+(defvar org-tree-slide-stop-hook nil
+  "A hook run when org-tree-slide--stop is evaluated to stop the slide show")
+(defvar org-tree-slide-before-narrow-hook nil
+  "A hook run before evaluating org-tree-slide--display-tree-with-narrow")
+(defvar org-tree-slide-after-narrow-hook nil
+  "A hook run after evaluating org-tree-slide--display-tree-with-narrow")
+(defvar org-tree-slide-before-move-next-hook nil
+  "A hook run before moving to the next slide")
+(defvar org-tree-slide-before-move-previous-hook nil
+  "A hook run before moving to the previous slide")
+  
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
   "A presentation tool for org-mode.
@@ -391,6 +406,7 @@ Profiles:
 	   (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
        (or (org-tree-slide--first-heading-with-narrow-p)
 	   (not (org-at-heading-p))))
+      (run-hooks 'org-tree-slide-before-move-next-hook)      
       (widen)
       (org-tree-slide--outline-next-heading))
      ;; stay the same slide (for CONTENT MODE, on the subtrees)
@@ -408,6 +424,7 @@ Profiles:
     (unless (equal org-tree-slide-modeline-display 'outside)
       (message "<< Previous"))
     (org-tree-slide--hide-slide-header)		; for at the first heading
+    (run-hooks 'org-tree-slide-before-move-previous-hook)
     (widen)
     (cond
      ((org-tree-slide--before-first-heading-p)
@@ -464,6 +481,7 @@ Profiles:
 (defun org-tree-slide--play ()
   "Start slide view with the first tree of the org-mode buffer."
   (run-hooks 'org-tree-slide-mode-play-hook)
+  (run-hooks 'org-tree-slide-play-hook)
   (org-tree-slide--apply-local-header-to-slide-header)
   (when org-tree-slide-heading-emphasis
     (org-tree-slide--apply-custom-heading-face t))
@@ -505,12 +523,14 @@ Profiles:
       ;; (org-clock-out)
       ))
   (run-hooks 'org-tree-slide-mode-stop-hook)
+  (run-hooks 'org-tree-slide-stop-hook)
   (when org-tree-slide-deactivate-message
     (message "%s" org-tree-slide-deactivate-message)))
 
 (defun org-tree-slide--display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
   (run-hooks 'org-tree-slide-mode-before-narrow-hook)
+  (run-hooks 'org-tree-slide-before-narrow-hook)  
   (when (equal org-tree-slide-modeline-display 'outside)
     (setq org-tree-slide--slide-number
 	  (format " %s" (org-tree-slide--count-slide (point))))
@@ -526,6 +546,7 @@ Profiles:
     (org-tree-slide--slide-in org-tree-slide-slide-in-brank-lines))
   (when org-tree-slide-header
     (org-tree-slide--show-slide-header))
+  (run-hooks 'org-tree-slide-after-narrow-hook)
   (run-hooks 'org-tree-slide-mode-after-narrow-hook))
 
 (defun org-tree-slide--outline-next-heading ()
