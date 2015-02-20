@@ -1,8 +1,8 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
-#+DATE:		2015-02-15
-#+UPDATE:	16:30:03
+#+DATE:		2015-02-20
+#+UPDATE:	21:49:07
 #+STARTUP:	content
 
 * 1. What's this?
@@ -14,15 +14,15 @@ Main features:
   - Live editable presentation
   - Fast switching of narrowing/widen
   - TODO pursuit with narrowing
-  - Displaying the current number of slides
-  - Countdown timer
+  - Displaying the current number of slides in mode line
   - CONTENT view during a presentation
   - Slide-in effect
   - Slide header from org file's header
+  - Countdown timer (currently, not available)
 
 ** 1-1. Related packages
 
-see [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]].
+There are various packages to make a presentation with org-mode. See [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]].
 
 * 2. Install
 
@@ -34,15 +34,19 @@ OR
 1. Eval: =(auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")= (for auto-install users)
 2. Add =(require 'org-tree-slide)= in your =.emacs=
 
-Then open an org file, just type =<right>= and =<left>=. A presentation will begin with a header, slide-in effect, and slide number.
+Then open an org file, just type =C-<= and =C->=, which means =C-M-,= and =C-M-.=, you can see a presentation will begin with a header, slide-in effect, and slide number in mode line.
 
-** el-get recipe
+** 2.1 el-get recipe
 
 If you are an [[https://github.com/dimitri/el-get][el-get]] user, just do
 
 : M-x el-get-install RET org-tree-slide
 
-** 2.1 Requirements
+** 2.2 MELPA
+
+Now, you can install `org-tree-slide' via [[http://melpa.org/#/org-tree-slide][MELPA]].
+
+** 2.2 Requirements
   - Org-mode 6.33x or higher version is required.
   - This elisp doesn't require any additional packages.
 
@@ -85,7 +89,7 @@ If you want to use this setting as the default, put the following configuration 
 
 ** 4-1. `Simple'
 
-This profile will display trees of your org buffer by simple narrowing. You can change trees without =widen= command. Most of the visual effect is disabled.
+This profile will display trees in your org buffer by simple narrowing. You can change trees without =widen= command. Most of the visual effect is disabled.
 
 Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
 
@@ -97,13 +101,15 @@ Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
 
 ** 4-2. `Presentation'
 
-This profile is used as the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line. A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
+This profile is the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line. 
 
-If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown like a Table Of Content except some headings configured as skipping by =org-tree-slide-slip-outline-level=. Find a heading that you want to show, and type =<right>=, the presentation will be resumed.
+# A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
+
+If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown in a buffer like a Table Of Content except some headings configured as skipping by =org-tree-slide-slip-outline-level=. Find a heading that you want to show, and type =C->=, the presentation will be resumed.
 
 It is possible to skip slides when a heading level is higher than or equal to a  value of =org-tree-slide-skip-outline-level=. see User variables.
 
-To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the head of the buffer and the trees will be displayed using =#+STARTUP:= if possible.
+To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the head of the buffer and the trees will be rendered according to the value of =#+STARTUP:= if possible.
 
 =M-x org-tree-slide-presentation-profile=
 
@@ -115,11 +121,11 @@ To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the he
 
 ** 4-3. `TODO Pursuit with narrowing'
 
-This profile will display trees restricted to =TODO status= without a header and slide-in effect. It is very useful to concentrate your focus on the current TODO item that is not done, and go to the next task by a single typing of =<right>=. This is "TODO Pursuit with narrowing". If you want to track every kind of tree including finished items, toggle =M-x org-tree-slide-skip-done-toggle= OFF.
+This profile will display trees restricted to =TODO status= without a header and slide-in effect. It is very useful to concentrate your focus on the current TODO item that is not done, and go to the next task by typing of =C->=. This is "TODO Pursuit with narrowing". If you want to track every kind of tree including finished items, toggle =M-x org-tree-slide-skip-done-toggle= OFF.
 
 When you exit =org-tree-slide-mode=, the cursor will keep the same position, it is therefore possible to focus again by toggle =M-x org-tree-slide-mode=.
 
-If you feel the cursor moving is very slow, please change a value of =org-tree-slide-modeline-display= to 'outside or =nil=.
+If you feel the cursor moving is very slow, please change a value of =org-tree-slide-modeline-display= to ='outside= or =nil=.
 
 =M-x org-tree-slide-narrowing-control-profile=
 
@@ -137,15 +143,16 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 |  1 | org-tree-slide-skip-outline-level   | 0             | Numeric |
 |  2 | org-tree-slide-header               | t             | Boolean |
 |  3 | org-tree-slide-slide-in-effect      | t             | Boolean |
-|  4 | org-tree-slide-slide-in-brank-lines | 10            | Numeric |
-|  5 | org-tree-slide-slide-in-waiting     | 0.02          | Float   |
-|  6 | org-tree-slide-cursor-init          | t             | Boolean |
+|  4 | org-tree-slide-cursor-init          | t             | Boolean |
+|  5 | org-tree-slide-slide-in-brank-lines | 10            | Numeric |
+|  6 | org-tree-slide-slide-in-waiting     | 0.02          | Float   |
 |  7 | org-tree-slide-heading-emphasis     | nil           | Boolean |
-|  8 | org-tree-slide-skip-done            | nil           | Boolean |
-|  9 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
+|  8 | org-tree-slide-never-touch-face     | nil           | Boolean |
+|  9 | org-tree-slide-skip-done            | nil           | Boolean |
 | 10 | org-tree-slide-skip-comments        | t             | Boolean |
 | 11 | org-tree-slide-activate-message     | Hello...      | String  |
 | 12 | org-tree-slide-deactivate-message   | Quit, Bye!    | String  |
+| 13 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
 
 #+BEGIN_QUOTE
 [*1] { nil| 'lighter | 'outside }
@@ -158,7 +165,7 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 If you like this elisp, the following setting is more useful. Try it!
 
-=<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned to control org-tree-slide.
+In this case, =<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned in order to control org-tree-slide.
 
 #+BEGIN_SRC emacs-lisp
 (when (require 'org-tree-slide nil t)
@@ -170,20 +177,16 @@ If you like this elisp, the following setting is more useful. Try it!
     'org-tree-slide-move-next-tree)
   (define-key org-tree-slide-mode-map (kbd "<f11>")
     'org-tree-slide-content)
-  ;; Reset the default setting
-  (define-key org-tree-slide-mode-map (kbd "<left>")  'backward-char)
-  (define-key org-tree-slide-mode-map (kbd "<right>") 'forward-char)
   (setq org-tree-slide-skip-outline-level 4)
   (org-tree-slide-narrowing-control-profile)
   (setq org-tree-slide-skip-done nil)))
 #+END_SRC
 
 * 6. Functions
-
 ** Control functions
 
-  - org-tree-slide-move-next-tree (=<right>=)
-  - org-tree-slide-move-previous-tree (=<left>=)
+  - org-tree-slide-move-next-tree (=C->=)
+  - org-tree-slide-move-previous-tree (=C-<=)
   - org-tree-slide-content (=C-x s c=)
 
 ** Startup options
@@ -209,8 +212,14 @@ These functions will toggle =org-tree-slide-mode= ON, automatically.
 
 ** Hooks
 
-  - org-tree-slide-mode-play-hook
-  - org-tree-slide-mode-stop-hook
+  - org-tree-slide-play-hook
+  - org-tree-slide-stop-hook
+  - org-tree-slide-before-narrow-hook
+  - org-tree-slide-after-narrow-hook
+  - org-tree-slide-before-move-next-hook
+  - org-tree-slide-before-move-previous-hook
+
+NOTE: For senior user, some hook were renamed, please update your configurations
 
 * 7. History
 
@@ -219,6 +228,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.8.0  | 2015-02-20@21:27 | Changed Keymap, and renamed/added hooks         |
 | v2.7.5  | 2015-02-15@16:29 | Replace ots- with org-tree-slide--              |
 | v2.7.4  | 2015-02-14@23:30 | Refine displaying slide number in modeline      |
 | v2.7.2  | 2015-01-12@19:56 | Suppress an error message from org-timer        |

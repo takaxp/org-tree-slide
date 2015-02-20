@@ -1,3 +1,12 @@
+2015-02-20  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Default keymap was changed
+	- Due to many reports on conflicting key binding, `<left>' and `<right>', these keymap changed to `C->' and `C-<'.
+
+	* org-tree-slide.el: Add new hooks and rename old hooks
+	- Added `org-tree-slide-before-move-next-hook' and `org-tree-slide-before-move-previous-hook'
+	- Renamed hooks. `org-tree-slide-mode-play-hook', `org-tree-slide-mode-stop-hook', `org-tree-slide-mode-before-narrow-hook', `org-tree-slide-mode-after-narrow-hook' will be obsoleted soon.
+
 2015-02-15  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (org-tree-slide): Replace ots- with org-tree-slide--
