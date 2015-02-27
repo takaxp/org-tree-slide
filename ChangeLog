@@ -1,3 +1,8 @@
+2015-02-27  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Hide org-clock related code
+	- To reduce loading time, org-clock related code was hidden.
+
 2015-02-20  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Default keymap was changed

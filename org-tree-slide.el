@@ -66,9 +66,9 @@
 
 (require 'org)
 (require 'org-timer)
-(require 'org-clock)			; org-clock-in, -out, -clocking-p
+;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.0"
+(defconst org-tree-slide "2.8.1"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -412,10 +412,7 @@ Profiles:
       (org-tree-slide--outline-next-heading))
      ;; stay the same slide (for CONTENT MODE, on the subtrees)
      (t nil))
-    (when (and org-tree-slide-skip-done
-	       (looking-at (concat "^\\*+ " org-not-done-regexp)))
-      ;; (org-clock-in)
-      )
+;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
     (org-tree-slide--display-tree-with-narrow)))
 
 (defun org-tree-slide-move-previous-tree ()
@@ -434,10 +431,7 @@ Profiles:
       (org-tree-slide--outline-previous-heading)
       (org-tree-slide--outline-previous-heading))
      (t (org-tree-slide--outline-previous-heading)))
-    (when (and org-tree-slide-skip-done
-	       (looking-at (concat "^\\*+ " org-not-done-regexp)))
-      ;; (org-clock-in)
-      )
+;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
     (org-tree-slide--display-tree-with-narrow)
     ;; To avoid error of missing header in Emacs24
     (if (= emacs-major-version 24)
@@ -514,14 +508,10 @@ Profiles:
 	  (t nil)))
   (org-tree-slide--hide-slide-header)
   (when org-timer-start-time
-      (org-timer-stop))
+    (org-timer-stop))
   (when org-tree-slide-heading-emphasis
     (org-tree-slide--apply-custom-heading-face nil))
-  (when (and org-tree-slide-skip-done
-	     (looking-at (concat "^\\*+ " org-not-done-regexp)))
-    (when (org-clocking-p)
-      ;; (org-clock-out)
-      ))
+;;  (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (when (org-clocking-p) (org-clock-out) ) )
   (run-hooks 'org-tree-slide-mode-stop-hook)
   (run-hooks 'org-tree-slide-stop-hook)
   (when org-tree-slide-deactivate-message

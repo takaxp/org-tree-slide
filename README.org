@@ -228,6 +228,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.8.1  | 2015-02-27@10:42 | Hide org-clock related code                     |
 | v2.8.0  | 2015-02-20@21:27 | Changed Keymap, and renamed/added hooks         |
 | v2.7.5  | 2015-02-15@16:29 | Replace ots- with org-tree-slide--              |
 | v2.7.4  | 2015-02-14@23:30 | Refine displaying slide number in modeline      |
