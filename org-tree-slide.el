@@ -520,16 +520,18 @@ Profiles:
 (defun org-tree-slide--display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
   (run-hooks 'org-tree-slide-mode-before-narrow-hook)
-  (run-hooks 'org-tree-slide-before-narrow-hook)  
+  (run-hooks 'org-tree-slide-before-narrow-hook)
   (when (equal org-tree-slide-modeline-display 'outside)
     (setq org-tree-slide--slide-number
-	  (format " %s" (org-tree-slide--count-slide (point))))
+    (format " %s" (org-tree-slide--count-slide (point))))
     (setq org-tree-slide--previous-line (org-tree-slide--line-number-at-pos)))
   (goto-char (point-at-bol))
   (unless (org-tree-slide--before-first-heading-p)
     (hide-subtree)	; support CONTENT (subtrees are shown)
     (org-show-entry)
-    (show-children)
+    (if (org-tree-slide--heading-level-skip-level-p (1+ (org-outline-level))) ;if this is the last level to be displayed, show the full content
+        (show-all)
+      (show-children))
     ;;    (org-cycle-hide-drawers 'all) ; disabled due to performance reduction
     (org-narrow-to-subtree))
   (when org-tree-slide-slide-in-effect
@@ -579,19 +581,22 @@ Profiles:
 *** hoge           ; nil
 "
   (or (or (org-tree-slide--heading-done-skip-p)
-	  (org-tree-slide--heading-level-skip-p))
+    (org-tree-slide--heading-level-skip-p))
       (org-tree-slide--heading-skip-comment-p)))
 
-(defun org-tree-slide--heading-level-skip-p ()
+(defun org-tree-slide--heading-level-skip-level-p (level)
   (and (> org-tree-slide-skip-outline-level 0)
-       (<= org-tree-slide-skip-outline-level (org-outline-level))))
+       (<= org-tree-slide-skip-outline-level level)))
+
+(defun org-tree-slide--heading-level-skip-p ()
+  (org-tree-slide--heading-level-skip-level-p (org-outline-level)))
 
 (defun org-tree-slide--heading-done-skip-p ()
   (and org-tree-slide-skip-done
        (not
-	(looking-at
-	 ;; 6.33x does NOT suport org-outline-regexp-bol 
-	 (concat "^\\*+ " org-not-done-regexp)))))
+  (looking-at
+   ;; 6.33x does NOT suport org-outline-regexp-bol
+   (concat "^\\*+ " org-not-done-regexp)))))
 
 (defun org-tree-slide--heading-skip-comment-p ()
   (and org-tree-slide-skip-comments
