@@ -1,8 +1,8 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
-#+DATE:		2015-02-20
-#+UPDATE:	21:49:07
+#+DATE:		2015-08-09
+#+UPDATE:	01:19:10
 #+STARTUP:	content
 
 * 1. What's this?
@@ -137,22 +137,23 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 * 5. User variables
 
-|----+-------------------------------------+---------------+---------|
-|    | Variable                            | Default value | Select  |
-|----+-------------------------------------+---------------+---------|
-|  1 | org-tree-slide-skip-outline-level   | 0             | Numeric |
-|  2 | org-tree-slide-header               | t             | Boolean |
-|  3 | org-tree-slide-slide-in-effect      | t             | Boolean |
-|  4 | org-tree-slide-cursor-init          | t             | Boolean |
-|  5 | org-tree-slide-slide-in-brank-lines | 10            | Numeric |
-|  6 | org-tree-slide-slide-in-waiting     | 0.02          | Float   |
-|  7 | org-tree-slide-heading-emphasis     | nil           | Boolean |
-|  8 | org-tree-slide-never-touch-face     | nil           | Boolean |
-|  9 | org-tree-slide-skip-done            | nil           | Boolean |
-| 10 | org-tree-slide-skip-comments        | t             | Boolean |
-| 11 | org-tree-slide-activate-message     | Hello...      | String  |
-| 12 | org-tree-slide-deactivate-message   | Quit, Bye!    | String  |
-| 13 | org-tree-slide-modeline-display     | 'outside      | [*1]    |
+|----+--------------------------------------+---------------+---------|
+|    | Variable                             | Default value | Select  |
+|----+--------------------------------------+---------------+---------|
+|  1 | org-tree-slide-skip-outline-level    | 0             | Numeric |
+|  2 | org-tree-slide-header                | t             | Boolean |
+|  3 | org-tree-slide-slide-in-effect       | t             | Boolean |
+|  4 | org-tree-slide-cursor-init           | t             | Boolean |
+|  5 | org-tree-slide-slide-in-brank-lines  | 10            | Numeric |
+|  6 | org-tree-slide-slide-in-waiting      | 0.02          | Float   |
+|  7 | org-tree-slide-heading-emphasis      | nil           | Boolean |
+|  8 | org-tree-slide-never-touch-face      | nil           | Boolean |
+|  9 | org-tree-slide-skip-done             | nil           | Boolean |
+| 10 | org-tree-slide-skip-comments         | t             | Boolean |
+| 11 | org-tree-slide-activate-message      | Hello...      | String  |
+| 12 | org-tree-slide-deactivate-message    | Quit, Bye!    | String  |
+| 13 | org-tree-slide-modeline-display      | 'outside      | [*1]    |
+| 14 | org-tree-slide-fold-subtrees-skipped | t             | Boolean |
 
 #+BEGIN_QUOTE
 [*1] { nil| 'lighter | 'outside }
@@ -228,6 +229,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.8.3  | 2015-08-09@01:04 | Added a flag to reveal subtrees to be skipped   |
 | v2.8.1  | 2015-02-27@10:42 | Hide org-clock related code                     |
 | v2.8.0  | 2015-02-20@21:27 | Changed Keymap, and renamed/added hooks         |
 | v2.7.5  | 2015-02-15@16:29 | Replace ots- with org-tree-slide--              |

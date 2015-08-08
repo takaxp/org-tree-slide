@@ -1,3 +1,10 @@
+2015-08-09  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Added a flag to reveal subtrees to be skipped
+	- org-tree-slide-fold-subtrees-skipped is added
+	- The original idea was proposed by bennati (https://github.com/bennati)
+	- org-tree-slide--heading-level-skip-p was revised so that the status can be checked by providing an arbitrary level number.
+
 2015-02-27  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Hide org-clock related code

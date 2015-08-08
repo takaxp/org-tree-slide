@@ -68,7 +68,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.1"
+(defconst org-tree-slide "2.8.3"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -86,6 +86,13 @@
    *** heading D  ; display as the next slide
 "
   :type 'integer
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-fold-subtrees-skipped t
+  "If this flag is true, the subtrees in a slide will be displayed in fold.
+   When nil, the body of the subtrees will be revealed.
+"
+  :type 'boolean
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-header t
@@ -529,8 +536,10 @@ Profiles:
   (unless (org-tree-slide--before-first-heading-p)
     (hide-subtree)	; support CONTENT (subtrees are shown)
     (org-show-entry)
-    (if (org-tree-slide--heading-level-skip-level-p (1+ (org-outline-level))) ;if this is the last level to be displayed, show the full content
-        (show-all)
+    ;; If this is the last level to be displayed, show the full content
+    (if (and (not org-tree-slide-fold-subtrees-skipped)
+             (org-tree-slide--heading-level-skip-p (1+ (org-outline-level))))
+        (org-show-subtree)
       (show-children))
     ;;    (org-cycle-hide-drawers 'all) ; disabled due to performance reduction
     (org-narrow-to-subtree))
@@ -584,18 +593,15 @@ Profiles:
           (org-tree-slide--heading-level-skip-p))
       (org-tree-slide--heading-skip-comment-p)))
 
-(defun org-tree-slide--heading-level-skip-level-p (level)
+(defun org-tree-slide--heading-level-skip-p (&optional level)
   (and (> org-tree-slide-skip-outline-level 0)
-       (<= org-tree-slide-skip-outline-level level)))
-
-(defun org-tree-slide--heading-level-skip-p ()
-  (org-tree-slide--heading-level-skip-level-p (org-outline-level)))
+       (<= org-tree-slide-skip-outline-level (or level (org-outline-level)))))
 
 (defun org-tree-slide--heading-done-skip-p ()
   (and org-tree-slide-skip-done
        (not
         (looking-at
-         ;; 6.33x does NOT suport org-outline-regexp-bol
+         ;; 6.33x does NOT support org-outline-regexp-bol
          (concat "^\\*+ " org-not-done-regexp)))))
 
 (defun org-tree-slide--heading-skip-comment-p ()
