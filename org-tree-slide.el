@@ -158,11 +158,11 @@
 (defvar org-tree-slide-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x s c") 'org-tree-slide-content)
-;;    (define-key map (kbd "C-x s r") 'org-tree-slide-resume) ;; TODO
+    ;;    (define-key map (kbd "C-x s r") 'org-tree-slide-resume) ;; TODO
     (define-key map (kbd "C-<") 'org-tree-slide-move-previous-tree)
     (define-key map (kbd "C->") 'org-tree-slide-move-next-tree)
     map)
- "The keymap for `org-tree-slide'.")
+  "The keymap for `org-tree-slide'.")
 
 (defface org-tree-slide-heading-level-2-init
   '((t (:inherit outline-2)))
@@ -208,7 +208,7 @@
   "A hook run before moving to the next slide")
 (defvar org-tree-slide-before-move-previous-hook nil
   "A hook run before moving to the previous slide")
-  
+
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
   "A presentation tool for org-mode.
@@ -392,7 +392,7 @@ Profiles:
   (interactive)
   (setq org-tree-slide-skip-comments (not org-tree-slide-skip-comments))
   (if org-tree-slide-skip-comments
-       (message "COMMENT: HIDE") (message "COMMENT: SHOW")))
+      (message "COMMENT: HIDE") (message "COMMENT: SHOW")))
 
 (defun org-tree-slide-move-next-tree ()
   "Display the next slide"
@@ -403,16 +403,16 @@ Profiles:
     (cond
      ((or
        (or (and (org-tree-slide--before-first-heading-p)
-		(not (org-at-heading-p)))
-	   (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
+                (not (org-at-heading-p)))
+           (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
        (or (org-tree-slide--first-heading-with-narrow-p)
-	   (not (org-at-heading-p))))
+           (not (org-at-heading-p))))
       (run-hooks 'org-tree-slide-before-move-next-hook)      
       (widen)
       (org-tree-slide--outline-next-heading))
      ;; stay the same slide (for CONTENT MODE, on the subtrees)
      (t nil))
-;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
+    ;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
     (org-tree-slide--display-tree-with-narrow)))
 
 (defun org-tree-slide-move-previous-tree ()
@@ -431,11 +431,11 @@ Profiles:
       (org-tree-slide--outline-previous-heading)
       (org-tree-slide--outline-previous-heading))
      (t (org-tree-slide--outline-previous-heading)))
-;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
+    ;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
     (org-tree-slide--display-tree-with-narrow)
     ;; To avoid error of missing header in Emacs24
     (if (= emacs-major-version 24)
-	(goto-char (point-min)))))
+        (goto-char (point-min)))))
 
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar org-tree-slide--slide-number nil)
@@ -453,7 +453,7 @@ Profiles:
     (cond
      ((equal org-tree-slide-modeline-display 'lighter)
       (setq org-tree-slide--slide-number
-	    (format " %s" (org-tree-slide--count-slide (point))))
+            (format " %s" (org-tree-slide--count-slide (point))))
       (setq org-tree-slide--previous-line (org-tree-slide--line-number-at-pos))
       org-tree-slide--slide-number)
      ;; just return the current org-tree-slide--slide-number quickly.
@@ -500,18 +500,18 @@ Profiles:
     (goto-char (point-min))
     (org-overview)
     (cond ((equal "content" org-tree-slide-startup)
-	   (message "CONTENT: %s" org-tree-slide-startup)
-	   (org-content))
-	  ((equal "showall" org-tree-slide-startup)
-	   (message "SHOW ALL: %s" org-tree-slide-startup)
-	   (org-cycle '(64)))
-	  (t nil)))
+           (message "CONTENT: %s" org-tree-slide-startup)
+           (org-content))
+          ((equal "showall" org-tree-slide-startup)
+           (message "SHOW ALL: %s" org-tree-slide-startup)
+           (org-cycle '(64)))
+          (t nil)))
   (org-tree-slide--hide-slide-header)
   (when org-timer-start-time
     (org-timer-stop))
   (when org-tree-slide-heading-emphasis
     (org-tree-slide--apply-custom-heading-face nil))
-;;  (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (when (org-clocking-p) (org-clock-out) ) )
+  ;;  (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (when (org-clocking-p) (org-clock-out) ) )
   (run-hooks 'org-tree-slide-mode-stop-hook)
   (run-hooks 'org-tree-slide-stop-hook)
   (when org-tree-slide-deactivate-message
@@ -523,7 +523,7 @@ Profiles:
   (run-hooks 'org-tree-slide-before-narrow-hook)
   (when (equal org-tree-slide-modeline-display 'outside)
     (setq org-tree-slide--slide-number
-    (format " %s" (org-tree-slide--count-slide (point))))
+          (format " %s" (org-tree-slide--count-slide (point))))
     (setq org-tree-slide--previous-line (org-tree-slide--line-number-at-pos)))
   (goto-char (point-at-bol))
   (unless (org-tree-slide--before-first-heading-p)
@@ -560,18 +560,18 @@ Profiles:
 
 (defun org-tree-slide--outline-select-method (action direction)
   (cond ((and (equal action 'last) (equal direction 'next))
-	 (unless org-tree-slide--all-skipped
-	   (org-tree-slide--outline-previous-heading)))  ; Return back.
-	((and (equal action 'first) (equal direction 'previous))
-	 (unless org-tree-slide--all-skipped
-	   (org-tree-slide--move-to-the-first-heading))) ; Stay first heading
-	((and (equal action 'skip) (equal direction 'next))
-	 (org-tree-slide--outline-next-heading))      ; recursive call
-	((and (equal action 'skip) (equal direction 'previous))
-	 (org-tree-slide--outline-previous-heading))  ; recursive call
-	(t 
-	 (setq org-tree-slide--all-skipped nil)
-	 nil)))
+         (unless org-tree-slide--all-skipped
+           (org-tree-slide--outline-previous-heading)))  ; Return back.
+        ((and (equal action 'first) (equal direction 'previous))
+         (unless org-tree-slide--all-skipped
+           (org-tree-slide--move-to-the-first-heading))) ; Stay first heading
+        ((and (equal action 'skip) (equal direction 'next))
+         (org-tree-slide--outline-next-heading))      ; recursive call
+        ((and (equal action 'skip) (equal direction 'previous))
+         (org-tree-slide--outline-previous-heading))  ; recursive call
+        (t 
+         (setq org-tree-slide--all-skipped nil)
+         nil)))
 
 (defun org-tree-slide--heading-skip-p ()
   "This method assume the cursor exist at the heading.
@@ -581,7 +581,7 @@ Profiles:
 *** hoge           ; nil
 "
   (or (or (org-tree-slide--heading-done-skip-p)
-    (org-tree-slide--heading-level-skip-p))
+          (org-tree-slide--heading-level-skip-p))
       (org-tree-slide--heading-skip-comment-p)))
 
 (defun org-tree-slide--heading-level-skip-level-p (level)
@@ -594,9 +594,9 @@ Profiles:
 (defun org-tree-slide--heading-done-skip-p ()
   (and org-tree-slide-skip-done
        (not
-  (looking-at
-   ;; 6.33x does NOT suport org-outline-regexp-bol
-   (concat "^\\*+ " org-not-done-regexp)))))
+        (looking-at
+         ;; 6.33x does NOT suport org-outline-regexp-bol
+         (concat "^\\*+ " org-not-done-regexp)))))
 
 (defun org-tree-slide--heading-skip-comment-p ()
   (and org-tree-slide-skip-comments
@@ -604,9 +604,9 @@ Profiles:
 
 (defun org-tree-slide--outline-skip-type (has-target-outline current-level)
   (cond ((equal has-target-outline 'last) 'last)
-	((equal has-target-outline 'first) 'first)
-	((org-tree-slide--heading-skip-p) 'skip)
-	(t nil)))
+        ((equal has-target-outline 'first) 'first)
+        ((org-tree-slide--heading-skip-p) 'skip)
+        (t nil)))
 
 (defun org-tree-slide--slide-in (brank-lines)
   (while (< 2 brank-lines)
@@ -657,24 +657,24 @@ Profiles:
 (defun org-tree-slide--set-slide-header (brank-lines)
   (org-tree-slide--hide-slide-header)
   (setq org-tree-slide--header-overlay
-	(make-overlay (point-min) (+ 1 (point-min))))
+        (make-overlay (point-min) (+ 1 (point-min))))
   (overlay-put org-tree-slide--header-overlay 'after-string " ")
   (overlay-put org-tree-slide--header-overlay
                'face
                'org-tree-slide-header-overlay-face)
   (if org-tree-slide-header
       (overlay-put org-tree-slide--header-overlay 'display
-		   (concat (if org-tree-slide-title org-tree-slide-title
-			     (buffer-name))
-			   "\n"
-			   (format-time-string "%Y-%m-%d") "  "
-			   (when org-tree-slide-author
-			     (concat org-tree-slide-author "  "))
-			   (when org-tree-slide-email
-			     (concat "<" org-tree-slide-email ">"))
-			   (org-tree-slide--get-brank-lines brank-lines)))
+                   (concat (if org-tree-slide-title org-tree-slide-title
+                             (buffer-name))
+                           "\n"
+                           (format-time-string "%Y-%m-%d") "  "
+                           (when org-tree-slide-author
+                             (concat org-tree-slide-author "  "))
+                           (when org-tree-slide-email
+                             (concat "<" org-tree-slide-email ">"))
+                           (org-tree-slide--get-brank-lines brank-lines)))
     (overlay-put org-tree-slide--header-overlay 'display
-		 (org-tree-slide--get-brank-lines brank-lines))))
+                 (org-tree-slide--get-brank-lines brank-lines))))
 
 (defun org-tree-slide--get-brank-lines (lines)
   (let ((breaks ""))
@@ -705,14 +705,14 @@ Profiles:
   "Change status of heading face."
   (unless org-tree-slide-never-touch-face
     (cond (status
-	   (custom-set-faces
-	    '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
-	    '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))))
-	  (t
-	   (custom-set-faces
-	    '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
-	    '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
-	   ))))
+           (custom-set-faces
+            '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
+            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))))
+          (t
+           (custom-set-faces
+            '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
+            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
+           ))))
 
 (defun org-tree-slide--count-slide (&optional pos)
   (save-excursion
@@ -720,21 +720,21 @@ Profiles:
       (widen)
       (goto-char (point-min))
       (let ((count 0)
-	    (current-slide 0)
-	    (current-point (or pos (point))))
-	(when (and (looking-at "^\\*+ ") (not (org-tree-slide--heading-skip-p)))
-	  (setq count 1)
-	  (setq current-slide 1))
-	(while (outline-next-heading)
-	  (when (not (org-tree-slide--heading-skip-p))
-	    (setq count (1+ count))
-	    (when (>= current-point (point))
-	      (setq current-slide (1+ current-slide)))))
-	(cond
-	 ((= count 0) "[-/-]") ; no headings
-	 ((= current-slide 0) (format "[-/%d]" count)) ; before first heading
-	 (t
-	  (format "[%d/%d]" current-slide count)))))))
+            (current-slide 0)
+            (current-point (or pos (point))))
+        (when (and (looking-at "^\\*+ ") (not (org-tree-slide--heading-skip-p)))
+          (setq count 1)
+          (setq current-slide 1))
+        (while (outline-next-heading)
+          (when (not (org-tree-slide--heading-skip-p))
+            (setq count (1+ count))
+            (when (>= current-point (point))
+              (setq current-slide (1+ current-slide)))))
+        (cond
+         ((= count 0) "[-/-]") ; no headings
+         ((= current-slide 0) (format "[-/%d]" count)) ; before first heading
+         (t
+          (format "[%d/%d]" current-slide count)))))))
 
 (defun org-tree-slide--active-p ()
   (and org-tree-slide-mode (equal major-mode 'org-mode)))
@@ -753,7 +753,7 @@ Profiles:
 ** third           ; nil
 "
   (and (org-before-first-heading-p) (not (org-tree-slide--narrowing-p))))
-  
+
 (defun org-tree-slide--first-heading-with-narrow-p ()
   "Check the current point is on the first heading with narrowing.
 ** first           ; t
@@ -776,8 +776,8 @@ Profiles:
       (widen)
       (goto-char target)
       (if (org-tree-slide--beginning-of-tree)
-	  (= (point) (org-tree-slide--last-heading-position))
-	nil))))
+          (= (point) (org-tree-slide--last-heading-position))
+        nil))))
 
 (defun org-tree-slide--last-heading-position ()
   "Return the position of the last heading. If the position does not exist in the buffer, then return nil."
