@@ -68,7 +68,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.3"
+(defconst org-tree-slide "2.8.4"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -539,7 +539,7 @@ Profiles:
     ;; If this is the last level to be displayed, show the full content
     (if (and (not org-tree-slide-fold-subtrees-skipped)
              (org-tree-slide--heading-level-skip-p (1+ (org-outline-level))))
-        (org-show-subtree)
+        (org-tree-slide--show-subtree)
       (show-children))
     ;;    (org-cycle-hide-drawers 'all) ; disabled due to performance reduction
     (org-narrow-to-subtree))
@@ -549,6 +549,21 @@ Profiles:
     (org-tree-slide--show-slide-header))
   (run-hooks 'org-tree-slide-after-narrow-hook)
   (run-hooks 'org-tree-slide-mode-after-narrow-hook))
+
+(defun org-tree-slide--show-subtree ()
+  "Hide all subtrees that "
+  (interactive "P")
+  (save-excursion
+    (outline-back-to-heading)
+    (outline-map-region
+     (lambda ()
+       (if (org-tree-slide--heading-skip-comment-p)
+           (hide-subtree)
+         (show-subtree)))
+     (point)
+     (progn (outline-end-of-subtree)
+            (if (eobp) (point-max) (1+ (point)))))))
+
 
 (defun org-tree-slide--outline-next-heading ()
   (org-tree-slide--outline-select-method
