@@ -1,3 +1,10 @@
+2015-08-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: 'COMMENT'-subtree will be hidden (by Stefano)
+	- org-tree-slide--show-subtree is added
+	- Subtrees that start with 'COMMENT' will be hidden during presentation even though org-tree-slide-fold-subtrees-skipped is nil
+	Thanks to Stefano BENNATI
+
 2015-08-09  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Added a flag to reveal subtrees to be skipped
