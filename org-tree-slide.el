@@ -95,6 +95,13 @@
   :type 'boolean
   :group 'org-tree-slide)
 
+(defcustom org-tree-slide-hide-subtrees-commented t
+  "If this flag is true, the commented subtrees in a slide will be hidden
+   When nil, the heading of the subtrees will be revealed.
+"
+  :type 'boolean
+  :group 'org-tree-slide)
+
 (defcustom org-tree-slide-header t
   "The status of displaying the slide header"
   :type 'boolean
@@ -558,11 +565,29 @@ Profiles:
     (outline-map-region
      (lambda ()
        (if (org-tree-slide--heading-skip-comment-p)
-           (hide-subtree)
+           (org-tree-slide--hide-subtree)
          (show-subtree)))
      (point)
      (progn (outline-end-of-subtree)
             (if (eobp) (point-max) (1+ (point)))))))
+
+
+
+(defun org-tree-slide--hide-subtree ()
+  "Hides subtree. The headline is revealed if org-tree-slide-hide-subtrees-commented is nil, else the headline is hidden"
+  (if org-tree-slide-hide-subtrees-commented
+      (let* ((from (progn (outline-back-to-heading) (point)))
+             (to (progn (outline-end-of-subtree) (point)))
+             (temp (remove-overlays from to 'invisible 'outline))
+             (o (make-overlay from to nil)))
+        ;;(overlay-put o 'evaporate t)
+        (overlay-put o 'invisible 'outline)
+        (overlay-put o 'isearch-open-invisible
+                     (or outline-isearch-open-invisible-function
+                         'outline-isearch-open-invisible))
+        )
+    (hide-subtree)
+    ))
 
 
 (defun org-tree-slide--outline-next-heading ()

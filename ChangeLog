@@ -2,6 +2,8 @@
 
 	* org-tree-slide.el: Subtrees that start with 'COMMENT' will be hidden during presentation
 	- org-tree-slide--show-subtree is added
+	- org-tree-slide--hide-subtree is added
+	- org-tree-slide-hide-subtrees-commented is added, it controls wether the heading of a commented subtree should be hidden
 
 2015-08-09  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
