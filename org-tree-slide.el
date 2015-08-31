@@ -799,13 +799,13 @@ Profiles:
 (defun org-tree-slide--beginning-of-tree ()
   "Return beginning point of the line, or t. If the position does not exist in the buffer, then return nil."
   (beginning-of-line)
-  (if (org-tree-slide--heading-level-skip-p) ;if the header has to be skipped
+  (if (and (not (org-tree-slide--heading-skip-p)) ;if the header has to be skipped
+           (org-at-heading-p))
+      (point)
       (progn
         (outline-previous-heading)      ;go to previous heading
         (org-tree-slide--beginning-of-tree)) ;recursion until a visible heading is found
-    (if (org-at-heading-p)
-        (point)
-      (outline-previous-heading)))) ; return position or nil.
+      )) ; return position or nil.
 
 (provide 'org-tree-slide)
 
