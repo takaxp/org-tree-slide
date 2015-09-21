@@ -409,19 +409,23 @@ Profiles:
     (unless (equal org-tree-slide-modeline-display 'outside)
       (message "   Next >>"))
     (cond
+     ((and (org-tree-slide--narrowing-p) ;displaying a slide, not the contents
+           (org-tree-slide--last-tree-p (progn (beginning-of-line) (point)))) ;the last subtree
+      (org-tree-slide-content))
      ((or
        (or (and (org-tree-slide--before-first-heading-p)
                 (not (org-at-heading-p)))
            (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
        (or (org-tree-slide--first-heading-with-narrow-p)
            (not (org-at-heading-p))))
-      (run-hooks 'org-tree-slide-before-move-next-hook)      
+      (run-hooks 'org-tree-slide-before-move-next-hook)
       (widen)
-      (org-tree-slide--outline-next-heading))
+      (org-tree-slide--outline-next-heading)
+      (org-tree-slide--display-tree-with-narrow))
      ;; stay the same slide (for CONTENT MODE, on the subtrees)
-     (t nil))
+     (t nil (org-tree-slide--display-tree-with-narrow)))
     ;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
-    (org-tree-slide--display-tree-with-narrow)))
+    ))
 
 (defun org-tree-slide-move-previous-tree ()
   "Display the previous slide"
@@ -810,9 +814,13 @@ Profiles:
 (defun org-tree-slide--beginning-of-tree ()
   "Return beginning point of the line, or t. If the position does not exist in the buffer, then return nil."
   (beginning-of-line)
-  (if (org-at-heading-p)
+  (if (and (not (org-tree-slide--heading-skip-p)) ;if the header has to be skipped
+           (org-at-heading-p))
       (point)
-    (outline-previous-heading))) ; return position or nil.
+      (progn
+        (outline-previous-heading)      ;go to previous heading
+        (org-tree-slide--beginning-of-tree)) ;recursion until a visible heading is found
+      )) ; return position or nil.
 
 (provide 'org-tree-slide)
 
