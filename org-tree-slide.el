@@ -28,12 +28,15 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 ;;
-;;; Requirement:
+
+;;; Commentary:
+
+;; Requirement:
 ;;    org-mode 6.33x or higher version
 ;;    The latest version of the org-mode is recommended.
 ;;                      (see http://orgmode.org/)
 ;;
-;;; Usage:
+;; Usage:
 ;;    1. Put this elisp into your load-path
 ;;    2. Add (require 'org-tree-slide) in your .emacs
 ;;    3. Open an org-mode file
@@ -44,7 +47,7 @@
 ;;       Select a heading and type <right>, then Slideshow will start again.
 ;;    7. Toggle org-tree-slide-mode again to exit this minor mode
 ;;
-;;; Recommended minimum settings:
+;; Recommended minimum settings:
 ;;    (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
 ;;    (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
 ;;
@@ -61,9 +64,11 @@
 ;;
 ;;    Type `C-h f org-tree-slide-mode', you can find more detail.
 ;;
-;;; Note:
+;; Note:
 ;;    - Make sure key maps below when you introduce this elisp.
 ;;    - Customize variables, M-x customize-group ENT org-tree-slide ENT
+
+;;; Code:
 
 (require 'org)
 (require 'org-timer)
