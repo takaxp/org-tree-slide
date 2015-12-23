@@ -1,3 +1,7 @@
+2015-12-23  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Added a tag for Melpa Stable
+
 2015-08-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: 'COMMENT'-subtree will be hidden (by Stefano)

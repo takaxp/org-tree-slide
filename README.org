@@ -1,9 +1,13 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
-#+DATE:		2015-08-14
-#+UPDATE:	08:35:49
+#+DATE:		2015-12-23
+#+UPDATE:	10:59:42
 #+STARTUP:	content
+
+[[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
+[[http://stable.melpa.org/#/org-tree-slide][http://stable.melpa.org/packages/org-tree-slide-badge.svg]]
+
 
 * 1. What's this?
 
