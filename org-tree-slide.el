@@ -663,6 +663,15 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
   "If you have `#+AUTHOR:' line in your org buffer, it will be used as
    a name of the slide author.")
 
+(defcustom org-tree-slide-breadcrumbs " > "
+  "Display breadcrumbs in the slide header.
+
+If non-nil, it should be a string used as a delimiter used to
+concat the headers."
+  :type '(choice (const :tag "Don't display breadcrumbs" nil)
+                 (string :tag "Delimiter"))
+  :group 'org-tree-slide)
+
 (defun org-tree-slide--apply-local-header-to-slide-header ()
   (save-excursion
     (org-tree-slide--move-to-the-first-heading)
@@ -689,6 +698,17 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
     (t (:bold t :foreground "black" :background "white")))
   "Face for org-tree-slide--header-overlay")
 
+(defun org-tree-slide--get-parents (&optional delim)
+  "Get parent headlines and concat them with DELIM."
+  (setq delim (or delim " > "))
+  (save-excursion
+    (save-restriction
+      (widen)
+      (let ((parents nil))
+        (while (org-up-heading-safe)
+          (push (org-get-heading) parents))
+        (mapconcat 'identity parents delim)))))
+
 (defun org-tree-slide--set-slide-header (blank-lines)
   (org-tree-slide--hide-slide-header)
   (setq org-tree-slide--header-overlay
@@ -707,6 +727,9 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
                              (concat org-tree-slide-author "  "))
                            (when org-tree-slide-email
                              (concat "<" org-tree-slide-email ">"))
+                           (when org-tree-slide-breadcrumbs
+                             (concat "\n" (org-tree-slide--get-parents
+                                           org-tree-slide-breadcrumbs)))
                            (org-tree-slide--get-blank-lines blank-lines)))
     (overlay-put org-tree-slide--header-overlay 'display
                  (org-tree-slide--get-blank-lines blank-lines))))
