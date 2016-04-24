@@ -672,6 +672,11 @@ concat the headers."
                  (string :tag "Delimiter"))
   :group 'org-tree-slide)
 
+(defcustom org-tree-slide-breadcrumbs-hide-todo-state t
+  "If non-nil, hide TODO states in the breadcrumbs."
+  :type 'boolean
+  :group 'org-tree-slide)
+
 (defun org-tree-slide--apply-local-header-to-slide-header ()
   (save-excursion
     (org-tree-slide--move-to-the-first-heading)
@@ -706,7 +711,10 @@ concat the headers."
       (widen)
       (let ((parents nil))
         (while (org-up-heading-safe)
-          (push (org-get-heading) parents))
+          (push (org-get-heading
+                 'no-tags
+                 org-tree-slide-breadcrumbs-hide-todo-state)
+                parents))
         (mapconcat 'identity parents delim)))))
 
 (defun org-tree-slide--set-slide-header (blank-lines)
