@@ -1,9 +1,9 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2015 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2016 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.4
+;; Version: 2.8.5
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; Repository: https://github.com/takaxp/org-tree-slide
@@ -13,6 +13,7 @@
 ;;             Eric S Fraga
 ;;             Eike Kettner
 ;;             Stefano BENNATI
+;;             Matus Goljer
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -75,7 +76,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.4"
+(defconst org-tree-slide "2.8.5"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -397,7 +398,8 @@ Profiles:
   (interactive)
   (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))
   (setq org-tree-slide--previous-line -1) ; to update modeline intentionally
-  (org-tree-slide--show-slide-header)
+  (when org-tree-slide-header
+    (org-tree-slide--show-slide-header))
   (if org-tree-slide-skip-done
       (message "TODO Pursuit: ON") (message "TODO Pursuit: OFF")))
 
@@ -644,11 +646,13 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
         (t nil)))
 
 (defun org-tree-slide--slide-in (blank-lines)
-  (while (< 2 blank-lines)
-    (org-tree-slide--set-slide-header blank-lines)
-    (sit-for org-tree-slide-slide-in-waiting)
-    (org-tree-slide--hide-slide-header)
-    (setq blank-lines (1- blank-lines))))
+  (let ((min-line -1))
+    (when org-tree-slide-header
+      (setq min-line 2))
+    (while (< min-line blank-lines)
+      (org-tree-slide--set-slide-header blank-lines)
+      (sit-for org-tree-slide-slide-in-waiting)
+      (setq blank-lines (1- blank-lines)))))
 
 (defvar org-tree-slide-title nil
   "If you have `#+TITLE:' line in your org buffer, it wil be used as a title
@@ -750,8 +754,7 @@ concat the headers."
     breaks))
 
 (defun org-tree-slide--show-slide-header ()
-  (org-tree-slide--set-slide-header 2)
-  (forward-char 1))
+  (org-tree-slide--set-slide-header 2))
 
 (defun org-tree-slide--hide-slide-header ()
   (when org-tree-slide--header-overlay
@@ -846,14 +849,16 @@ concat the headers."
         nil))))
 
 (defun org-tree-slide--last-heading-position ()
-  "Return the position of the last heading. If the position does not exist in the buffer, then return nil."
+  "Return the position of the last heading.
+   If the position does not exist in the buffer, then return nil."
   (save-excursion
     (save-restriction
       (goto-char (buffer-size))
       (org-tree-slide--beginning-of-tree))))
 
 (defun org-tree-slide--beginning-of-tree ()
-  "Return beginning point of the line, or t. If the position does not exist in the buffer, then return nil."
+  "Return beginning point of the line, or t.
+   If the position does not exist in the buffer, then return nil."
   (beginning-of-line)
   (if (and (not (org-tree-slide--heading-skip-p)) ;if the header has to be skipped
            (org-at-heading-p))

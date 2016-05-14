@@ -1,3 +1,8 @@
+2016-05-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Merged breadcrumbs feature (#23)
+	- org-tree-slide-breadcrumbs is added to show breadcrumbs in the header
+
 2015-12-23  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Added Version header
