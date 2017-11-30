@@ -1,8 +1,8 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
-#+DATE:		2016-05-14
-#+UPDATE:	15:24:12
+#+DATE:		2017-11-30
+#+UPDATE:	15:33:29
 #+STARTUP:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -235,6 +235,7 @@ see also ChangeLog
 |---------+------------------+-------------------------------------------------|
 | Version | Date             | Description                                     |
 |---------+------------------+-------------------------------------------------|
+| v2.8.6  | 2017-11-30@15:33 | Added a hook for CONTENT viewing mode           |
 | v2.8.5  | 2016-05-14@14:09 | Added breadcrumbs feature (by Matus)            |
 | v2.8.4  | 2015-08-12@21:35 | 'COMMENT'-subtree will be hidden (by Stefano)   |
 | v2.8.3  | 2015-08-09@01:04 | Added a flag to reveal subtrees to be skipped   |

@@ -1,3 +1,7 @@
+2017-11-30  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Added a hook for CONTENT viewing mode
+
 2016-05-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Merged breadcrumbs feature (#23)

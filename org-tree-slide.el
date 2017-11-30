@@ -1,9 +1,9 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2016 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2017 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.5
+;; Version: 2.8.6
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; Repository: https://github.com/takaxp/org-tree-slide
@@ -223,6 +223,8 @@
   "A hook run before moving to the next slide")
 (defvar org-tree-slide-before-move-previous-hook nil
   "A hook run before moving to the previous slide")
+(defvar org-tree-slide-before-content-view-hook nil
+  "A hook run before showing the content")
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
@@ -298,6 +300,7 @@ Profiles:
    the slide view mode is active."
   (interactive)
   (when (org-tree-slide--active-p)
+    (run-hooks 'org-tree-slide-before-content-view-hook)
     (org-tree-slide--hide-slide-header)
     (org-tree-slide--move-to-the-first-heading)
     (org-overview)
