@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2017 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.6
+;; Version: 2.8.7
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; Repository: https://github.com/takaxp/org-tree-slide
@@ -44,9 +44,9 @@
 ;;    3. Open an org-mode file
 ;;    4. Toggle org-tree-slide-mode (M-x org-tree-slide-mode)
 ;;       then Slideshow will start and you can find "TSlide" in mode line.
-;;    5. <left>/<right> will move between slides
+;;    5. `C-<'/`C->' will move between slides
 ;;    6. `C-x s c' will show CONTENT of the org buffer
-;;       Select a heading and type <right>, then Slideshow will start again.
+;;       Select a heading and type `C-<', then Slideshow will start again.
 ;;    7. Toggle org-tree-slide-mode again to exit this minor mode
 ;;
 ;; Recommended minimum settings:
@@ -69,6 +69,7 @@
 ;; Note:
 ;;    - Make sure key maps below when you introduce this elisp.
 ;;    - Customize variables, M-x customize-group ENT org-tree-slide ENT
+;;    - see also moom.el (https://github.com/takaxp/moom) to control Emacs frame
 
 ;;; Code:
 
@@ -76,7 +77,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.5"
+(defconst org-tree-slide "2.8.7"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
@@ -236,7 +237,7 @@ Usage:
     (global-set-key (kbd \"S-<f8>\") 'org-tree-slide-skip-done-toggle)
   - Open an org file
   - Type <f8> to start org-tree-slide-mode
-  - Type <left>/<right> to move between trees
+  - Type C-< / C-> to move between trees
   - To exit this minor mode, just type <f8> again.
 
 Profiles:

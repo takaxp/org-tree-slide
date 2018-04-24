@@ -1,8 +1,8 @@
 #+TITLE:	README for Org Tree Slide
 #+AUTHOR:	Takaaki Ishikawa
 #+EMAIL:	takaxp@ieee.org
-#+DATE:		2017-11-30
-#+UPDATE:	15:33:29
+#+DATE:		2018-04-25
+#+UPDATE:	08:35:36
 #+STARTUP:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -10,7 +10,7 @@
 
 * 1. What's this?
 
-The main purpose of this elisp is to handle each tree in an org buffer as a slide by simple narrowing. This emacs lisp is a minor mode for Emacs Org-mode. 
+The main purpose of this elisp is to handle each tree in an org buffer as a slide by simple narrowing. This emacs lisp is a minor mode for Emacs Org-mode.
 
 Main features:
 
@@ -21,11 +21,11 @@ Main features:
   - CONTENT view during a presentation
   - Slide-in effect
   - Slide header from org file's header
-  - Countdown timer 
+  - Countdown timer
 
 ** 1-1. Related packages
 
-There are various packages to make a presentation with org-mode. See [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]].
+There are various packages to make a presentation with org-mode. See [[http://orgmode.org/worg/org-tutorials/non-beamer-presentations.html]]. For more simple use, [[https://github.com/zonuexe/emacs-presentation-mode][presentation.el]] may suitable.
 
 * 2. Install
 
@@ -38,6 +38,15 @@ OR
 2. Add =(require 'org-tree-slide)= in your =.emacs=
 
 Then open an org file, just type =C-<= and =C->=, which means =C-M-,= and =C-M-.=, you can see a presentation will begin with a header, slide-in effect, and slide number in mode line.
+
+It is recommended to change the keybindings to make your presentation smoothly. Here is an example.
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load "org-tree-slide"
+  (define-key org-tree-slide-mode-map (kbd "<f9>") 'org-tree-slide-move-previous-tree)
+  (define-key org-tree-slide-mode-map (kbd "<f10>") 'org-tree-slide-move-next-tree)
+  )
+#+END_SRC
 
 ** 2.1 el-get recipe
 
@@ -52,6 +61,9 @@ Now, you can install `org-tree-slide' via [[http://melpa.org/#/org-tree-slide][M
 ** 2.2 Requirements
   - Org-mode 6.33x or higher version is required.
   - This elisp doesn't require any additional packages.
+** 2.3 additional package (moom.el)
+
+Normally, presentations will appear in full screen or frame maximized. [[https://github.com/takaxp/moom#org-mode-org-tree-slide][moom]] is useful in such cases since the package can change frame position and size by keyboard and the font size will be increased suitably for your presentation.
 
 * 3. Recommended settings
 
@@ -104,7 +116,7 @@ Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
 
 ** 4-2. `Presentation'
 
-This profile is the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line. 
+This profile is the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line.
 
 # A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
 
