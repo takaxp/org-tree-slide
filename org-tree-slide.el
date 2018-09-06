@@ -180,6 +180,11 @@
     map)
   "The keymap for `org-tree-slide'.")
 
+(defface org-tree-slide-heading-level-1-init
+  '((t (:inherit outline-1)))
+  "Level 1."
+  :group 'org-tree-slide)
+
 (defface org-tree-slide-heading-level-2-init
   '((t (:inherit outline-2)))
   "Level 2."
@@ -190,6 +195,16 @@
   "Level 3."
   :group 'org-tree-slide)
 
+(defface org-tree-slide-heading-level-4-init
+  '((t (:inherit outline-4)))
+  "Level 4."
+  :group 'org-tree-slide)
+
+(defface org-tree-slide-heading-level-1
+  '((t (:inherit outline-1 :height 1.5 :bold t)))
+  "Level 1."
+  :group 'org-tree-slide)
+
 (defface org-tree-slide-heading-level-2
   '((t (:inherit outline-2 :height 1.4 :bold t)))
   "Level 2."
@@ -198,6 +213,11 @@
 (defface org-tree-slide-heading-level-3
   '((t (:inherit outline-3 :height 1.3 :bold t)))
   "Level 3."
+  :group 'org-tree-slide)
+
+(defface org-tree-slide-heading-level-4
+  '((t (:inherit outline-4 :height 1.2 :bold t)))
+  "Level 4."
   :group 'org-tree-slide)
 
 (defvar org-tree-slide-mode nil)
@@ -779,12 +799,16 @@ concat the headers."
   (unless org-tree-slide-never-touch-face
     (cond (status
            (custom-set-faces
+            '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1))))
             '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
-            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))))
+            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))
+            '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4))))))
           (t
            (custom-set-faces
+            '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1-init))))
             '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
-            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init)))))
+            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init))))
+            '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4-init)))))
            ))))
 
 (defun org-tree-slide--count-slide (&optional pos)
