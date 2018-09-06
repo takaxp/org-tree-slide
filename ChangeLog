@@ -1,3 +1,8 @@
+2018-09-06  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: Support additional	heading faces (#28)
+	- outline-1 and outline-4 can be also emphasized.
+
 2017-11-30  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Added a hook for CONTENT viewing mode

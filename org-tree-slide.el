@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2017 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.7
+;; Version: 2.8.8
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; Repository: https://github.com/takaxp/org-tree-slide
@@ -77,7 +77,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.7"
+(defconst org-tree-slide "2.8.8"
   "The version number of the org-tree-slide.el")
 
 (defgroup org-tree-slide nil
