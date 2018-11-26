@@ -1,6 +1,6 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2017 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Version: 2.8.8
@@ -36,7 +36,7 @@
 ;; Requirement:
 ;;    org-mode 6.33x or higher version
 ;;    The latest version of the org-mode is recommended.
-;;                      (see http://orgmode.org/)
+;;                      (see https://orgmode.org/)
 ;;
 ;; Usage:
 ;;    1. Put this elisp into your load-path
@@ -78,7 +78,7 @@
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
 (defconst org-tree-slide "2.8.8"
-  "The version number of the org-tree-slide.el")
+  "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
   "User variables for org-tree-slide."
@@ -86,26 +86,26 @@
 
 (defcustom org-tree-slide-skip-outline-level 0
   "Skip slides if a heading level is higher than or equal to this variable.
+
    `0': never skip at any heading
    e.g. set `4',
    *** heading A  ; display as a slide
        entry
    **** heading B ; skip! do not display as the next slide
    **** heading C ; skip!
-   *** heading D  ; display as the next slide
-"
+   *** heading D  ; display as the next slide"
   :type 'integer
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-fold-subtrees-skipped t
   "If this flag is true, the subtrees in a slide will be displayed in fold.
-   When nil, the body of the subtrees will be revealed.
-"
+
+When nil, the body of the subtrees will be revealed."
   :type 'boolean
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-header t
-  "The status of displaying the slide header"
+  "The status of displaying the slide header."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -116,8 +116,9 @@
 
 (defcustom org-tree-slide-cursor-init t
   "Specify a cursor position when exit slideshow.
-  `t': the cursor will move automatically to the head of buffer.
-  nil: keep the same position."
+
+Non-nil: the cursor will move automatically to the head of buffer.
+nil: keep the same position."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -132,7 +133,7 @@
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-emphasis nil
-  "Specify to use a custom face heading, or not"
+  "Specify to use a custom face heading, or not."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -153,18 +154,19 @@
 
 (defcustom org-tree-slide-activate-message
   "Hello! This is org-tree-slide :-)"
-  "Message in mini buffer when org-tree-slide is activated."
+  "Message in mini buffer when \"org-tree-slide\" is activated."
   :type 'string
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-deactivate-message
   "Quit, Bye!"
-  "Message in mini buffer when org-tree-slide is deactivated."
+  "Message in mini buffer when \"org-tree-slide\" is deactivated."
   :type 'string
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-modeline-display 'outside
   "Specify how to display the slide number in mode line.
+
    'lighter: shown in lighter (update info actively, then it's slow)
    'outside: update infomation when moving to the next/previous slide
    nil: nothing to be shown"
@@ -223,29 +225,29 @@
 (defvar org-tree-slide-mode nil)
 ;; These hooks was obsoleted, and will be deleted by Oct. 2015.
 (defvar org-tree-slide-mode-play-hook nil
-  "[obsolete] A hook run when org-tree-slide--play is evaluated to start the slide show")
+  "[obsolete] A hook run when `org-tree-slide--play' is evaluated to start the slide show.")
 (defvar org-tree-slide-mode-stop-hook nil
-  "[obsolete] A hook run when org-tree-slide--stop is evaluated to stop the slide show")
+  "[obsolete] A hook run when `org-tree-slide--stop' is evaluated to stop the slide show.")
 (defvar org-tree-slide-mode-before-narrow-hook nil
-  "[obsolete] A hook run before evaluating org-tree-slide--display-tree-with-narrow")
+  "[obsolete] A hook run before evaluating `org-tree-slide--display-tree-with-narrow'.")
 (defvar org-tree-slide-mode-after-narrow-hook nil
-  "[obsolete] A hook run after evaluating org-tree-slide--display-tree-with-narrow")
+  "[obsolete] A hook run after evaluating `org-tree-slide--display-tree-with-narrow'.")
 
 ;; Updated hooks
 (defvar org-tree-slide-play-hook nil
-  "A hook run when org-tree-slide--play is evaluated to start the slide show")
+  "A hook run when `org-tree-slide--play' is evaluated to start the slideshow.")
 (defvar org-tree-slide-stop-hook nil
-  "A hook run when org-tree-slide--stop is evaluated to stop the slide show")
+  "A hook run when `org-tree-slide--stop' is evaluated to stop the slideshow.")
 (defvar org-tree-slide-before-narrow-hook nil
-  "A hook run before evaluating org-tree-slide--display-tree-with-narrow")
+  "A hook run before evaluating `org-tree-slide--display-tree-with-narrow'.")
 (defvar org-tree-slide-after-narrow-hook nil
-  "A hook run after evaluating org-tree-slide--display-tree-with-narrow")
+  "A hook run after evaluating `org-tree-slide--display-tree-with-narrow'.")
 (defvar org-tree-slide-before-move-next-hook nil
-  "A hook run before moving to the next slide")
+  "A hook run before moving to the next slide.")
 (defvar org-tree-slide-before-move-previous-hook nil
-  "A hook run before moving to the previous slide")
+  "A hook run before moving to the previous slide.")
 (defvar org-tree-slide-before-content-view-hook nil
-  "A hook run before showing the content")
+  "A hook run before showing the content.")
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
@@ -308,7 +310,7 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-without-init-play ()
-  "Start slideshow without the init play. Just enter org-tree-slide-mode."
+  "Start slideshow without the init play.  Just enter \"org-tree-slide-mode\"."
   (interactive)
   (org-tree-slide-mode)
   (widen)
@@ -317,8 +319,7 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-content ()
-  "Change the display for viewing content of the org file during
-   the slide view mode is active."
+  "Change the display for viewing content of the org file during the slide view mode is active."
   (interactive)
   (when (org-tree-slide--active-p)
     (run-hooks 'org-tree-slide-before-content-view-hook)
@@ -332,14 +333,14 @@ Profiles:
 ;;;###autoload
 (defun org-tree-slide-simple-profile ()
   "Set variables for simple use.
+
   `org-tree-slide-header'            => nil
   `org-tree-slide-slide-in-effect'   => nil
   `org-tree-slide-heading-emphasis'  => nil
   `org-tree-slide-cursor-init'       => t
   `org-tree-slide-modeline-display'  => nil
   `org-tree-slide-skip-done'         => nil
-  `org-tree-slide-skip-comments'     => t
-"
+  `org-tree-slide-skip-comments'     => t"
   (interactive)
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
@@ -353,14 +354,14 @@ Profiles:
 ;;;###autoload
 (defun org-tree-slide-presentation-profile ()
   "Set variables for presentation use.
+
   `org-tree-slide-header'            => t
   `org-tree-slide-slide-in-effect'   => t
   `org-tree-slide-heading-emphasis'  => nil
   `org-tree-slide-cursor-init'       => t
   `org-tree-slide-modeline-display'  => 'outside
   `org-tree-slide-skip-done'         => nil
-  `org-tree-slide-skip-comments'     => t
-"
+  `org-tree-slide-skip-comments'     => t"
   (interactive)
   (setq org-tree-slide-header t)
   (setq org-tree-slide-slide-in-effect t)
@@ -374,14 +375,14 @@ Profiles:
 ;;;###autoload
 (defun org-tree-slide-narrowing-control-profile ()
   "Set variables for TODO pursuit with narrowing.
+
   `org-tree-slide-header'            => nil
   `org-tree-slide-slide-in-effect'   => nil
   `org-tree-slide-heading-emphasis'  => nil
   `org-tree-slide-cursor-init'       => nil
   `org-tree-slide-modeline-display'  => 'lighter
   `org-tree-slide-skip-done'         => t
-  `org-tree-slide-skip-comments'     => t
-"
+  `org-tree-slide-skip-comments'     => t"
   (interactive)
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
@@ -394,7 +395,7 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-display-header-toggle ()
-  "Toggle displaying the slide header"
+  "Toggle displaying the slide header."
   (interactive)
   (setq org-tree-slide-header (not org-tree-slide-header))
   (unless org-tree-slide-header
@@ -403,14 +404,14 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-slide-in-effect-toggle ()
-  "Toggle using slide-in effect"
+  "Toggle using slide-in effect."
   (interactive)
   (setq org-tree-slide-slide-in-effect (not org-tree-slide-slide-in-effect))
   (org-tree-slide--display-tree-with-narrow))
 
 ;;;###autoload
 (defun org-tree-slide-heading-emphasis-toggle ()
-  "Toggle applying emphasis to heading"
+  "Toggle applying emphasis to heading."
   (interactive)
   (setq org-tree-slide-heading-emphasis (not org-tree-slide-heading-emphasis))
   (org-tree-slide--apply-custom-heading-face org-tree-slide-heading-emphasis))
@@ -418,7 +419,7 @@ Profiles:
 (defvar org-tree-slide--previous-line 0)
 ;;;###autoload
 (defun org-tree-slide-skip-done-toggle ()
-  "Toggle show TODO item only or not"
+  "Toggle show TODO item only or not."
   (interactive)
   (setq org-tree-slide-skip-done (not org-tree-slide-skip-done))
   (setq org-tree-slide--previous-line -1) ; to update modeline intentionally
@@ -429,14 +430,14 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-skip-comments-toggle ()
-  "Toggle show COMMENT item or not"
+  "Toggle show COMMENT item or not."
   (interactive)
   (setq org-tree-slide-skip-comments (not org-tree-slide-skip-comments))
   (if org-tree-slide-skip-comments
       (message "COMMENT: HIDE") (message "COMMENT: SHOW")))
 
 (defun org-tree-slide-move-next-tree ()
-  "Display the next slide"
+  "Display the next slide."
   (interactive)
   (when (org-tree-slide--active-p)
     (unless (equal org-tree-slide-modeline-display 'outside)
@@ -461,7 +462,7 @@ Profiles:
     ))
 
 (defun org-tree-slide-move-previous-tree ()
-  "Display the previous slide"
+  "Display the previous slide."
   (interactive)
   (when (org-tree-slide--active-p)
     (unless (equal org-tree-slide-modeline-display 'outside)
@@ -487,16 +488,18 @@ Profiles:
 (make-variable-buffer-local 'org-tree-slide--slide-number)
 
 (defvar org-tree-slide--lighter " TSlide"
-  "Lighter for org-tree-slide.
-This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
+  "Lighter for `org-tree-slide'.
+This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 
 (defun org-tree-slide--line-number-at-pos ()
+  "Return the line number when widen."
   (save-excursion
     (save-restriction
       (widen)
       (line-number-at-pos))))
 
 (defun org-tree-slide--update-modeline ()
+  "Update mode line."
   (when (org-tree-slide--active-p)
     (cond
      ((equal org-tree-slide-modeline-display 'lighter)
@@ -513,15 +516,17 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
   "Flag to check the status of overlay for a slide header.")
 
 (defun org-tree-slide--setup ()
+  "Setup."
   (when (org-tree-slide--active-p)
     (org-tree-slide--play)))
 
 (defun org-tree-slide--abort ()
+  "Abort."
   (when (equal major-mode 'org-mode)
     (org-tree-slide--stop)))
 
 (defun org-tree-slide--play ()
-  "Start slide view with the first tree of the org-mode buffer."
+  "Start slide view with the first tree of the orgmode buffer."
   (run-hooks 'org-tree-slide-mode-play-hook)
   (run-hooks 'org-tree-slide-play-hook)
   (org-tree-slide--apply-local-header-to-slide-header)
@@ -537,11 +542,10 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
     (message "%s" org-tree-slide-activate-message)))
 
 (defvar org-tree-slide-startup "overview"
-  "If you have `#+STARTUP:' line in your org buffer, the org buffer will
-   be shown with corresponding status (content, showall, overview:default).")
+  "If you have \"#+startup:\" line in your org buffer, the org buffer will be shown with corresponding status (content, showall, overview:default).")
 
 (defun org-tree-slide--stop ()
-  "Stop the slide view, and redraw the org-mode buffer with #+STARTUP:."
+  "Stop the slide view, and redraw the orgmode buffer with #+STARTUP:."
   (widen)
   (org-show-siblings)
   (when (or org-tree-slide-cursor-init (org-tree-slide--before-first-heading-p))
@@ -606,23 +610,24 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
             (if (eobp) (point-max) (1+ (point)))))))
 
 (defun org-tree-slide--outline-next-heading ()
+  "Go to the next heading."
+  (message "org-tree-slide--outline-next-heading")
   (org-tree-slide--outline-select-method
-   (org-tree-slide--outline-skip-type
-    (if (outline-next-heading) t 'last)
-    (org-outline-level))
+   (if (outline-next-heading) nil 'last)
    'next))
 
 (defun org-tree-slide--outline-previous-heading ()
+  "Go to the previous heading."
+  (message "org-tree-slide--outline-previous-heading")
   (org-tree-slide--outline-select-method
-   (org-tree-slide--outline-skip-type
-    (if (outline-previous-heading) t 'first)
-    (org-outline-level))
+   (if (outline-previous-heading) nil 'first)
    'previous))
 
 (defvar org-tree-slide--all-skipped t
-  "A flag to know if all trees are skipped")
+  "A flag to know if all trees are skipped.")
 
 (defun org-tree-slide--outline-select-method (action direction)
+  "Control heading selection with ACTION and DIRECTION."
   (cond ((and (equal action 'last) (equal direction 'next))
          (unless org-tree-slide--all-skipped
            (org-tree-slide--outline-previous-heading)))  ; Return back.
@@ -642,17 +647,21 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
 ** COMMENT         ; t
    hoge            ; nil
    hoge            ; nil
-*** hoge           ; nil
-"
+*** hoge           ; nil"
   (or (or (org-tree-slide--heading-done-skip-p)
           (org-tree-slide--heading-level-skip-p))
       (org-tree-slide--heading-skip-comment-p)))
 
-(defun org-tree-slide--heading-level-skip-p (&optional level)
+(defun org-tree-slide--heading-level-skip-p (&optional heading-level)
+  "Check the current heading should be skipped or not based on outline level.
+
+If HEADING-LEVEL is non-nil, the provided outline level is checked."
   (and (> org-tree-slide-skip-outline-level 0)
-       (<= org-tree-slide-skip-outline-level (or level (org-outline-level)))))
+       (<= org-tree-slide-skip-outline-level
+           (or heading-level (org-outline-level)))))
 
 (defun org-tree-slide--heading-done-skip-p ()
+  "Return t, if the current heading is already done."
   (and org-tree-slide-skip-done
        (not
         (looking-at
@@ -660,16 +669,12 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
          (concat "^\\*+ " org-not-done-regexp)))))
 
 (defun org-tree-slide--heading-skip-comment-p ()
+  "Return t, if the current heading is commented."
   (and org-tree-slide-skip-comments
        (looking-at (concat "^\\*+ " org-comment-string))))
 
-(defun org-tree-slide--outline-skip-type (has-target-outline current-level)
-  (cond ((equal has-target-outline 'last) 'last)
-        ((equal has-target-outline 'first) 'first)
-        ((org-tree-slide--heading-skip-p) 'skip)
-        (t nil)))
-
 (defun org-tree-slide--slide-in (blank-lines)
+  "Apply slide in.  The slide will be moved from BLANK-LINES below to top."
   (let ((min-line -1))
     (when org-tree-slide-header
       (setq min-line 2))
@@ -679,17 +684,13 @@ This is displayed by default if `org-tree-slide-modeline-display' is `nil'.")
       (setq blank-lines (1- blank-lines)))))
 
 (defvar org-tree-slide-title nil
-  "If you have `#+TITLE:' line in your org buffer, it wil be used as a title
-   of the slide. If the buffer has no `#+TITLE:' line, the name of
-   current buffer will be displayed.")
+  "If you have \"#+title:\" line in your org buffer, it wil be used as a title of the slide.  If the buffer has no \"#+title:\" line, the name of current buffer will be displayed.")
 
 (defvar org-tree-slide-email nil
-  "If you have `#+EMAIL:' line in your org buffer, it will be used as
-   an address of the slide.")
+  "If you have \"#+email:\" line in your org buffer, it will be used as an address of the slide.")
 
 (defvar org-tree-slide-author nil
-  "If you have `#+AUTHOR:' line in your org buffer, it will be used as
-   a name of the slide author.")
+  "If you have \"#+author:\" line in your org buffer, it will be used as a name of the slide author.")
 
 (defcustom org-tree-slide-breadcrumbs " > "
   "Display breadcrumbs in the slide header.
@@ -706,6 +707,7 @@ concat the headers."
   :group 'org-tree-slide)
 
 (defun org-tree-slide--apply-local-header-to-slide-header ()
+  "Form the header."
   (save-excursion
     (org-tree-slide--move-to-the-first-heading)
     (let ((limit (point)))
@@ -719,6 +721,7 @@ concat the headers."
        'org-tree-slide-startup "#\\+STARTUP:[ \t]*\\(.*\\)$" limit))))
 
 (defun org-tree-slide--set-header-var-by-regxep (header-variable regexp limit)
+  "Set HEADER-VARIABLE using REGEXP.  LIMIT is used to change searching bound."
   (goto-char 1)
   (set header-variable
        (if (re-search-forward regexp limit t) (match-string 1) nil)))
@@ -746,6 +749,9 @@ concat the headers."
         (mapconcat 'identity parents delim)))))
 
 (defun org-tree-slide--set-slide-header (blank-lines)
+  "Set the header with overlay.
+
+Some number of BLANK-LINES will be shown below the header."
   (org-tree-slide--hide-slide-header)
   (setq org-tree-slide--header-overlay
         (make-overlay (point-min) (+ 1 (point-min))))
@@ -771,20 +777,24 @@ concat the headers."
                  (org-tree-slide--get-blank-lines blank-lines))))
 
 (defun org-tree-slide--get-blank-lines (lines)
+  "Return breaks by LINES."
   (let ((breaks ""))
     (while (< 0 lines)
       (setq lines (1- lines))
       (setq breaks (concat breaks "\n")))
     breaks))
 
-(defun org-tree-slide--show-slide-header ()
-  (org-tree-slide--set-slide-header 2))
+(defun org-tree-slide--show-slide-header (&optional lines)
+  "Show header.  When LINES is nil, the default value is 2."
+  (org-tree-slide--set-slide-header (or lines 2)))
 
 (defun org-tree-slide--hide-slide-header ()
+  "Hide header."
   (when org-tree-slide--header-overlay
     (delete-overlay org-tree-slide--header-overlay)))
 
 (defun org-tree-slide--move-to-the-first-heading ()
+  "Go to the first heading."
   (setq org-tree-slide--all-skipped t)
   (widen)
   (goto-char 1)
@@ -795,7 +805,7 @@ concat the headers."
     (org-tree-slide--outline-next-heading)))
 
 (defun org-tree-slide--apply-custom-heading-face (status)
-  "Change status of heading face."
+  "Change status of heading face.  If STATUS is nil, apply the default values."
   (unless org-tree-slide-never-touch-face
     (cond (status
            (custom-set-faces
@@ -812,6 +822,7 @@ concat the headers."
            ))))
 
 (defun org-tree-slide--count-slide (&optional pos)
+  "Return formatted the slide number.  If POS is nil, `point' will be used."
   (save-excursion
     (save-restriction
       (widen)
@@ -834,21 +845,21 @@ concat the headers."
           (format "[%d/%d]" current-slide count)))))))
 
 (defun org-tree-slide--active-p ()
+  "Return nil, if the current `major-mode' is not `org-mode'."
   (and org-tree-slide-mode (equal major-mode 'org-mode)))
 
 (defun org-tree-slide--narrowing-p ()
-  "Check the current status if narrowing or not"
+  "Check the current status if narrowing or not."
   (not (and (= (point-min) 1) (= (point-max) (1+ (buffer-size))))))
 
 (defun org-tree-slide--before-first-heading-p ()
-  "Extension of org-before-first-heading-p to support org 6.33x.
+  "Extension of `org-before-first-heading-p' to support org 6.33x.
 #+TITLE: title     ; t
 #+STARTUP: content ; t
 * first            ; t
   hoge             ; nil
 ** second          ; nil
-** third           ; nil
-"
+** third           ; nil"
   (and (org-before-first-heading-p) (not (org-tree-slide--narrowing-p))))
 
 (defun org-tree-slide--first-heading-with-narrow-p ()
@@ -858,16 +869,14 @@ concat the headers."
    hoge            ; nil
 *** second         ; nil
     hoge           ; nil
-*** third          ; nil
-"
+*** third          ; nil"
   (and (org-tree-slide--narrowing-p) (= (point-at-bol) (point-min))))
 
 (defun org-tree-slide--last-tree-p (target)
-  "Check if the target point is in the last heading or it's body.
+  "Check if the TARGET point is in the last heading or it's body.
 ** n-1             ; nil
 ** n               ; t
-   hoge            ; t
-"
+   hoge            ; t"
   (save-excursion
     (save-restriction
       (widen)
@@ -878,6 +887,7 @@ concat the headers."
 
 (defun org-tree-slide--last-heading-position ()
   "Return the position of the last heading.
+
    If the position does not exist in the buffer, then return nil."
   (save-excursion
     (save-restriction
@@ -886,6 +896,7 @@ concat the headers."
 
 (defun org-tree-slide--beginning-of-tree ()
   "Return beginning point of the line, or t.
+
    If the position does not exist in the buffer, then return nil."
   (beginning-of-line)
   (if (and (not (org-tree-slide--heading-skip-p)) ;if the header has to be skipped
