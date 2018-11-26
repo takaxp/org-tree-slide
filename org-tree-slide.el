@@ -6,8 +6,8 @@
 ;; Version: 2.8.8
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
-;; Repository: https://github.com/takaxp/org-tree-slide
-;; Keywords: org-mode, presentation, narrowing
+;; URL: https://github.com/takaxp/org-tree-slide
+;; Keywords: convenience, org-mode, presentation, narrowing
 ;;
 ;; Committers: Yuuki ARISAWA (@uk-ar)
 ;;             Eric S Fraga
