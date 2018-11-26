@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.8
+;; Version: 2.8.9
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -611,14 +611,12 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 
 (defun org-tree-slide--outline-next-heading ()
   "Go to the next heading."
-  (message "org-tree-slide--outline-next-heading")
   (org-tree-slide--outline-select-method
    (if (outline-next-heading) nil 'last)
    'next))
 
 (defun org-tree-slide--outline-previous-heading ()
   "Go to the previous heading."
-  (message "org-tree-slide--outline-previous-heading")
   (org-tree-slide--outline-select-method
    (if (outline-previous-heading) nil 'first)
    'previous))
@@ -727,12 +725,10 @@ concat the headers."
        (if (re-search-forward regexp limit t) (match-string 1) nil)))
 
 (defface org-tree-slide-header-overlay-face
-  '((((class color) (background dark))
-     (:bold t :foreground "white" :background "black"))
-    (((class color) (background light))
-     (:bold t :foreground "black" :background "white"))
-    (t (:bold t :foreground "black" :background "white")))
-  "Face for org-tree-slide--header-overlay")
+  `((t (:bold t :foreground ,(face-foreground 'default)
+              :background ,(face-background 'default))))
+  "Face for org-tree-slide--header-overlay"
+  :group 'org-tree-slide)
 
 (defun org-tree-slide--get-parents (&optional delim)
   "Get parent headlines and concat them with DELIM."
