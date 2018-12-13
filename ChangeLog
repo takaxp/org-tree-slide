@@ -1,7 +1,7 @@
 2018-11-26  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Extract header colors from default face of frame
-	- the implementation of org-tree-slide-header-overlay-face is updated so that user don't need to set the variable explicitly. In case user customized theme is updated after loading this package, an appropriate function for updating the face spec should be run in `org-tree-slide-play-hook'. For instance,
+	- the implementation of `org-tree-slide-header-overlay-face' is updated so that user don't need to set the variable explicitly. In case user customized theme is updated after loading this package, an appropriate function for updating the face spec should be run in `org-tree-slide-play-hook'. For instance,
 	  (defun my-reload-header-face ()
         (face-spec-set 'org-tree-slide-header-overlay-face
                  `((t (:bold t :foreground ,(face-foreground 'default)

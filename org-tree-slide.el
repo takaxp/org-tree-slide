@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.9
+;; Version: 2.8.10
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -77,7 +77,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.9"
+(defconst org-tree-slide "2.8.10"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -895,12 +895,13 @@ Some number of BLANK-LINES will be shown below the header."
 
    If the position does not exist in the buffer, then return nil."
   (beginning-of-line)
-  (if (and (not (org-tree-slide--heading-skip-p)) ;if the header has to be skipped
+  ;; if the header has to be skipped
+  (if (and (not (org-tree-slide--heading-skip-p))
            (org-at-heading-p))
       (point)
     (progn
-      (outline-previous-heading)      ;go to previous heading
-      (org-tree-slide--beginning-of-tree)) ;recursion until a visible heading is found
+      (when (outline-previous-heading)
+        (org-tree-slide--beginning-of-tree)))
     )) ; return position or nil.
 
 (provide 'org-tree-slide)
