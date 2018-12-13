@@ -75,7 +75,6 @@
 
 (require 'org)
 (require 'org-timer)
-;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
 (defconst org-tree-slide "2.8.11"
   "The version number of the org-tree-slide.el.")
@@ -444,7 +443,8 @@ Profiles:
       (message "   Next >>"))
     (cond
      ((and (org-tree-slide--narrowing-p) ;displaying a slide, not the contents
-           (org-tree-slide--last-tree-p (progn (beginning-of-line) (point)))) ;the last subtree
+           (org-tree-slide--last-tree-p
+            (progn (beginning-of-line) (point)))) ;the last subtree
       (org-tree-slide-content))
      ((or
        (or (and (org-tree-slide--before-first-heading-p)
@@ -457,9 +457,7 @@ Profiles:
       (org-tree-slide--outline-next-heading)
       (org-tree-slide--display-tree-with-narrow))
      ;; stay the same slide (for CONTENT MODE, on the subtrees)
-     (t nil (org-tree-slide--display-tree-with-narrow)))
-    ;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
-    ))
+     (t nil (org-tree-slide--display-tree-with-narrow)))))
 
 (defun org-tree-slide-move-previous-tree ()
   "Display the previous slide."
@@ -477,7 +475,6 @@ Profiles:
       (org-tree-slide--outline-previous-heading)
       (org-tree-slide--outline-previous-heading))
      (t (org-tree-slide--outline-previous-heading)))
-    ;;    (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (org-clock-in) )
     (org-tree-slide--display-tree-with-narrow)
     ;; To avoid error of missing header in Emacs24
     (if (= emacs-major-version 24)
@@ -563,7 +560,6 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
     (org-timer-stop))
   (when org-tree-slide-heading-emphasis
     (org-tree-slide--apply-custom-heading-face nil))
-  ;;  (when (and org-tree-slide-skip-done (looking-at (concat "^\\*+ " org-not-done-regexp))) (when (org-clocking-p) (org-clock-out) ) )
   (run-hooks 'org-tree-slide-mode-stop-hook)
   (run-hooks 'org-tree-slide-stop-hook)
   (when org-tree-slide-deactivate-message
@@ -646,8 +642,8 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
    hoge            ; nil
    hoge            ; nil
 *** hoge           ; nil"
-  (or (or (org-tree-slide--heading-done-skip-p)
-          (org-tree-slide--heading-level-skip-p))
+  (or (org-tree-slide--heading-done-skip-p)
+      (org-tree-slide--heading-level-skip-p)
       (org-tree-slide--heading-skip-comment-p)))
 
 (defun org-tree-slide--heading-level-skip-p (&optional heading-level)
@@ -840,6 +836,28 @@ Some number of BLANK-LINES will be shown below the header."
          (t
           (format "[%d/%d]" current-slide count)))))))
 
+(defun org-tree-slide--last-point-at-bot ()
+  "Return nil, if no heading is the last tree.  Otherwise, return the point.
+Searching the last point will start from the current cursor position.
+Move point to an appropriate position before searching by call this function."
+  (save-excursion
+    (save-restriction
+      (widen)
+      (unless (org-tree-slide--before-first-heading-p)
+        (org-tree-slide--beginning-of-tree)
+        (if (org-tree-slide--heading-skip-p)
+            (when (outline-previous-heading)
+              (org-tree-slide--last-point-at-bot))
+          (point))))))
+
+(defun org-tree-slide--beginning-of-tree ()
+  "Move point to beginning of tree.
+If the cursor exist before first heading, do nothing."
+  (unless (org-tree-slide--before-first-heading-p)
+    (beginning-of-line)
+    (unless (org-at-heading-p)
+      (org-tree-slide--outline-previous-heading))))
+
 (defun org-tree-slide--active-p ()
   "Return nil, if the current `major-mode' is not `org-mode'."
   (and org-tree-slide-mode (equal major-mode 'org-mode)))
@@ -884,28 +902,6 @@ Some number of BLANK-LINES will be shown below the header."
         (if l
             (= p l)
           nil)))))
-
-(defun org-tree-slide--last-point-at-bot ()
-  "Return nil, if no heading is the last tree.  Otherwise, return the point.
-Searching the last point will start from the current cursor position.
-Move point to an appropriate position before searching by call this function."
-  (save-excursion
-    (save-restriction
-      (widen)
-      (unless (org-tree-slide--before-first-heading-p)
-        (org-tree-slide--beginning-of-tree)
-        (if (org-tree-slide--heading-skip-p)
-            (when (outline-previous-heading)
-              (org-tree-slide--last-point-at-bot))
-          (point))))))
-
-(defun org-tree-slide--beginning-of-tree ()
-  "Move point to beginning of tree.
-If the cursor exist before first heading, do nothing."
-  (unless (org-tree-slide--before-first-heading-p)
-    (beginning-of-line)
-    (unless (org-at-heading-p)
-      (org-tree-slide--outline-previous-heading))))
 
 (provide 'org-tree-slide)
 
