@@ -325,8 +325,10 @@ Profiles:
     (org-tree-slide--hide-slide-header)
     (org-tree-slide--move-to-the-first-heading)
     (org-overview)
-    (org-content (if (> org-tree-slide-skip-outline-level 0)
-                     (1- org-tree-slide-skip-outline-level)))
+    (cond ((eq 0 org-tree-slide-skip-outline-level)
+           (org-content))
+          ((< 2 org-tree-slide-skip-outline-level)
+           (org-content (1- org-tree-slide-skip-outline-level))))
     (message "<<  CONTENT  >>")))
 
 ;;;###autoload
@@ -648,7 +650,6 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 
 (defun org-tree-slide--heading-level-skip-p (&optional heading-level)
   "Check the current heading should be skipped or not based on outline level.
-
 If HEADING-LEVEL is non-nil, the provided outline level is checked."
   (and (> org-tree-slide-skip-outline-level 0)
        (<= org-tree-slide-skip-outline-level
