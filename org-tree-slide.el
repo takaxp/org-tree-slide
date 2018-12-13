@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.10
+;; Version: 2.8.11
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -77,7 +77,7 @@
 (require 'org-timer)
 ;;(require 'org-clock)			; org-clock-in, -out, -clocking-p
 
-(defconst org-tree-slide "2.8.10"
+(defconst org-tree-slide "2.8.11"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -877,32 +877,35 @@ Some number of BLANK-LINES will be shown below the header."
     (save-restriction
       (widen)
       (goto-char target)
-      (if (org-tree-slide--beginning-of-tree)
-          (= (point) (org-tree-slide--last-heading-position))
-        nil))))
+      (org-tree-slide--beginning-of-tree)
+      (let ((p (point))
+            (v (goto-char (1+ (buffer-size))))
+            (l (org-tree-slide--last-point-at-bot)))
+        (if l
+            (= p l)
+          nil)))))
 
-(defun org-tree-slide--last-heading-position ()
-  "Return the position of the last heading.
-
-   If the position does not exist in the buffer, then return nil."
+(defun org-tree-slide--last-point-at-bot ()
+  "Return nil, if no heading is the last tree.  Otherwise, return the point.
+Searching the last point will start from the current cursor position.
+Move point to an appropriate position before searching by call this function."
   (save-excursion
     (save-restriction
-      (goto-char (buffer-size))
-      (org-tree-slide--beginning-of-tree))))
+      (widen)
+      (unless (org-tree-slide--before-first-heading-p)
+        (org-tree-slide--beginning-of-tree)
+        (if (org-tree-slide--heading-skip-p)
+            (when (outline-previous-heading)
+              (org-tree-slide--last-point-at-bot))
+          (point))))))
 
 (defun org-tree-slide--beginning-of-tree ()
-  "Return beginning point of the line, or t.
-
-   If the position does not exist in the buffer, then return nil."
-  (beginning-of-line)
-  ;; if the header has to be skipped
-  (if (and (not (org-tree-slide--heading-skip-p))
-           (org-at-heading-p))
-      (point)
-    (progn
-      (when (outline-previous-heading)
-        (org-tree-slide--beginning-of-tree)))
-    )) ; return position or nil.
+  "Move point to beginning of tree.
+If the cursor exist before first heading, do nothing."
+  (unless (org-tree-slide--before-first-heading-p)
+    (beginning-of-line)
+    (unless (org-at-heading-p)
+      (org-tree-slide--outline-previous-heading))))
 
 (provide 'org-tree-slide)
 
