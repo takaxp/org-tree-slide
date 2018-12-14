@@ -322,6 +322,7 @@ Profiles:
   (interactive)
   (when (org-tree-slide--active-p)
     (run-hooks 'org-tree-slide-before-content-view-hook)
+    (widen)
     (org-tree-slide--hide-slide-header)
     (org-tree-slide--move-to-the-first-heading)
     (org-overview)
@@ -330,6 +331,53 @@ Profiles:
           ((< 2 org-tree-slide-skip-outline-level)
            (org-content (1- org-tree-slide-skip-outline-level))))
     (message "<<  CONTENT  >>")))
+
+;;;###autoload
+(defun org-tree-slide-move-next-tree ()
+  "Display the next slide."
+  (interactive)
+  (when (org-tree-slide--active-p)
+    (unless (equal org-tree-slide-modeline-display 'outside)
+      (message "   Next >>"))
+    (cond
+     ;; displaying a slide, not the contents
+     ((and (org-tree-slide--narrowing-p)
+           (org-tree-slide--last-tree-p (point)))
+      (org-tree-slide-content))
+     ((or
+       (or (and (org-tree-slide--before-first-heading-p)
+                (not (org-at-heading-p)))
+           (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
+       (or (org-tree-slide--first-heading-with-narrow-p)
+           (not (org-at-heading-p))))
+      (run-hooks 'org-tree-slide-before-move-next-hook)
+      (widen)
+      (org-tree-slide--outline-next-heading)
+      (org-tree-slide--display-tree-with-narrow))
+     ;; stay the same slide (for CONTENT MODE, on the subtrees)
+     (t (org-tree-slide--display-tree-with-narrow)))))
+
+;;;###autoload
+(defun org-tree-slide-move-previous-tree ()
+  "Display the previous slide."
+  (interactive)
+  (when (org-tree-slide--active-p)
+    (unless (equal org-tree-slide-modeline-display 'outside)
+      (message "<< Previous"))
+    (org-tree-slide--hide-slide-header)		; for at the first heading
+    (run-hooks 'org-tree-slide-before-move-previous-hook)
+    (widen)
+    (cond
+     ((org-tree-slide--before-first-heading-p)
+      (message "before first heading (org-tree-slide)" ))
+     ((not (org-at-heading-p))
+      (org-tree-slide--outline-previous-heading)
+      (org-tree-slide--outline-previous-heading))
+     (t (org-tree-slide--outline-previous-heading)))
+    (org-tree-slide--display-tree-with-narrow)
+    ;; To avoid error of missing header in Emacs24
+    (if (= emacs-major-version 24)
+        (goto-char (point-min)))))
 
 ;;;###autoload
 (defun org-tree-slide-simple-profile ()
@@ -437,51 +485,6 @@ Profiles:
   (if org-tree-slide-skip-comments
       (message "COMMENT: HIDE") (message "COMMENT: SHOW")))
 
-(defun org-tree-slide-move-next-tree ()
-  "Display the next slide."
-  (interactive)
-  (when (org-tree-slide--active-p)
-    (unless (equal org-tree-slide-modeline-display 'outside)
-      (message "   Next >>"))
-    (cond
-     ((and (org-tree-slide--narrowing-p) ;displaying a slide, not the contents
-           (org-tree-slide--last-tree-p
-            (progn (beginning-of-line) (point)))) ;the last subtree
-      (org-tree-slide-content))
-     ((or
-       (or (and (org-tree-slide--before-first-heading-p)
-                (not (org-at-heading-p)))
-           (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
-       (or (org-tree-slide--first-heading-with-narrow-p)
-           (not (org-at-heading-p))))
-      (run-hooks 'org-tree-slide-before-move-next-hook)
-      (widen)
-      (org-tree-slide--outline-next-heading)
-      (org-tree-slide--display-tree-with-narrow))
-     ;; stay the same slide (for CONTENT MODE, on the subtrees)
-     (t nil (org-tree-slide--display-tree-with-narrow)))))
-
-(defun org-tree-slide-move-previous-tree ()
-  "Display the previous slide."
-  (interactive)
-  (when (org-tree-slide--active-p)
-    (unless (equal org-tree-slide-modeline-display 'outside)
-      (message "<< Previous"))
-    (org-tree-slide--hide-slide-header)		; for at the first heading
-    (run-hooks 'org-tree-slide-before-move-previous-hook)
-    (widen)
-    (cond
-     ((org-tree-slide--before-first-heading-p)
-      (message "before first heading (org-tree-slide)" ))
-     ((not (org-at-heading-p))
-      (org-tree-slide--outline-previous-heading)
-      (org-tree-slide--outline-previous-heading))
-     (t (org-tree-slide--outline-previous-heading)))
-    (org-tree-slide--display-tree-with-narrow)
-    ;; To avoid error of missing header in Emacs24
-    (if (= emacs-major-version 24)
-        (goto-char (point-min)))))
-
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar org-tree-slide--slide-number nil)
 (make-variable-buffer-local 'org-tree-slide--slide-number)
@@ -509,7 +512,8 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
      ;; just return the current org-tree-slide--slide-number quickly.
      ((equal org-tree-slide-modeline-display 'outside)
       org-tree-slide--slide-number)
-     (t org-tree-slide--lighter))))
+     (t
+      org-tree-slide--lighter))))
 
 (defvar org-tree-slide--header-overlay nil
   "Flag to check the status of overlay for a slide header.")
@@ -525,20 +529,25 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
     (org-tree-slide--stop)))
 
 (defun org-tree-slide--play ()
-  "Start slide view with the first tree of the orgmode buffer."
+  "Start slide view with the first tree of the org mode buffer."
   (run-hooks 'org-tree-slide-mode-play-hook)
   (run-hooks 'org-tree-slide-play-hook)
-  (org-tree-slide--apply-local-header-to-slide-header)
-  (when org-tree-slide-heading-emphasis
-    (org-tree-slide--apply-custom-heading-face t))
-  (when (or org-tree-slide-cursor-init (org-tree-slide--before-first-heading-p))
-    (org-tree-slide--move-to-the-first-heading))
-  (org-tree-slide--beginning-of-tree)
-  (when (org-tree-slide--heading-skip-p)
-    (org-tree-slide--outline-next-heading))
-  (org-tree-slide--display-tree-with-narrow)
-  (when org-tree-slide-activate-message
-    (message "%s" org-tree-slide-activate-message)))
+  (if (org-tree-slide--all-skip-p)
+      (let ((org-tree-slide-deactivate-message
+             "[notice] Terminated. Skipped all slides."))
+        (org-tree-slide--stop))
+    (org-tree-slide--apply-local-header-to-slide-header)
+    (when org-tree-slide-heading-emphasis
+      (org-tree-slide--apply-custom-heading-face t))
+    (when (or org-tree-slide-cursor-init
+              (org-tree-slide--before-first-heading-p))
+      (org-tree-slide--move-to-the-first-heading))
+    (org-tree-slide--beginning-of-tree)
+    (when (org-tree-slide--heading-skip-p)
+      (org-tree-slide--outline-next-heading))
+    (org-tree-slide--display-tree-with-narrow)
+    (when org-tree-slide-activate-message
+      (message "%s" org-tree-slide-activate-message))))
 
 (defvar org-tree-slide-startup "overview"
   "If you have \"#+startup:\" line in your org buffer, the org buffer will be shown with corresponding status (content, showall, overview:default).")
@@ -610,32 +619,39 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 (defun org-tree-slide--outline-next-heading ()
   "Go to the next heading."
   (org-tree-slide--outline-select-method
-   (if (outline-next-heading) nil 'last)
+   (if (outline-next-heading)
+       (if (org-tree-slide--heading-skip-p)
+           'skip
+         nil)
+     'last)
    'next))
 
 (defun org-tree-slide--outline-previous-heading ()
   "Go to the previous heading."
   (org-tree-slide--outline-select-method
-   (if (outline-previous-heading) nil 'first)
+   (if (outline-previous-heading)
+       (if (org-tree-slide--heading-skip-p)
+           'skip
+         nil)
+     'first)
    'previous))
-
-(defvar org-tree-slide--all-skipped t
-  "A flag to know if all trees are skipped.")
 
 (defun org-tree-slide--outline-select-method (action direction)
   "Control heading selection with ACTION and DIRECTION."
-  (cond ((and (equal action 'last) (equal direction 'next))
-         (unless org-tree-slide--all-skipped
-           (org-tree-slide--outline-previous-heading)))  ; Return back.
-        ((and (equal action 'first) (equal direction 'previous))
-         (unless org-tree-slide--all-skipped
-           (org-tree-slide--move-to-the-first-heading))) ; Stay first heading
-        ((and (equal action 'skip) (equal direction 'next))
-         (org-tree-slide--outline-next-heading))      ; recursive call
-        ((and (equal action 'skip) (equal direction 'previous))
-         (org-tree-slide--outline-previous-heading))  ; recursive call
+  (cond ((and (equal action 'last)
+              (equal direction 'next))
+         (when (org-tree-slide--heading-skip-p)
+           (org-tree-slide-content))) ;; would be not reached here.
+        ((and (equal action 'first)
+              (equal direction 'previous))
+         (org-tree-slide--move-to-the-first-heading))
+        ((and (equal action 'skip)
+              (equal direction 'next))
+         (org-tree-slide--outline-next-heading)) ;; find next again
+        ((and (equal action 'skip)
+              (equal direction 'previous))
+         (org-tree-slide--outline-previous-heading)) ;; find previous again
         (t
-         (setq org-tree-slide--all-skipped nil)
          nil)))
 
 (defun org-tree-slide--heading-skip-p ()
@@ -787,15 +803,16 @@ Some number of BLANK-LINES will be shown below the header."
     (delete-overlay org-tree-slide--header-overlay)))
 
 (defun org-tree-slide--move-to-the-first-heading ()
-  "Go to the first heading."
-  (setq org-tree-slide--all-skipped t)
+  "Go to the first heading.  Narrowing will be canceled.
+If no heading in the buffer, Return nil and stay top of the buffer.
+Otherwise, return the point.  This doesn't check whether skipping or not."
   (widen)
   (goto-char 1)
-  (unless (looking-at "^\\*+ ")
-    (outline-next-heading))
-  (when (org-tree-slide--heading-skip-p)
-    (setq org-tree-slide--all-skipped t)
-    (org-tree-slide--outline-next-heading)))
+  (if (looking-at "^\\*+ ")
+      (progn
+        (beginning-of-line)
+        (point))
+    (outline-next-heading)))
 
 (defun org-tree-slide--apply-custom-heading-face (status)
   "Change status of heading face.  If STATUS is nil, apply the default values."
@@ -887,8 +904,18 @@ If the cursor exist before first heading, do nothing."
 *** third          ; nil"
   (and (org-tree-slide--narrowing-p) (= (point-at-bol) (point-min))))
 
+(defun org-tree-slide--all-skip-p ()
+  "Check the buffer has at least one slide to be shown."
+  (save-excursion
+    (save-restriction
+      (widen)
+      (goto-char (1+ (buffer-size)))
+      (unless (org-tree-slide--last-point-at-bot)
+        t))))
+
 (defun org-tree-slide--last-tree-p (target)
   "Check if the TARGET point is in the last heading or it's body.
+If every heading is specified as skip, return nil.
 ** n-1             ; nil
 ** n               ; t
    hoge            ; t"
