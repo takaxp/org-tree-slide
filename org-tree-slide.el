@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.11
+;; Version: 2.8.12
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -76,7 +76,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.8.11"
+(defconst org-tree-slide "2.8.12"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -222,17 +222,6 @@ nil: keep the same position."
   :group 'org-tree-slide)
 
 (defvar org-tree-slide-mode nil)
-;; These hooks was obsoleted, and will be deleted by Oct. 2015.
-(defvar org-tree-slide-mode-play-hook nil
-  "[obsolete] A hook run when `org-tree-slide--play' is evaluated to start the slide show.")
-(defvar org-tree-slide-mode-stop-hook nil
-  "[obsolete] A hook run when `org-tree-slide--stop' is evaluated to stop the slide show.")
-(defvar org-tree-slide-mode-before-narrow-hook nil
-  "[obsolete] A hook run before evaluating `org-tree-slide--display-tree-with-narrow'.")
-(defvar org-tree-slide-mode-after-narrow-hook nil
-  "[obsolete] A hook run after evaluating `org-tree-slide--display-tree-with-narrow'.")
-
-;; Updated hooks
 (defvar org-tree-slide-play-hook nil
   "A hook run when `org-tree-slide--play' is evaluated to start the slideshow.")
 (defvar org-tree-slide-stop-hook nil
@@ -530,7 +519,6 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 
 (defun org-tree-slide--play ()
   "Start slide view with the first tree of the org mode buffer."
-  (run-hooks 'org-tree-slide-mode-play-hook)
   (run-hooks 'org-tree-slide-play-hook)
   (if (org-tree-slide--all-skip-p)
       (let ((org-tree-slide-deactivate-message
@@ -571,14 +559,12 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
     (org-timer-stop))
   (when org-tree-slide-heading-emphasis
     (org-tree-slide--apply-custom-heading-face nil))
-  (run-hooks 'org-tree-slide-mode-stop-hook)
   (run-hooks 'org-tree-slide-stop-hook)
   (when org-tree-slide-deactivate-message
     (message "%s" org-tree-slide-deactivate-message)))
 
 (defun org-tree-slide--display-tree-with-narrow ()
   "Show a tree with narrowing and also set a header at the head of slide."
-  (run-hooks 'org-tree-slide-mode-before-narrow-hook)
   (run-hooks 'org-tree-slide-before-narrow-hook)
   (when (equal org-tree-slide-modeline-display 'outside)
     (setq org-tree-slide--slide-number
@@ -599,8 +585,7 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
     (org-tree-slide--slide-in org-tree-slide-slide-in-blank-lines))
   (when org-tree-slide-header
     (org-tree-slide--show-slide-header))
-  (run-hooks 'org-tree-slide-after-narrow-hook)
-  (run-hooks 'org-tree-slide-mode-after-narrow-hook))
+  (run-hooks 'org-tree-slide-after-narrow-hook))
 
 (defun org-tree-slide--show-subtree ()
   "Show everything after this heading at deeper levels except COMMENT items."
