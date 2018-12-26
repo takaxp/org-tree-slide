@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.12
+;; Version: 2.8.13
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -76,7 +76,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.8.12"
+(defconst org-tree-slide "2.8.13"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -87,6 +87,8 @@
   "Skip slides if a heading level is higher than or equal to this variable.
 
    `0': never skip at any heading
+   `1': will skip all slides and be terminated automatically.
+        Not recommended to use this number.
    e.g. set `4',
    *** heading A  ; display as a slide
        entry
