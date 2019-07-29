@@ -1,9 +1,9 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2018 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2019 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.13
+;; Version: 2.8.14
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -14,6 +14,7 @@
 ;;             Eike Kettner
 ;;             Stefano BENNATI
 ;;             Matus Goljer
+;;             Boruch Baum
 ;;
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -76,7 +77,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.8.13"
+(defconst org-tree-slide "2.8.14"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -238,8 +239,6 @@ nil: keep the same position."
   "A hook run before moving to the previous slide.")
 (defvar org-tree-slide-before-content-view-hook nil
   "A hook run before showing the content.")
-(defvar org-tree-slide-content-pos nil
-  "Where to return when toggling function `org-tree-slide-content'.")
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
@@ -309,21 +308,24 @@ Profiles:
   (org-overview)
   (goto-char 1))
 
+(defvar org-tree-slide-content--pos nil
+  "Where to return when toggling function `org-tree-slide-content'.")
+
 ;;;###autoload
 (defun org-tree-slide-content ()
   "Change the display for viewing content of the org file during the slide view mode is active."
   (interactive)
   (when (org-tree-slide--active-p)
     (cond
-     (org-tree-slide-content-pos
-;     (widen)
-      (goto-char org-tree-slide-content-pos)
+     (org-tree-slide-content--pos
+      ;; (widen)
+      (goto-char org-tree-slide-content--pos)
       (org-tree-slide--display-tree-with-narrow)
-      (goto-char org-tree-slide-content-pos)
-      (setq org-tree-slide-content-pos nil))
+      (goto-char org-tree-slide-content--pos)
+      (setq org-tree-slide-content--pos nil))
      (t
-      (setq org-tree-slide-content-pos
-        (max (1+ (point-min)) (point)))
+      (setq org-tree-slide-content--pos
+            (max (1+ (point-min)) (point)))
       (run-hooks 'org-tree-slide-before-content-view-hook)
       (widen)
       (org-tree-slide--hide-slide-header)
@@ -333,9 +335,9 @@ Profiles:
              (org-content))
             ((< 2 org-tree-slide-skip-outline-level)
              (org-content (1- org-tree-slide-skip-outline-level))))
-;     (goto-char (point-min))
+      ;;  (goto-char (point-min))
       (redisplay)
-      (goto-char org-tree-slide-content-pos)
+      (goto-char org-tree-slide-content--pos)
       (message "<<  CONTENT  >>")))))
 
 ;;;###autoload
@@ -472,6 +474,7 @@ Profiles:
   (org-tree-slide--apply-custom-heading-face org-tree-slide-heading-emphasis))
 
 (defvar org-tree-slide--previous-line 0)
+
 ;;;###autoload
 (defun org-tree-slide-skip-done-toggle ()
   "Toggle show TODO item only or not."
