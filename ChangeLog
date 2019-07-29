@@ -1,3 +1,9 @@
+2019-06-30  Boruch Baum  <boruch_baum@gmx.com>
+
+	* org-tree-slide.el (org-tree-slide-content): Toggle back to slide
+	presentation, to exact position where you left off.
+	(org-tree-slide-content-pos): New variable to support this feature.
+
 2018-11-26  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Extract header colors from default face of frame
@@ -235,4 +241,3 @@
 2011-09-28  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Initial release
-

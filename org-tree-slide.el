@@ -238,6 +238,8 @@ nil: keep the same position."
   "A hook run before moving to the previous slide.")
 (defvar org-tree-slide-before-content-view-hook nil
   "A hook run before showing the content.")
+(defvar org-tree-slide-content-pos nil
+  "Where to return when toggling function `org-tree-slide-content'.")
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
@@ -312,16 +314,29 @@ Profiles:
   "Change the display for viewing content of the org file during the slide view mode is active."
   (interactive)
   (when (org-tree-slide--active-p)
-    (run-hooks 'org-tree-slide-before-content-view-hook)
-    (widen)
-    (org-tree-slide--hide-slide-header)
-    (org-tree-slide--move-to-the-first-heading)
-    (org-overview)
-    (cond ((eq 0 org-tree-slide-skip-outline-level)
-           (org-content))
-          ((< 2 org-tree-slide-skip-outline-level)
-           (org-content (1- org-tree-slide-skip-outline-level))))
-    (message "<<  CONTENT  >>")))
+    (cond
+     (org-tree-slide-content-pos
+;     (widen)
+      (goto-char org-tree-slide-content-pos)
+      (org-tree-slide--display-tree-with-narrow)
+      (goto-char org-tree-slide-content-pos)
+      (setq org-tree-slide-content-pos nil))
+     (t
+      (setq org-tree-slide-content-pos
+        (max (1+ (point-min)) (point)))
+      (run-hooks 'org-tree-slide-before-content-view-hook)
+      (widen)
+      (org-tree-slide--hide-slide-header)
+      (org-tree-slide--move-to-the-first-heading)
+      (org-overview)
+      (cond ((eq 0 org-tree-slide-skip-outline-level)
+             (org-content))
+            ((< 2 org-tree-slide-skip-outline-level)
+             (org-content (1- org-tree-slide-skip-outline-level))))
+;     (goto-char (point-min))
+      (redisplay)
+      (goto-char org-tree-slide-content-pos)
+      (message "<<  CONTENT  >>")))))
 
 ;;;###autoload
 (defun org-tree-slide-move-next-tree ()
