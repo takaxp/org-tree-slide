@@ -708,6 +708,9 @@ If HEADING-LEVEL is non-nil, the provided outline level is checked."
 (defvar org-tree-slide-author nil
   "If you have \"#+author:\" line in your org buffer, it will be used as a name of the slide author.")
 
+(defvar org-tree-slide-date nil
+  "If you have \"#+date:\" line in your org buffer, it will be used as the date.")
+
 (defcustom org-tree-slide-breadcrumbs " > "
   "Display breadcrumbs in the slide header.
 
@@ -733,6 +736,15 @@ concat the headers."
        'org-tree-slide-author "#\\+AUTHOR:[ \t]*\\(.*\\)$" limit)
       (org-tree-slide--set-header-var-by-regxep
        'org-tree-slide-email "#\\+EMAIL:[ \t]*\\(.*\\)$" limit)
+
+      ; Use the date header or the current date if there isn't one
+      (setq org-tree-slide-date nil)
+      (org-tree-slide--set-header-var-by-regxep
+       'org-tree-slide-date "#\\+DATE:[ \t]*\\(.*\\)$" limit)
+      (if (not org-tree-slide-date)
+          (setq org-tree-slide-date
+                (format-time-string "%Y-%m-%d")))
+
       (org-tree-slide--set-header-var-by-regxep
        'org-tree-slide-startup "#\\+STARTUP:[ \t]*\\(.*\\)$" limit))))
 
@@ -778,7 +790,7 @@ Some number of BLANK-LINES will be shown below the header."
                    (concat (if org-tree-slide-title org-tree-slide-title
                              (buffer-name))
                            "\n"
-                           (format-time-string "%Y-%m-%d") "  "
+                           org-tree-slide-date "  "
                            (when org-tree-slide-author
                              (concat org-tree-slide-author "  "))
                            (when org-tree-slide-email
