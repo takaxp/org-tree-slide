@@ -1,12 +1,14 @@
-#+TITLE:	README for Org Tree Slide
-#+AUTHOR:	Takaaki Ishikawa
-#+EMAIL:	takaxp@ieee.org
-#+DATE:		2018-04-25
-#+UPDATE:	08:35:36
-#+STARTUP:	content
+#+title:	README for Org Tree Slide
+#+author:	Takaaki Ishikawa
+#+email:	takaxp@ieee.org
+#+date:		[2020-05-27 Wed 23:08]
+#+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
 [[http://stable.melpa.org/#/org-tree-slide][http://stable.melpa.org/packages/org-tree-slide-badge.svg]]
+
+#+caption: An example demo of org-tree-slide
+[[https://github.com/takaxp/contents/blob/master/org-tree-slide/demo1.gif]]
 
 * 1. What's this?
 
@@ -41,12 +43,12 @@ Then open an org file, just type =C-<= and =C->=, which means =C-M-,= and =C-M-.
 
 It is recommended to change the keybindings to make your presentation smoothly. Here is an example.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (with-eval-after-load "org-tree-slide"
   (define-key org-tree-slide-mode-map (kbd "<f9>") 'org-tree-slide-move-previous-tree)
   (define-key org-tree-slide-mode-map (kbd "<f10>") 'org-tree-slide-move-next-tree)
   )
-#+END_SRC
+#+end_src
 
 ** 2.1 el-get recipe
 
@@ -69,17 +71,17 @@ Normally, presentations will appear in full screen or frame maximized. [[https:/
 
 Assigning a single key to =org-tree-slide-mode= is recommended.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
 (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
-#+END_SRC
+#+end_src
 
 OR
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (define-key org-mode-map (kbd "<f8>") 'org-tree-slide-mode)
 (define-key org-mode-map (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
-#+END_SRC
+#+end_src
 
 * 4. Profiles
 
@@ -87,18 +89,18 @@ Three useful profiles are available. Please select a profile that is the most su
 
 If you select =simple= profile, call the following command while =org-tree-slide-mode= is ON.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 M-x org-tree-slide-simple-profile
-#+END_SRC
+#+end_src
 
 If you want to use this setting as the default, put the following configuration including recommended settings into your =.emacs=.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (when (require 'org-tree-slide nil t)
   (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
   (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
   (org-tree-slide-simple-profile))
-#+END_SRC
+#+end_src
 
 =org-tree-slide-presentation-profile= and =org-tree-slide-narrowing-control-profile= are also available.
 
@@ -116,7 +118,7 @@ Type =M-x org-tree-slide-simple-profile= while =org-tree-slide-mode= is ON.
 
 ** 4-2. `Presentation'
 
-This profile is the default setting of org-tree-slide. If an org buffer includes =#+TITLE:=, =#+EMAIL:=, and =#+AUTHOR:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line.
+This profile is the default setting of org-tree-slide. If an org buffer includes =#+title:=, =#+email:=, and =#+author:=, org-tree-slide attempts to use those variables in the slide header. A date in the header will be set with the presentation of the day. You can enjoy a slide-in effect, the current slide number in mode line.
 
 # A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
 
@@ -124,7 +126,7 @@ If you want to show the content of your presentation, type =C-x s c= or =M-x org
 
 It is possible to skip slides when a heading level is higher than or equal to a  value of =org-tree-slide-skip-outline-level=. see User variables.
 
-To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the head of the buffer and the trees will be rendered according to the value of =#+STARTUP:= if possible.
+To exit a presentation, set =org-tree-slide-mode= OFF. The cursor move to the head of the buffer and the trees will be rendered according to the value of =#+startup:= if possible.
 
 =M-x org-tree-slide-presentation-profile=
 
@@ -152,7 +154,7 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 * 5. User variables
 
-#+CAPTION: User variables
+#+caption: User variables
 |----+--------------------------------------------+---------------+---------|
 |    | Variable                                   | Default value | Select  |
 |----+--------------------------------------------+---------------+---------|
@@ -173,12 +175,12 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 15 | org-tree-slide-breadcrumbs                 | " > "         | String  |
 | 16 | org-tree-slide-breadcrumbs-hide-todo-state | t             | Boolean |
 
-#+BEGIN_QUOTE
+#+begin_quote
 [*1] { nil| 'lighter | 'outside }
   'outside: shown in the mode line outside of lighter
   'lighter: shown in lighter (slow)
        nil: nothing to be shown"
-#+END_QUOTE
+#+end_quote
 
 ** 5-1. Useful settings for experts
 
@@ -186,7 +188,7 @@ If you like this elisp, the following setting is more useful. Try it!
 
 In this case, =<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned in order to control org-tree-slide.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (when (require 'org-tree-slide nil t)
   (global-set-key (kbd "<f8>") 'org-tree-slide-mode)
   (global-set-key (kbd "S-<f8>") 'org-tree-slide-skip-done-toggle)
@@ -199,7 +201,7 @@ In this case, =<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned in order to contr
   (setq org-tree-slide-skip-outline-level 4)
   (org-tree-slide-narrowing-control-profile)
   (setq org-tree-slide-skip-done nil)))
-#+END_SRC
+#+end_src
 
 * 6. Functions
 ** Control functions
