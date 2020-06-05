@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2019 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.14
+;; Version: 2.8.15
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -77,7 +77,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.8.14"
+(defconst org-tree-slide "2.8.15"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -173,6 +173,16 @@ nil: keep the same position."
    'outside: update infomation when moving to the next/previous slide
    nil: nothing to be shown"
   :type 'symbol
+  :group 'org-tree-slide)
+
+(defcustom org-tree-slide-indicator
+  '(:next "   Next >>" :previous "<< Previous" :content "<<  CONTENT  >>")
+  "Specify the indication messages for changing slides.
+The specified string for NEXT will be used in `org-tree-slide-move-next-tree',
+PREVIOUS will be used in `org-tree-slide-move-previous-tree'.
+CONTENT will be used in `org-tree-slide-content'.
+If you want to show anything, just specify nil."
+  :type 'plist
   :group 'org-tree-slide)
 
 (defvar org-tree-slide-mode-map
@@ -338,15 +348,20 @@ Profiles:
       ;;  (goto-char (point-min))
       (redisplay)
       (goto-char org-tree-slide-content--pos)
-      (message "<<  CONTENT  >>")))))
+      (let ((msg (plist-get org-tree-slide-indicator :content))
+            (message-log-max nil))
+        (when msg
+          (message "%s" msg)))))))
 
 ;;;###autoload
 (defun org-tree-slide-move-next-tree ()
   "Display the next slide."
   (interactive)
   (when (org-tree-slide--active-p)
-    (unless (equal org-tree-slide-modeline-display 'outside)
-      (message "   Next >>"))
+    (let ((msg (plist-get org-tree-slide-indicator :next))
+          (message-log-max nil))
+      (when msg
+        (message "%s" msg)))
     (cond
      ;; displaying a slide, not the contents
      ((and (org-tree-slide--narrowing-p)
@@ -370,8 +385,10 @@ Profiles:
   "Display the previous slide."
   (interactive)
   (when (org-tree-slide--active-p)
-    (unless (equal org-tree-slide-modeline-display 'outside)
-      (message "<< Previous"))
+    (let ((msg (plist-get org-tree-slide-indicator :previous))
+          (message-log-max nil))
+      (when msg
+        (message "%s" msg)))
     (org-tree-slide--hide-slide-header)		; for at the first heading
     (run-hooks 'org-tree-slide-before-move-previous-hook)
     (widen)
@@ -737,7 +754,7 @@ concat the headers."
       (org-tree-slide--set-header-var-by-regxep
        'org-tree-slide-email "#\\+EMAIL:[ \t]*\\(.*\\)$" limit)
 
-      ; Use the date header or the current date if there isn't one
+                                        ; Use the date header or the current date if there isn't one
       (setq org-tree-slide-date nil)
       (org-tree-slide--set-header-var-by-regxep
        'org-tree-slide-date "#\\+DATE:[ \t]*\\(.*\\)$" limit)
@@ -834,19 +851,19 @@ Otherwise, return the point.  This doesn't check whether skipping or not."
 (defun org-tree-slide--apply-custom-heading-face (status)
   "Change status of heading face.  If STATUS is nil, apply the default values."
   (unless org-tree-slide-never-touch-face
-    (cond (status
-           (custom-set-faces
-            '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1))))
-            '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
-            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))
-            '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4))))))
-          (t
-           (custom-set-faces
-            '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1-init))))
-            '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
-            '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init))))
-            '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4-init)))))
-           ))))
+    (cond
+     (status
+      (custom-set-faces
+       '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1))))
+       '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
+       '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))
+       '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4))))))
+     (t
+      (custom-set-faces
+       '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1-init))))
+       '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
+       '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init))))
+       '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4-init)))))))))
 
 (defun org-tree-slide--count-slide (&optional pos)
   "Return formatted the slide number.  If POS is nil, `point' will be used."
