@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2020-05-27 Wed 23:08]
+#+date:		[2020-06-05 Fri 16:07]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -174,12 +174,17 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 14 | org-tree-slide-fold-subtrees-skipped       | t             | Boolean |
 | 15 | org-tree-slide-breadcrumbs                 | " > "         | String  |
 | 16 | org-tree-slide-breadcrumbs-hide-todo-state | t             | Boolean |
+| 17 | org-tree-slide-indicator                   | plist         | [*2]    |
 
 #+begin_quote
 [*1] { nil| 'lighter | 'outside }
   'outside: shown in the mode line outside of lighter
   'lighter: shown in lighter (slow)
        nil: nothing to be shown"
+
+[*2] '(:next "   Next >>" :previous "<< Previous" :content "<<  CONTENT  >>")
+   If you prefer to show nothing for entering content mode, then specify as
+   '(:next "   Next >>" :previous "<< Previous" :content nil)
 #+end_quote
 
 ** 5-1. Useful settings for experts
