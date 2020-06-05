@@ -1,6 +1,6 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2019 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2020 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Version: 2.8.15

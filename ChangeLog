@@ -1,3 +1,11 @@
+2020-06-05  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el (org-tree-slide-indicator): New plist to control showing messages in mini buffer
+
+2020-01-14  Norman Walsh  <ndw@nwalsh.com>
+
+	* org-tree-slide.el: Add support for date header (#31)
+
 2019-07-30  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el (org-tree-slide-content--pos): Rename
@@ -29,7 +37,7 @@
 
 2016-05-14  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
-	* org-tree-slide.el: Merged breadcrumbs feature (#23)
+	* org-tree-slide.el: Merged breadcrumbs feature (#23) (by Matus)
 	- org-tree-slide-breadcrumbs is added to show breadcrumbs in the header
 
 2015-12-23  Takaaki ISHIKAWA  <takaxp@ieee.org>
