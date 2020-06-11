@@ -78,7 +78,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.8.15"
+(defconst org-tree-slide "2.8.16"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
