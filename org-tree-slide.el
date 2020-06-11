@@ -916,7 +916,7 @@ If the cursor exist before first heading, do nothing."
 
 (defun org-tree-slide--narrowing-p ()
   "Check the current status if narrowing or not."
-  (not (and (= (point-min) 1) (= (point-max) (1+ (buffer-size))))))
+  (buffer-narrowed-p))
 
 (defun org-tree-slide--before-first-heading-p ()
   "Extension of `org-before-first-heading-p' to support org 6.33x.
