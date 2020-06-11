@@ -3,7 +3,8 @@
 ;; Copyright (C) 2011-2020 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.15
+;; Version: 2.8.16
+;; Package-Requires: ((emacs "24.3"))
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -364,13 +365,13 @@ Profiles:
         (message "%s" msg)))
     (cond
      ;; displaying a slide, not the contents
-     ((and (org-tree-slide--narrowing-p)
+     ((and (buffer-narrowed-p)
            (org-tree-slide--last-tree-p (point)))
       (org-tree-slide-content))
      ((or
        (or (and (org-tree-slide--before-first-heading-p)
                 (not (org-at-heading-p)))
-           (and (= (point-at-bol) 1) (not (org-tree-slide--narrowing-p))))
+           (and (= (point-at-bol) 1) (not (buffer-narrowed-p))))
        (or (org-tree-slide--first-heading-with-narrow-p)
            (not (org-at-heading-p))))
       (run-hooks 'org-tree-slide-before-move-next-hook)
@@ -914,10 +915,6 @@ If the cursor exist before first heading, do nothing."
   "Return nil, if the current `major-mode' is not `org-mode'."
   (and org-tree-slide-mode (equal major-mode 'org-mode)))
 
-(defun org-tree-slide--narrowing-p ()
-  "Check the current status if narrowing or not."
-  (buffer-narrowed-p))
-
 (defun org-tree-slide--before-first-heading-p ()
   "Extension of `org-before-first-heading-p' to support org 6.33x.
 #+TITLE: title     ; t
@@ -926,7 +923,7 @@ If the cursor exist before first heading, do nothing."
   hoge             ; nil
 ** second          ; nil
 ** third           ; nil"
-  (and (org-before-first-heading-p) (not (org-tree-slide--narrowing-p))))
+  (and (org-before-first-heading-p) (not (buffer-narrowed-p))))
 
 (defun org-tree-slide--first-heading-with-narrow-p ()
   "Check the current point is on the first heading with narrowing.
@@ -936,7 +933,7 @@ If the cursor exist before first heading, do nothing."
 *** second         ; nil
     hoge           ; nil
 *** third          ; nil"
-  (and (org-tree-slide--narrowing-p) (= (point-at-bol) (point-min))))
+  (and (buffer-narrowed-p) (= (point-at-bol) (point-min))))
 
 (defun org-tree-slide--all-skip-p ()
   "Check the buffer has at least one slide to be shown."
