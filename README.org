@@ -122,7 +122,7 @@ This profile is the default setting of org-tree-slide. If an org buffer includes
 
 # A presentation with a count down timer is started by =M-x org-tree-slide-play-with-timer=.
 
-If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown in a buffer like a Table Of Content except some headings configured as skipping by =org-tree-slide-slip-outline-level=. Find a heading that you want to show, and type =C->=, the presentation will be resumed.
+If you want to show the content of your presentation, type =C-x s c= or =M-x org-tree-slide-content=. All of the headings will be shown in a buffer like a Table Of Content except some headings configured as skipping by =org-tree-slide-skip-outline-level=. Find a heading that you want to show, and type =C->=, the presentation will be resumed.
 
 It is possible to skip slides when a heading level is higher than or equal to a  value of =org-tree-slide-skip-outline-level=. see User variables.
 
