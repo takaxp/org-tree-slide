@@ -186,6 +186,12 @@ If you want to show anything, just specify nil."
   :type 'plist
   :group 'org-tree-slide)
 
+(defcustom org-tree-slide-exit-at-next-last-slide nil
+  "Exit at right next door to the last slide if this value is non-nil.
+Otherwise stay in content."
+  :type 'boolean
+  :group 'org-tree-slide)
+
 (defvar org-tree-slide-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x s c") 'org-tree-slide-content)
@@ -250,6 +256,8 @@ If you want to show anything, just specify nil."
   "A hook run before moving to the previous slide.")
 (defvar org-tree-slide-before-content-view-hook nil
   "A hook run before showing the content.")
+(defvar org-tree-slide-before-exit-hook nil
+  "A hook run before exit from `org-tree-slide-mode'")
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
@@ -367,7 +375,12 @@ Profiles:
      ;; displaying a slide, not the contents
      ((and (buffer-narrowed-p)
            (org-tree-slide--last-tree-p (point)))
-      (org-tree-slide-content))
+      (if org-tree-slide-exit-at-next-last-slide
+          ;; exit at right next door to the last slide
+          (progn
+            (run-hooks 'org-tree-slide-before-exit-hook)
+            (org-tree-slide-mode 0))
+        (org-tree-slide-content)))
      ((or
        (or (and (org-tree-slide--before-first-heading-p)
                 (not (org-at-heading-p)))
