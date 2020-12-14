@@ -113,7 +113,7 @@ When nil, the body of the subtrees will be revealed."
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-content-margin-top 2
-  "Specify the number of blank lines, the slide will move from this line."
+  "Specify the margin between the slide header and its content."
   :type 'integer
   :group 'org-tree-slide)
 
