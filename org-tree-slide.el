@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2020 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.17
+;; Version: 2.8.18
 ;; Package-Requires: ((emacs "24.4"))
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
@@ -78,7 +78,7 @@
 (require 'org)
 (require 'org-timer)
 
-(defconst org-tree-slide "2.8.17"
+(defconst org-tree-slide "2.8.18"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -553,16 +553,11 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 (defvar org-tree-slide--header-face-autoconfig nil)
 (defun org-tree-slide--setup ()
   "Setup."
-  (when org-tree-slide--header-face-autoconfig
-    (org-tree-slide--reset-header-face)
-    (advice-add 'enable-theme :around #'org-tree-slide--enable-theme))
   (when (org-tree-slide--active-p)
     (org-tree-slide--play)))
 
 (defun org-tree-slide--abort ()
   "Abort."
-  (when org-tree-slide--header-face-autoconfig
-    (advice-remove 'enable-theme #'org-tree-slide--enable-theme))
   (when (equal major-mode 'org-mode)
     (org-tree-slide--stop)))
 
@@ -783,26 +778,9 @@ concat the headers."
   (set header-variable
        (if (re-search-forward regexp limit t) (match-string 1) nil)))
 
-(defface org-tree-slide-header-overlay-face
-  `((t (:bold t :foreground ,(face-foreground 'default)
-              :background ,(face-background 'default))))
+(defface org-tree-slide-header-overlay-face '((t :inherit default))
   "Face for org-tree-slide--header-overlay"
   :group 'org-tree-slide)
-
-(defun org-tree-slide--reset-header-face ()
-  "Reset the header face."
-  (face-spec-set 'org-tree-slide-header-overlay-face
-                 `((t (:bold t
-                             :foreground ,(face-foreground 'default)
-                             :background ,(face-background 'default))))))
-
-(defun org-tree-slide--enable-theme (f theme)
-  "Extend `enable-theme'.
-F is the original function.
-THEME is identical to the original arguments."
-  (funcall f theme)
-  (when (eq theme 'user)
-    (org-tree-slide--reset-header-face)))
 
 (defun org-tree-slide--get-parents (&optional delim)
   "Get parent headlines and concat them with DELIM."
