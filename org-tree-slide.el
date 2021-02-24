@@ -112,6 +112,11 @@ When nil, the body of the subtrees will be revealed."
   :type 'boolean
   :group 'org-tree-slide)
 
+(defcustom org-tree-slide-content-margin-top 2
+  "Specify the margin between the slide header and its content."
+  :type 'integer
+  :group 'org-tree-slide)
+
 (defcustom org-tree-slide-slide-in-effect t
   "Using a visual effect of slide-in for displaying trees."
   :type 'boolean
@@ -717,7 +722,7 @@ If HEADING-LEVEL is non-nil, the provided outline level is checked."
   "Apply slide in.  The slide will be moved from BLANK-LINES below to top."
   (let ((min-line -1))
     (when org-tree-slide-header
-      (setq min-line 2))
+      (setq min-line org-tree-slide-content-margin-top))
     (while (< min-line blank-lines)
       (org-tree-slide--set-slide-header blank-lines)
       (sit-for org-tree-slide-slide-in-waiting)
@@ -851,7 +856,7 @@ Some number of BLANK-LINES will be shown below the header."
 
 (defun org-tree-slide--show-slide-header (&optional lines)
   "Show header.  When LINES is nil, the default value is 2."
-  (org-tree-slide--set-slide-header (or lines 2)))
+  (org-tree-slide--set-slide-header (or lines org-tree-slide-content-margin-top)))
 
 (defun org-tree-slide--hide-slide-header ()
   "Hide header."
