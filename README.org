@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2020-06-05 Fri 23:39]
+#+date:		[2021-02-25 Thu 22:12]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -268,3 +268,11 @@ see also [[https://github.com/takaxp/org-tree-slide/blob/master/ChangeLog][Chang
 
 The author is Takaaki ISHIKAWA (takaxp@ieee.org).
 Feel free to email me or use a mention of twitter ([[https://twitter.com/#!/takaxp][@takaxp]])
+
+* 9. Videos
+
+We can watch some videos that kindly introduce =org-tree-slide.el=:
+- [[https://www.youtube.com/watch?v=vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]] (presented by [[https://www.youtube.com/watch?v=vz9aLmxYJB0][System Crafters]])
+- [[https://www.youtube.com/watch?v=vz9aLmxYJB0][Show presentation using Org Mode]] (presented by [[https://www.youtube.com/watch?v=vz9aLmxYJB0][Blackberry Boy]])
+
+Thank you!
