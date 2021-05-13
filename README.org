@@ -175,6 +175,7 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 | 15 | org-tree-slide-breadcrumbs                 | " > "         | String  |
 | 16 | org-tree-slide-breadcrumbs-hide-todo-state | t             | Boolean |
 | 17 | org-tree-slide-indicator                   | plist         | [*2]    |
+| 18 | org-tree-slide-exit-at-next-last-slide     | nil           | Boolean |
 
 #+begin_quote
 [*1] { nil| 'lighter | 'outside }
@@ -244,6 +245,7 @@ These functions will toggle =org-tree-slide-mode= ON, automatically.
   - org-tree-slide-after-narrow-hook
   - org-tree-slide-before-move-next-hook
   - org-tree-slide-before-move-previous-hook
+  - org-tree-slide-before-exit-hook
 
 NOTE: For senior user, some hook were renamed, please update your configurations
 
