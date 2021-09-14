@@ -201,22 +201,22 @@ If you want to show anything, just specify nil."
   "The keymap for `org-tree-slide'.")
 
 (defcustom org-tree-slide-heading-level-1
-  '((t (:inherit outline-1 :height 1.5 :bold t)))
+  '(outline-1 :height 1.5 bold)
   "Level 1."
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-level-2
-  '((t (:inherit outline-2 :height 1.4 :bold t)))
+  '(outline-2 :height 1.4 bold)
   "Level 2."
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-level-3
-  '((t (:inherit outline-3 :height 1.3 :bold t)))
+  '(outline-3 :height 1.3 bold)
   "Level 3."
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-level-4
-  '((t (:inherit outline-4 :height 1.2 :bold t)))
+  '(outline-4 :height 1.2 bold)
   "Level 4."
   :group 'org-tree-slide)
 
