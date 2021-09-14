@@ -220,10 +220,10 @@ If you want to show anything, just specify nil."
   "Level 4."
   :group 'org-tree-slide)
 
-(defvar-local org-tree-slide-heading-level-1-cookie)
-(defvar-local org-tree-slide-heading-level-2-cookie)
-(defvar-local org-tree-slide-heading-level-3-cookie)
-(defvar-local org-tree-slide-heading-level-4-cookie)
+(defvar-local org-tree-slide-heading-level-1-cookie nil)
+(defvar-local org-tree-slide-heading-level-2-cookie nil)
+(defvar-local org-tree-slide-heading-level-3-cookie nil)
+(defvar-local org-tree-slide-heading-level-4-cookie nil)
 
 (defvar org-tree-slide-mode nil)
 (defvar org-tree-slide-play-hook nil
