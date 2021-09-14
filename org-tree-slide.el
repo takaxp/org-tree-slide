@@ -200,45 +200,30 @@ If you want to show anything, just specify nil."
     map)
   "The keymap for `org-tree-slide'.")
 
-(defface org-tree-slide-heading-level-1-init
-  '((t (:inherit outline-1)))
-  "Level 1."
-  :group 'org-tree-slide)
-
-(defface org-tree-slide-heading-level-2-init
-  '((t (:inherit outline-2)))
-  "Level 2."
-  :group 'org-tree-slide)
-
-(defface org-tree-slide-heading-level-3-init
-  '((t (:inherit outline-3)))
-  "Level 3."
-  :group 'org-tree-slide)
-
-(defface org-tree-slide-heading-level-4-init
-  '((t (:inherit outline-4)))
-  "Level 4."
-  :group 'org-tree-slide)
-
-(defface org-tree-slide-heading-level-1
+(defcustom org-tree-slide-heading-level-1
   '((t (:inherit outline-1 :height 1.5 :bold t)))
   "Level 1."
   :group 'org-tree-slide)
 
-(defface org-tree-slide-heading-level-2
+(defcustom org-tree-slide-heading-level-2
   '((t (:inherit outline-2 :height 1.4 :bold t)))
   "Level 2."
   :group 'org-tree-slide)
 
-(defface org-tree-slide-heading-level-3
+(defcustom org-tree-slide-heading-level-3
   '((t (:inherit outline-3 :height 1.3 :bold t)))
   "Level 3."
   :group 'org-tree-slide)
 
-(defface org-tree-slide-heading-level-4
+(defcustom org-tree-slide-heading-level-4
   '((t (:inherit outline-4 :height 1.2 :bold t)))
   "Level 4."
   :group 'org-tree-slide)
+
+(defvar-local org-tree-slide-heading-level-1-cookie)
+(defvar-local org-tree-slide-heading-level-2-cookie)
+(defvar-local org-tree-slide-heading-level-3-cookie)
+(defvar-local org-tree-slide-heading-level-4-cookie)
 
 (defvar org-tree-slide-mode nil)
 (defvar org-tree-slide-play-hook nil
@@ -858,17 +843,20 @@ Otherwise, return the point.  This doesn't check whether skipping or not."
   (unless org-tree-slide-never-touch-face
     (cond
      (status
-      (custom-set-faces
-       '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1))))
-       '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2))))
-       '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3))))
-       '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4))))))
+      (setq
+       org-tree-slide-heading-level-1-cookie
+       (face-remap-add-relative 'org-level-1 org-tree-slide-heading-level-1)
+       org-tree-slide-heading-level-2-cookie
+       (face-remap-add-relative 'org-level-2 org-tree-slide-heading-level-2)
+       org-tree-slide-heading-level-3-cookie
+       (face-remap-add-relative 'org-level-3 org-tree-slide-heading-level-3)
+       org-tree-slide-heading-level-4-cookie
+       (face-remap-add-relative 'org-level-4 org-tree-slide-heading-level-4)))
      (t
-      (custom-set-faces
-       '(org-level-1 ((t (:inherit org-tree-slide-heading-level-1-init))))
-       '(org-level-2 ((t (:inherit org-tree-slide-heading-level-2-init))))
-       '(org-level-3 ((t (:inherit org-tree-slide-heading-level-3-init))))
-       '(org-level-4 ((t (:inherit org-tree-slide-heading-level-4-init)))))))))
+      (face-remap-remove-relative org-tree-slide-heading-level-1-cookie)
+      (face-remap-remove-relative org-tree-slide-heading-level-2-cookie)
+      (face-remap-remove-relative org-tree-slide-heading-level-3-cookie)
+      (face-remap-remove-relative org-tree-slide-heading-level-4-cookie)))))
 
 (defun org-tree-slide--count-slide (&optional pos)
   "Return formatted the slide number.  If POS is nil, `point' will be used."
