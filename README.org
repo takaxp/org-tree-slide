@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2021-02-26 Fri 01:04]
+#+date:		[2021-10-10 Sun 02:05]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -247,7 +247,35 @@ These functions will toggle =org-tree-slide-mode= ON, automatically.
 
 NOTE: For senior user, some hook were renamed, please update your configurations
 
-* 7. History
+* 7. Additional settings
+** Hide org-meta-line
+
+The following code could be useful if you want to make =#+= lines invisible during presentation.
+
+#+begin_src emacs-lisp
+(with-eval-after-load "org-tree-slide"
+  (defvar my-hide-org-meta-line-p nil)
+  (defun my-hide-org-meta-line ()
+    (interactive)
+    (setq my-hide-org-meta-line-p t)
+    (set-face-attribute 'org-meta-line nil
+			                  :foreground (face-attribute 'default :background)))
+  (defun my-show-org-meta-line ()
+    (interactive)
+    (setq my-hide-org-meta-line-p nil)
+    (set-face-attribute 'org-meta-line nil :foreground nil))
+
+  (defun my-toggle-org-meta-line ()
+    (interactive)
+    (if my-hide-org-meta-line-p
+	      (my-show-org-meta-line) (my-hide-org-meta-line)))
+
+  (add-hook 'org-tree-slide-play-hook #'my-hide-org-meta-line)
+  (add-hook 'org-tree-slide-stop-hook #'my-show-org-meta-line))
+#+end_src
+
+
+* 8. History
 
 see also [[https://github.com/takaxp/org-tree-slide/blob/master/ChangeLog][ChangeLog]] for details
 
@@ -264,12 +292,12 @@ see also [[https://github.com/takaxp/org-tree-slide/blob/master/ChangeLog][Chang
 | v2.0.0  | 2011-12-01@17:41 | Add profiles and support org 6.33x      |
 | v1.0.0  | 2011-09-28@20:59 | Release the initial version             |
 
-* 8. Contact
+* 9. Contact
 
 The author is Takaaki ISHIKAWA (takaxp@ieee.org).
 Feel free to email me or use a mention of twitter ([[https://twitter.com/#!/takaxp][@takaxp]])
 
-* 9. Videos
+* 10. Videos
 
 We can watch some videos that kindly introduce =org-tree-slide.el=:
 - [[https://www.youtube.com/watch?v=vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]] (presented by [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters]])
