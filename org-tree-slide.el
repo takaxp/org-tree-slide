@@ -796,16 +796,12 @@ Some number of BLANK-LINES will be shown below the header."
       (overlay-put org-tree-slide--header-overlay 'display
                    (concat (if org-tree-slide-title org-tree-slide-title
                              (buffer-name))
-
-                           ;; Use one line for date and author (but only if either of those is set)
-                           (when (or org-tree-slide-date org-tree-slide-author org-tree-slide-email)
-                             "\n"
-                             org-tree-slide-date "  "
-                             (when org-tree-slide-author
-                               (concat org-tree-slide-author "  "))
-                             (when org-tree-slide-email
-                               (concat "<" org-tree-slide-email ">")))
-
+                           "\n"
+                           org-tree-slide-date "  "
+                           (when org-tree-slide-author
+                             (concat org-tree-slide-author "  "))
+                           (when org-tree-slide-email
+                             (concat "<" org-tree-slide-email ">"))
                            (when org-tree-slide-breadcrumbs
                              (concat "\n" (org-tree-slide--get-parents
                                            org-tree-slide-breadcrumbs)))
