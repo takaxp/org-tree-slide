@@ -123,10 +123,10 @@ When nil, the body of the subtrees will be revealed."
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-cursor-init t
-  "Specify a cursor position when exit slideshow.
+  "Specify a cursor position at start and exit of the slideshow.
 
 Non-nil: the cursor will move automatically to the head of buffer.
-nil: keep the same position."
+nil: keep the same position.  The slideshow will start from the heading that has the cursor."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -243,7 +243,7 @@ If you want to show anything, just specify nil."
 
 ;;;###autoload
 (define-minor-mode org-tree-slide-mode
-  "A presentation tool for org-mode.
+  "A presentation tool for Org Mode.
 
 Usage:
   - Set minimal recommendation settings in .emacs
@@ -257,7 +257,7 @@ Usage:
 Profiles:
 
   - [ Simple ]
- => M-x `org-tree-slide-simple-profile'
+ => \\`M-x org-tree-slide-simple-profile'
 
     1. No header display
     2. No slide-in effect
@@ -266,7 +266,7 @@ Profiles:
     5. Display every type of tree
 
   - [ Presentation ]
- => M-x `org-tree-slide-presentation-profile'
+ => \\`M-x org-tree-slide-presentation-profile'
 
     1. Display header
     2. Enable slide-in effect
@@ -275,14 +275,13 @@ Profiles:
     5. Display every type of tree
 
   - [ TODO Pursuit with narrowing ]
- => M-x `org-tree-slide-narrowing-control-profile'
+ => \\`M-x org-tree-slide-narrowing-control-profile'
 
     1. No header display
     2. No slide-in effect
     3. The cursor will keep the same position when exit
     4. Display slide number in mode line
-    5. Display TODO trees only
-"
+    5. Display TODO trees only"
   :init-value nil
   :lighter (:eval (org-tree-slide--update-modeline))
   :keymap org-tree-slide-mode-map
@@ -764,7 +763,7 @@ concat the headers."
        (if (re-search-forward regexp limit t) (match-string 1) nil)))
 
 (defface org-tree-slide-header-overlay-face '((t :inherit default))
-  "Face for org-tree-slide--header-overlay"
+  "Face for org-tree-slide--header-overlay."
   :group 'org-tree-slide)
 
 (defun org-tree-slide--get-parents (&optional delim)
