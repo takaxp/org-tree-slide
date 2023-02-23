@@ -1,3 +1,14 @@
+2023-02-23  Lukas Zumvorde  <lukaszumvorde@web.de>
+
+	* org-tree-slide.el: Prevent warning messages during native compilation
+	Add line breaks to docstrings to shorten them to <80 characters per line
+	Replace deprecated function calls with their new equivalents
+	- hide-subtree -> outline-hide-subtree
+	- show-children -> outline-show-children
+	- show-subtree -> outline-show-subtree
+	require face-remap file explicitly to ensure face-remap-remove-relative is loaded
+	Add missing type definition to defcustom of org-subtree-slide-heading-level-{1,2,3,4}
+
 2020-06-11  Takaaki ISHIKAWA  <takaxp@ieee.org>
 
 	* org-tree-slide.el: Depends on emacs 24.3
