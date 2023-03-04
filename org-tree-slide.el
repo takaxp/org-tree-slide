@@ -77,6 +77,7 @@
 
 (require 'org)
 (require 'org-timer)
+(require 'face-remap)
 
 (defconst org-tree-slide "2.8.18"
   "The version number of the org-tree-slide.el.")
@@ -126,7 +127,8 @@ When nil, the body of the subtrees will be revealed."
   "Specify a cursor position at start and exit of the slideshow.
 
 Non-nil: the cursor will move automatically to the head of buffer.
-nil: keep the same position.  The slideshow will start from the heading that has the cursor."
+nil: keep the same position.  The slideshow will start from the heading
+     that has the cursor."
   :type 'boolean
   :group 'org-tree-slide)
 
@@ -203,21 +205,25 @@ If you want to show anything, just specify nil."
 (defcustom org-tree-slide-heading-level-1
   '(outline-1 :height 1.5 bold)
   "Level 1."
+  :type 'list
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-level-2
   '(outline-2 :height 1.4 bold)
   "Level 2."
+  :type 'list
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-level-3
   '(outline-3 :height 1.3 bold)
   "Level 3."
+  :type 'list
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-heading-level-4
   '(outline-4 :height 1.2 bold)
   "Level 4."
+  :type 'list
   :group 'org-tree-slide)
 
 (defvar-local org-tree-slide-heading-level-1-cookie nil)
@@ -313,7 +319,8 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-content ()
-  "Change the display for viewing content of the org file during the slide view mode is active."
+  "Change the display for viewing content of the org file during the
+slide view mode is active."
   (interactive)
   (when (org-tree-slide--active-p)
     (cond
@@ -566,7 +573,9 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
       (message "%s" org-tree-slide-activate-message))))
 
 (defvar org-tree-slide-startup "overview"
-  "If you have \"#+startup:\" line in your org buffer, the org buffer will be shown with corresponding status (content, showall, overview:default).")
+  "If you have \"#+startup:\" line in your org buffer,
+the org buffer will be shown with corresponding status
+(content, showall, overview:default).")
 
 (defun org-tree-slide--stop ()
   "Stop the slide view, and redraw the orgmode buffer with #+STARTUP:."
@@ -600,13 +609,13 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
     (setq org-tree-slide--previous-line (org-tree-slide--line-number-at-pos)))
   (goto-char (point-at-bol))
   (unless (org-tree-slide--before-first-heading-p)
-    (hide-subtree)	; support CONTENT (subtrees are shown)
+    (outline-hide-subtree)	; support CONTENT (subtrees are shown)
     (org-show-entry)
     ;; If this is the last level to be displayed, show the full content
     (if (and (not org-tree-slide-fold-subtrees-skipped)
              (org-tree-slide--heading-level-skip-p (1+ (org-outline-level))))
         (org-tree-slide--show-subtree)
-      (show-children))
+      (outline-show-children))
     ;;    (org-cycle-hide-drawers 'all) ; disabled due to performance reduction
     (org-narrow-to-subtree))
   (when org-tree-slide-slide-in-effect
@@ -622,8 +631,8 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
     (outline-map-region
      (lambda ()
        (if (org-tree-slide--heading-skip-comment-p)
-           (hide-subtree)
-         (show-subtree)
+           (outline-hide-subtree)
+         (outline-show-subtree)
          (org-cycle-hide-drawers 'all)))
      (point)
      (progn (outline-end-of-subtree)
@@ -708,13 +717,17 @@ If HEADING-LEVEL is non-nil, the provided outline level is checked."
       (setq blank-lines (1- blank-lines)))))
 
 (defvar org-tree-slide-title nil
-  "If you have \"#+title:\" line in your org buffer, it wil be used as a title of the slide.  If the buffer has no \"#+title:\" line, the name of current buffer will be displayed.")
+  "If you have \"#+title:\" line in your org buffer, it wil be used as a title
+of the slide.  If the buffer has no \"#+title:\" line, the name of
+current buffer will be displayed.")
 
 (defvar org-tree-slide-email nil
-  "If you have \"#+email:\" line in your org buffer, it will be used as an address of the slide.")
+  "If you have \"#+email:\" line in your org buffer,
+it will be used as an address of the slide.")
 
 (defvar org-tree-slide-author nil
-  "If you have \"#+author:\" line in your org buffer, it will be used as a name of the slide author.")
+  "If you have \"#+author:\" line in your org buffer,
+it will be used as a name of the slide author.")
 
 (defvar org-tree-slide-date nil
   "If you have \"#+date:\" line in your org buffer, it will be used as the date.")
