@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2021-10-10 Sun 02:05]
+#+date:		[2023-03-05 Sun 13:49]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -63,6 +63,8 @@ Now, you can install `org-tree-slide' via [[http://melpa.org/#/org-tree-slide][M
 ** 2.2 Requirements
   - Org-mode 6.33x or higher version is required.
   - This elisp doesn't require any additional packages.
+  - Emacs 25.2 or later is required. But users of Emacs 25.1 or earlier (at least 24.4) can still use this package. Please load =org-tree-slide-compt.el= before activating org-tree-slide.el.
+
 ** 2.3 additional package (moom.el)
 
 Normally, presentations will appear in full screen or frame maximized. [[https://github.com/takaxp/moom#org-mode-org-tree-slide][moom]] is useful in such cases since the package can change frame position and size by keyboard and the font size will be increased suitably for your presentation.

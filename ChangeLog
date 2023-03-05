@@ -1,3 +1,9 @@
+2023-03-05  Takaaki ISHIKAWA  <takaxp@ieee.org>
+
+	* org-tree-slide.el: This package requires Emacs 25.2 or later
+	- outline-hide-subtree, outlineshow-children, and outline-show-subtree are NOT defined in outline.el contained in Emacs 25.1 or earlier
+	- Users of Emacs 25.1 or earlier can still use org-tree-slide.el by loading org-tree-slide-compt.el before activating org-tree-slide.el.
+
 2023-02-23  Lukas Zumvorde  <lukaszumvorde@web.de>
 
 	* org-tree-slide.el: Prevent warning messages during native compilation
