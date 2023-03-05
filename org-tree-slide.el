@@ -1,10 +1,10 @@
 ;;; org-tree-slide.el --- A presentation tool for org-mode
 ;;
-;; Copyright (C) 2011-2020 Takaaki ISHIKAWA
+;; Copyright (C) 2011-2023 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.18
-;; Package-Requires: ((emacs "24.4"))
+;; Version: 2.8.19
+;; Package-Requires: ((emacs "25.2"))
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
 ;; URL: https://github.com/takaxp/org-tree-slide
@@ -83,7 +83,7 @@
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
-  "User variables for org-tree-slide."
+  "User variables for `org-tree-slide'."
   :group 'org-structure)
 
 (defcustom org-tree-slide-skip-outline-level 0
@@ -177,8 +177,8 @@ nil: keep the same position.  The slideshow will start from the heading
 (defcustom org-tree-slide-modeline-display 'outside
   "Specify how to display the slide number in mode line.
 
-   'lighter: shown in lighter (update info actively, then it's slow)
-   'outside: update infomation when moving to the next/previous slide
+   \='lighter: shown in lighter (update info actively, then it's slow)
+   \='outside: update infomation when moving to the next/previous slide
    nil: nothing to be shown"
   :type 'symbol
   :group 'org-tree-slide)
@@ -253,8 +253,8 @@ If you want to show anything, just specify nil."
 
 Usage:
   - Set minimal recommendation settings in .emacs
-    (global-set-key (kbd \"<f8>\") 'org-tree-slide-mode)
-    (global-set-key (kbd \"S-<f8>\") 'org-tree-slide-skip-done-toggle)
+    (global-set-key (kbd \"<f8>\") \='org-tree-slide-mode)
+    (global-set-key (kbd \"S-<f8>\") \='org-tree-slide-skip-done-toggle)
   - Open an org file
   - Type <f8> to start org-tree-slide-mode
   - Type C-< / C-> to move between trees
@@ -319,8 +319,7 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-content ()
-  "Change the display for viewing content of the org file during the
-slide view mode is active."
+  "Change the display for viewing content of the org file."
   (interactive)
   (when (org-tree-slide--active-p)
     (cond
@@ -430,7 +429,7 @@ slide view mode is active."
   `org-tree-slide-slide-in-effect'   => t
   `org-tree-slide-heading-emphasis'  => nil
   `org-tree-slide-cursor-init'       => t
-  `org-tree-slide-modeline-display'  => 'outside
+  `org-tree-slide-modeline-display'  => \='outside
   `org-tree-slide-skip-done'         => nil
   `org-tree-slide-skip-comments'     => t"
   (interactive)
@@ -451,7 +450,7 @@ slide view mode is active."
   `org-tree-slide-slide-in-effect'   => nil
   `org-tree-slide-heading-emphasis'  => nil
   `org-tree-slide-cursor-init'       => nil
-  `org-tree-slide-modeline-display'  => 'lighter
+  `org-tree-slide-modeline-display'  => \='lighter
   `org-tree-slide-skip-done'         => t
   `org-tree-slide-skip-comments'     => t"
   (interactive)
@@ -573,9 +572,10 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
       (message "%s" org-tree-slide-activate-message))))
 
 (defvar org-tree-slide-startup "overview"
-  "If you have \"#+startup:\" line in your org buffer,
+  "Start `org-tree-slide' with overview mode.
+If you have \"#+startup:\" line in your org buffer,
 the org buffer will be shown with corresponding status
-(content, showall, overview:default).")
+\\(content, showall, overview:default\\).")
 
 (defun org-tree-slide--stop ()
   "Stop the slide view, and redraw the orgmode buffer with #+STARTUP:."
@@ -717,20 +717,24 @@ If HEADING-LEVEL is non-nil, the provided outline level is checked."
       (setq blank-lines (1- blank-lines)))))
 
 (defvar org-tree-slide-title nil
-  "If you have \"#+title:\" line in your org buffer, it wil be used as a title
+  "Presentation title.
+If you have \"#+title:\" line in your org buffer, it wil be used as a title
 of the slide.  If the buffer has no \"#+title:\" line, the name of
 current buffer will be displayed.")
 
 (defvar org-tree-slide-email nil
-  "If you have \"#+email:\" line in your org buffer,
+  "Email address.
+If you have \"#+email:\" line in your org buffer,
 it will be used as an address of the slide.")
 
 (defvar org-tree-slide-author nil
-  "If you have \"#+author:\" line in your org buffer,
+  "Author name.
+If you have \"#+author:\" line in your org buffer,
 it will be used as a name of the slide author.")
 
 (defvar org-tree-slide-date nil
-  "If you have \"#+date:\" line in your org buffer, it will be used as the date.")
+  "Date.
+If you have \"#+date:\" line in your org buffer, it will be used as the date.")
 
 (defcustom org-tree-slide-breadcrumbs " > "
   "Display breadcrumbs in the slide header.
@@ -776,7 +780,7 @@ concat the headers."
        (if (re-search-forward regexp limit t) (match-string 1) nil)))
 
 (defface org-tree-slide-header-overlay-face '((t :inherit default))
-  "Face for org-tree-slide--header-overlay."
+  "Face for `org-tree-slide--header-overlay'."
   :group 'org-tree-slide)
 
 (defun org-tree-slide--get-parents (&optional delim)
