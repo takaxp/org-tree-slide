@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2023-03-05 Sun 13:49]
+#+date:		[2023-05-13 Sat 01:13]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -164,7 +164,7 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 |  2 | org-tree-slide-header                      | t             | Boolean |
 |  3 | org-tree-slide-slide-in-effect             | t             | Boolean |
 |  4 | org-tree-slide-cursor-init                 | t             | Boolean |
-|  5 | org-tree-slide-slide-in-brank-lines        | 10            | Numeric |
+|  5 | org-tree-slide-slide-in-blank-lines        | 10            | Numeric |
 |  6 | org-tree-slide-slide-in-waiting            | 0.02          | Float   |
 |  7 | org-tree-slide-heading-emphasis            | nil           | Boolean |
 |  8 | org-tree-slide-never-touch-face            | nil           | Boolean |
@@ -207,7 +207,7 @@ In this case, =<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned in order to contr
     'org-tree-slide-content)
   (setq org-tree-slide-skip-outline-level 4)
   (org-tree-slide-narrowing-control-profile)
-  (setq org-tree-slide-skip-done nil)))
+  (setq org-tree-slide-skip-done nil))
 #+end_src
 
 * 6. Functions
