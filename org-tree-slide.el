@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2023 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.21
+;; Version: 2.8.22
 ;; Package-Requires: ((emacs "25.2"))
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
@@ -79,7 +79,7 @@
 (require 'org-timer)
 (require 'face-remap)
 
-(defconst org-tree-slide "2.8.19"
+(defconst org-tree-slide "2.8.22"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -585,7 +585,6 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
 (defun org-tree-slide--play ()
   "Start slide view with the first tree of the org mode buffer."
   (run-hooks 'org-tree-slide-play-hook)
-  (setq org-tree-slide--skip-comments-mode org-tree-slide-skip-comments)
   (if (org-tree-slide--all-skip-p)
       (let ((org-tree-slide-deactivate-message
              "[notice] Terminated. Skipped all slides."))
