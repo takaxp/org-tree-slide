@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2023-08-26 Sat 21:51]
+#+date:		[2023-08-26 Sat 21:57]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -180,15 +180,15 @@ If you feel the cursor moving is very slow, please change a value of =org-tree-s
 
 #+begin_quote
 [*1] { nil | t | 'inherit }
-         t: skip only the current heading with COMMENT, child headings without COMMENT will be shown
-  'inherit: skip headings with COMMENT and its child headings
-       nil: show even if it has COMMENT."
-(note) =org-tree-slide-skip-comments-toggle= will switch between ~t~ and ~nil~ normally, but if org-tree-slide-skip-comments is specified as ~'inherit~, then the toggle will switch between ~'inherit~ and ~t~.
+         t: skip only the current heading with COMMENT, child headings without COMMENT will be shown,
+  'inherit: skip headings with COMMENT and its child headings,
+       nil: show even if it has COMMENT.
+(note) =org-tree-slide-skip-comments-toggle= will switch between ~t~ and ~nil~ normally, but if =org-tree-slide-skip-comments= is specified as ~'inherit~, then the toggle will switch between ~'inherit~ and ~t~.
 
 [*2] { nil | 'lighter | 'outside }
-  'outside: shown in the mode line outside of lighter
-  'lighter: shown in lighter (slow)
-       nil: nothing to be shown"
+  'outside: shown in the mode line outside of lighter,
+  'lighter: shown in lighter (slow),
+       nil: nothing to be shown.
 
 [*3] '(:next "   Next >>" :previous "<< Previous" :content "<<  CONTENT  >>")
    If you prefer to show nothing for entering content mode, then specify as
