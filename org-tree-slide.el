@@ -3,7 +3,7 @@
 ;; Copyright (C) 2011-2023 Takaaki ISHIKAWA
 ;;
 ;; Author: Takaaki ISHIKAWA <takaxp at ieee dot org>
-;; Version: 2.8.19
+;; Version: 2.8.20
 ;; Package-Requires: ((emacs "25.2"))
 ;; Maintainer: Takaaki ISHIKAWA <takaxp at ieee dot org>
 ;; Twitter: @takaxp
@@ -79,7 +79,7 @@
 (require 'org-timer)
 (require 'face-remap)
 
-(defconst org-tree-slide "2.8.18"
+(defconst org-tree-slide "2.8.19"
   "The version number of the org-tree-slide.el.")
 
 (defgroup org-tree-slide nil
@@ -158,8 +158,16 @@ nil: keep the same position.  The slideshow will start from the heading
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-skip-comments t
-  "Specify to skip COMMENT item or not."
-  :type 'boolean
+  "Specify to skip COMMENT item or not.
+t: skip only the current heading with COMMENT,
+   child headings without COMMENT will be shown
+inherit: skip headings with COMMENT and its child headings
+nil: show even if it has COMMENT."
+  :type '(choice
+          (const :tag "Skip only headings with COMMENT" t)
+          (const :tag "Skip headings with COMMENT and its child headings"
+                 inherit)
+          (const :tag "Show headings even if it has COMMENT" nil))
   :group 'org-tree-slide)
 
 (defcustom org-tree-slide-activate-message
@@ -263,7 +271,7 @@ Usage:
 Profiles:
 
   - [ Simple ]
- => \\`M-x org-tree-slide-simple-profile'
+ => \\[command] `org-tree-slide-simple-profile'
 
     1. No header display
     2. No slide-in effect
@@ -272,7 +280,7 @@ Profiles:
     5. Display every type of tree
 
   - [ Presentation ]
- => \\`M-x org-tree-slide-presentation-profile'
+ => \\[command] `org-tree-slide-presentation-profile'
 
     1. Display header
     2. Enable slide-in effect
@@ -281,7 +289,7 @@ Profiles:
     5. Display every type of tree
 
   - [ TODO Pursuit with narrowing ]
- => \\`M-x org-tree-slide-narrowing-control-profile'
+ => \\[command] `org-tree-slide-narrowing-control-profile'
 
     1. No header display
     2. No slide-in effect
@@ -501,11 +509,33 @@ Profiles:
 
 ;;;###autoload
 (defun org-tree-slide-skip-comments-toggle ()
-  "Toggle show COMMENT item or not."
+  "Toggle show COMMENT item or not.
+If `org-tree-slide-skip-comments' is specified as `inherit',
+then toggle between `inherit' and nil.  Otherwise, between t and nil.
+See also `org-tree-slide-skip-comments'."
   (interactive)
-  (setq org-tree-slide-skip-comments (not org-tree-slide-skip-comments))
-  (if org-tree-slide-skip-comments
-      (message "COMMENT: HIDE") (message "COMMENT: SHOW")))
+  ;; Sync
+  (if (eq org-tree-slide-skip-comments 'inherit)
+      (setq org-tree-slide--skip-comments-mode 'inherit)
+    (when (eq org-tree-slide-skip-comments t)
+      (setq org-tree-slide--skip-comments-mode t)))
+  ;; Toggle
+  (if (eq org-tree-slide--skip-comments-mode 'inherit)
+      (if (eq org-tree-slide-skip-comments 'inherit)
+          (setq org-tree-slide-skip-comments nil)
+        (setq org-tree-slide-skip-comments 'inherit))
+    (setq org-tree-slide-skip-comments (not org-tree-slide-skip-comments)))
+  ;; Feedback
+  (cond ((eq org-tree-slide-skip-comments nil)
+         (message "COMMENT: Show headings even if it has COMMENT"))
+        ((eq org-tree-slide-skip-comments t)
+         (message "COMMENT: Skip only headings with COMMENT"))
+        ((eq org-tree-slide-skip-comments 'inherit)
+         (message
+          "COMMENT: Skip headings with COMMENT and its child headings")))
+  (when (org-tree-slide--active-p)
+    (setq org-tree-slide--slide-number
+          (format " %s" (org-tree-slide--count-slide (point))))))
 
 ;;; Internal functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar org-tree-slide--slide-number nil)
@@ -541,9 +571,11 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
   "Flag to check the status of overlay for a slide header.")
 
 (defvar org-tree-slide--header-face-autoconfig nil)
+(defvar org-tree-slide--skip-comments-mode nil)
 (defun org-tree-slide--setup ()
   "Setup."
   (when (org-tree-slide--active-p)
+    (setq org-tree-slide--skip-comments-mode org-tree-slide-skip-comments)
     (org-tree-slide--play)))
 
 (defun org-tree-slide--abort ()
@@ -572,10 +604,7 @@ This is displayed by default if `org-tree-slide-modeline-display' is nil.")
       (message "%s" org-tree-slide-activate-message))))
 
 (defvar org-tree-slide-startup "overview"
-  "Start `org-tree-slide' with overview mode.
-If you have \"#+startup:\" line in your org buffer,
-the org buffer will be shown with corresponding status
-\\(content, showall, overview:default\\).")
+  "If you have \"#+startup:\" line in your org buffer, the org buffer will be shown with corresponding status \(content, showall, overview:default\).")
 
 (defun org-tree-slide--stop ()
   "Stop the slide view, and redraw the orgmode buffer with #+STARTUP:."
@@ -666,7 +695,7 @@ the org buffer will be shown with corresponding status
            (org-tree-slide-content))) ;; would be not reached here.
         ((and (equal action 'first)
               (equal direction 'previous))
-         (org-tree-slide--move-to-the-first-heading))
+         (org-tree-slide--outline-next-heading)) ;; find the first non-skip
         ((and (equal action 'skip)
               (equal direction 'next))
          (org-tree-slide--outline-next-heading)) ;; find next again
@@ -702,9 +731,20 @@ If HEADING-LEVEL is non-nil, the provided outline level is checked."
          (concat "^\\*+ " org-not-done-regexp)))))
 
 (defun org-tree-slide--heading-skip-comment-p ()
-  "Return t, if the current heading is commented."
-  (and org-tree-slide-skip-comments
-       (looking-at (concat "^\\*+ " org-comment-string))))
+  "Return t, if the current heading is commented.
+If `org-tree-slide-skip-comments' is specified as `inherit' and
+parent heading is commented, then also return t.  Otherwise, return nil."
+  (cond ((eq org-tree-slide-skip-comments 'inherit)
+         (when (org-tree-slide--parent-commented-p) t))
+        (t (and org-tree-slide-skip-comments
+                (looking-at (concat "^\\*+ " org-comment-string))))))
+
+(defun org-tree-slide--parent-commented-p ()
+  "Return nil, when no parent heading is commented."
+  (memq 0 (mapcar
+           (lambda (x)
+             (string-match (concat "^" org-comment-string) x))
+           (org-get-outline-path t))))
 
 (defun org-tree-slide--slide-in (blank-lines)
   "Apply slide in.  The slide will be moved from BLANK-LINES below to top."
@@ -784,7 +824,7 @@ concat the headers."
   :group 'org-tree-slide)
 
 (defun org-tree-slide--get-parents (&optional delim)
-  "Get parent headlines and concat them with DELIM."
+  "Get parent headings and concat them with DELIM."
   (setq delim (or delim " > "))
   (save-excursion
     (save-restriction
@@ -799,7 +839,6 @@ concat the headers."
 
 (defun org-tree-slide--set-slide-header (blank-lines)
   "Set the header with overlay.
-
 Some number of BLANK-LINES will be shown below the header."
   (org-tree-slide--hide-slide-header)
   (setq org-tree-slide--header-overlay
@@ -835,7 +874,8 @@ Some number of BLANK-LINES will be shown below the header."
 
 (defun org-tree-slide--show-slide-header (&optional lines)
   "Show header.  When LINES is nil, the default value is 2."
-  (org-tree-slide--set-slide-header (or lines org-tree-slide-content-margin-top)))
+  (org-tree-slide--set-slide-header
+   (or lines org-tree-slide-content-margin-top)))
 
 (defun org-tree-slide--hide-slide-header ()
   "Hide header."
@@ -844,7 +884,7 @@ Some number of BLANK-LINES will be shown below the header."
 
 (defun org-tree-slide--move-to-the-first-heading ()
   "Go to the first heading.  Narrowing will be canceled.
-If no heading in the buffer, Return nil and stay top of the buffer.
+If no heading in the buffer, return nil and stay top of the buffer.
 Otherwise, return the point.  This doesn't check whether skipping or not."
   (widen)
   (goto-char 1)
