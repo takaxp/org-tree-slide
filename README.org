@@ -1,7 +1,7 @@
 #+title:	README for Org Tree Slide
 #+author:	Takaaki Ishikawa
 #+email:	takaxp@ieee.org
-#+date:		[2023-08-26 Sat 21:57]
+#+date:		[2023-08-26 Sat 22:20]
 #+startup:	content
 
 [[http://melpa.org/#/org-tree-slide][http://melpa.org/packages/org-tree-slide-badge.svg]]
@@ -213,6 +213,7 @@ In this case, =<f8>= / =<f9>= / =<f10>= / =<f11>= are assigned in order to contr
     'org-tree-slide-content)
   (setq org-tree-slide-skip-outline-level 4)
   (org-tree-slide-narrowing-control-profile)
+  (setq org-tree-slide-skip-comments 'inherit)
   (setq org-tree-slide-skip-done nil))
 #+end_src
 
